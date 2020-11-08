@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   window.addEventListener('scroll', () => {
     var rect = canvas.getBoundingClientRect();
-    var progress = (rect.bottom - 700) / 1000;
+    var progress = (rect.bottom - window.innerHeight * 0.2) / window.innerHeight;
     if (progress > 1 || progress < 0) return;
     var clippedProgress = 1 - Math.min(1, Math.max(0, progress));
     var numberOfFrames = 120 - 38;
