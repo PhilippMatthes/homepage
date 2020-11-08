@@ -1,0 +1,23 @@
+{% load static %}
+
+<section id="header">
+  <div class="container my-6">
+    <div class="hero is-small has-text-centered">
+      <div class="hero-body px-0">
+        <figure id="profile-icon-container" class="image">
+          <div id="profile-icon-webgl"></div>
+          <noscript>
+            <img id="profile-icon" class="is-rounded"
+                src="{% static 'img/ausschnitt.webp' %}">
+          </noscript>
+        </figure>
+        <h1 class="title colorful-text is-animated py-5">
+          Hi! 👋🏼
+        </h1>
+        <h2 class="subtitle">
+          {% lorem 50 w %}
+        </h2>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+{% load static %}
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Imagination Realization - Philipp Matthes</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent">
+
+    <meta name="author" content="Philipp Matthes">
+    <meta name="description"
+          lang="en"
+          content="Your partner for digital innovation, ubiquitous and adaptive computing, goal-driven project realization, artificial intelligence and more.">
+    <meta name="description"
+          lang="de"
+          content="Ihr Ansprechpartner für digitale Innovation, ubiquitäre und adaptive Software-Anwendungen, zielorientierte IT-Projektrealisierung, künstliche Intelligenz und mehr.">
+
+    <meta name="twitter:title"
+          content="Philipp Matthes - Imagination Realization">
+    <meta name="twitter:description"
+          content="Your partner for digital innovation, ubiquitous and adaptive computing, goal-driven project realization, artificial intelligence and more.">
+
+    <meta name="generator" content="Django">
+    <meta name="subject" content="Homepage of Philipp Matthes.">
+    <meta name="rating" content="General">
+
+    <link rel="prefetch" href="//fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet"
+          type="text/css"
+          href="//fonts.googleapis.com/css?family=Open+Sans" />
+
+    <link rel="prefetch" href="{% static 'vendor/css/bulma.min.css' %}">
+    <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
+
+    <link rel="prefetch" href="{% static 'vendor/css/fa.min.css' %}">
+    <link href="{% static 'vendor/css/fa.min.css' %}" rel="stylesheet">
+
+    <link rel="prefetch" href="{% static 'css/homepage.css' %}">
+    <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+
+    <link rel="prefetch" href="{% static 'css/navigation.css' %}">
+    <link href="{% static 'css/navigation.css' %}" rel="stylesheet">
+
+    <link rel="prefetch" href="{% static 'css/fontstack.css' %}">
+    <link href="{% static 'css/fontstack.css' %}" rel="stylesheet">
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body>
+    {% include 'top-navigation.html' %}
+
+    <main>
+      {% block main %}{% endblock %}
+    </main>
+
+    <link rel="prefetch" href="{% static 'vendor/js/three.min.js' %}">
+    <script src="{% static 'vendor/js/three.min.js' %}"></script>
+
+    {% block extrabody %}{% endblock %}
+  </body>
+
+</html>

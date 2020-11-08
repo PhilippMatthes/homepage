@@ -1,0 +1,87 @@
+
+body {
+  margin: 0;
+}
+
+html {
+  background-color: #fafafa;
+  color: #0d0d0d;
+
+  scroll-behavior: smooth;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #0d0d0d;
+  }
+}
+
+hr {
+  height: 1px;
+  background: #d1d1d1;
+}
+
+@media (prefers-color-scheme: dark) {
+  hr {
+    background: #1d1d1d;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  .subtitle,
+  .subtitle strong,
+  .title,
+  .title strong {
+    color: #f0f0f0;
+  }
+}
+
+.container {
+  max-width: 60rem !important;
+}
+
+.hero .title {
+  font-size: 6rem;
+}
+
+.hero .subtitle {
+  font-size: 1.5rem;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.colorful-background {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+}
+
+.text-clip {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+.colorful-background.is-animated {
+  animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+}
+
+
+.notification {
+  background: #fafafa;
+  border-radius: 2rem;
+}
+
+

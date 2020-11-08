@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+<link rel="prefetch" href="{% static 'css/index.css' %}">
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block main %}
+
+  {% include 'header.html' %}
+  {% include 'bottom-navigation.html' %}
+  {% include 'apps.html' %}
+  {% include 'cloud.html' %}
+  {% include 'ml.html' %}
+  {% include 'teaching.html' %}
+
+{% endblock %}
+
+{% block extrabody %}
+<link rel="prefetch" href="{% static 'js/header.js' %}">
+<script src="{% static 'js/header.js' %}"></script>
+
+<link rel="prefetch" href="{% static 'js/apps.js' %}">
+<script src="{% static 'js/apps.js' %}"></script>
+{% endblock %}
