@@ -19,16 +19,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function preloadFrames() {
     for (var i = 38; i <= 120; i++) {
-      var frame = new Image();
-      frame.src = frameURL(i);
+      new Promise(function() {
+        var frame = new Image();
+        frame.src = frameURL(i);
+      });
     }
   }
 
   window.addEventListener('scroll', () => {
     var rect = canvas.getBoundingClientRect();
-    var progress = 1 - Math.min(1, Math.max(0, (rect.bottom - 700) / 1000));
+    var progress = (rect.bottom - 700) / 1000;
+    if (progress > 1 || progress < 0) return;
+    var clippedProgress = 1 - Math.min(1, Math.max(0, progress));
     var numberOfFrames = 120 - 38;
-    var frameIndex = 38 + Math.round(progress * numberOfFrames);
+    var frameIndex = 38 + Math.round(clippedProgress * numberOfFrames);
     frame.src = frameURL(frameIndex);
   });
 

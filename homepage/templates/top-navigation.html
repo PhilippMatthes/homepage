@@ -4,21 +4,21 @@
 <nav class="navbar primary px-2">
   <div class="container">
     <div class="navbar-brand">
-      <div class="navbar-burger burger" data-target="navMenuColordark-example">
+      <a class="navbar-item" href="/">
+          <strong>Philipp Matthes</strong>
+        </a>
+      <div class="navbar-burger burger"
+           data-target="top-navigation"
+           onclick="document.querySelector('#top-navigation').classList.toggle('is-active');">
         <span></span>
         <span></span>
         <span></span>
       </div>
     </div>
 
-    <div id="navMenuColordark-example" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          <strong>Philipp Matthes</strong>
-        </a>
-      </div>
+    <div id="top-navigation" class="navbar-menu py-0">
       <div class="navbar-end">
-        <a class="navbar-item" href="tel:+4917642090978">
+        <a class="navbar-item" href="https://docs.google.com/document/d/1YKh-AAxi6FJAzP5X6TbZjgQbTFUaIaAsV8V_RMAB1G4/edit?usp=sharing" target="_blank">
           <i class="fas fa-calendar-check mr-2"></i> CV
         </a>
         <a class="navbar-item"

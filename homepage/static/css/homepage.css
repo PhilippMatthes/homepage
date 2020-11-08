@@ -3,6 +3,14 @@ body {
   margin: 0;
 }
 
+a {
+  text-decoration: none !important;
+}
+
+.notification a:not(.button):not(.dropdown-item) {
+  color: #3273dc;
+}
+
 html {
   background-color: #fafafa;
   color: #0d0d0d;
@@ -49,6 +57,16 @@ hr {
   font-size: 1.5rem;
 }
 
+@media (max-device-width: 1023px) {
+  .hero .title {
+    font-size: 3rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
 @keyframes gradient {
 	0% {
 		background-position: 0% 50%;
@@ -84,4 +102,13 @@ hr {
   border-radius: 2rem;
 }
 
+@media (prefers-color-scheme: dark) {
+  .notification {
+    background: #1d1d1d;
+    color: white;
+  }
+}
 
+#footer {
+  margin-top: 6rem;
+}

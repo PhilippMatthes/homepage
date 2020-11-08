@@ -2,12 +2,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var camera, scene, renderer, mesh, geometry;
 
     init();
-    animate();
-
-    function animate() {
-        window.requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
 
     function onWindowResize() {
         var element = document.getElementById('profile-icon-webgl');
@@ -23,6 +17,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         mesh.scale.set(width, height, 1);
 
         renderer.setSize(element.clientWidth, element.clientHeight);
+        window.requestAnimationFrame(function() {
+            renderer.render(scene, camera);
+        });
     }
 
     function init() {
@@ -102,6 +99,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             shaderMaterial.uniforms.mouseX.value = -x / 15000;
             shaderMaterial.uniforms.mouseY.value = y / 15000;
             element.style.transform = `rotate3d(0, 1, 1, ${x / 50}deg)`;
-        })
+            window.requestAnimationFrame(function() {
+                renderer.render(scene, camera);
+            });
+        });
     }
 });

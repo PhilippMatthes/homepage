@@ -1,21 +1,19 @@
 {% load static %}
 
-<section id="header">
+<section id="header" class="px-3">
   <div class="container my-6">
     <div class="hero is-small has-text-centered">
       <div class="hero-body px-0">
         <figure id="profile-icon-container" class="image">
-          <div id="profile-icon-webgl"></div>
-          <noscript>
-            <img id="profile-icon" class="is-rounded"
+          <div class="is-hidden-touch" id="profile-icon-webgl"></div>
+          <img id="profile-icon" class="is-rounded is-hidden-desktop"
                 src="{% static 'img/ausschnitt.webp' %}">
-          </noscript>
         </figure>
         <h1 class="title colorful-text is-animated py-5">
           Hi! 👋🏼
         </h1>
         <h2 class="subtitle">
-          {% lorem 50 w %}
+          I am Philipp Matthes, self employed software developer and student of Computer Science at TU Dresden since 2016. As of now, I will graduate in fall 2021 with the academic grade Diplom-Informatiker. Since 2018, I am also employed as a tutor for the Software Engineering Lecture + Labs at TU Dresden. Between 2018 and fall 2020, I worked at TU Dresden on an E-Assessment-System for online programming courses named <a href="https://github.com/st-tu-dresden/inloop" target="_blank">INLOOP</a>.
         </h2>
       </div>
     </div>
