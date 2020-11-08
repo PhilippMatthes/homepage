@@ -4,7 +4,7 @@
   <div class="container mb-6">
     <div class="hero is-small">
       <div class="hero-body px-0">
-        <h1 class="title colorful-background is-animated text-clip py-5">
+        <h1 class="title colorful-background text-clip py-5">
           Machine Learning.
         </h1>
       </div>
@@ -13,11 +13,14 @@
       As the hot topics of Computer Science, Artificial Intelligence and especially Machine Learning solve problems that were not sufficiently solvable before. From data analysis through structuring or segmentation to the classification of sensor data and the generation of assistive, human-like voices, applying Artificial Intelligence correctly is a powerful tool to understand and interpret the context and environment of the user.
     </h1>
 
-    <div id="ml-presentation-container" class="is-hidden-mobile">
-      <img id="ml-presentation"
-          class="mt-6"
+    <div id="ml-presentation-container">
+      <img id="ml-presentation-back"
           alt="3dify-presentation"
-          src="{% static 'img/3dify.webp' %}">
+          src="{% static 'img/3dify-back.webp' %}">
+      <div id="ml-presentation-gradient"></div>
+      <img id="ml-presentation-front"
+          alt="3dify-presentation"
+          src="{% static 'img/3dify-front.webp' %}">
       <div id="ml-presentation-text" class="notification">
         <h1 class="title">
           Featured Project

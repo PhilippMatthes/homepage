@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var clippedProgress = 1 - Math.min(1, Math.max(0, progress));
     var numberOfFrames = 120 - 38;
     var frameIndex = 38 + Math.round(clippedProgress * numberOfFrames);
-    frame.src = frameURL(frameIndex);
+    new Promise(function() {
+      frame.src = frameURL(frameIndex);
+    });
   });
 
   preloadFrames();

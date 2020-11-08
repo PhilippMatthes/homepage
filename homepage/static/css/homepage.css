@@ -1,3 +1,10 @@
+:root {
+  --gradient: linear-gradient(45deg, #00c6ff, #0072ff);
+  --lightblue: #00c6ff;
+  --darkblue: #0072ff;
+  --dark: #0d0d0d;
+  --light: #fafafa;
+}
 
 body {
   margin: 0;
@@ -8,19 +15,19 @@ a {
 }
 
 .notification a:not(.button):not(.dropdown-item) {
-  color: #3273dc;
+  color: var(--darkblue);
 }
 
 html {
-  background-color: #fafafa;
-  color: #0d0d0d;
+  background-color: var(--light);
+  color: var(--dark);
 
   scroll-behavior: smooth;
 }
 
 @media (prefers-color-scheme: dark) {
   html {
-    background-color: #0d0d0d;
+    background-color: var(--dark);
   }
 }
 
@@ -31,7 +38,7 @@ hr {
 
 @media (prefers-color-scheme: dark) {
   hr {
-    background: #1d1d1d;
+    background: var(--light);
   }
 }
 
@@ -41,7 +48,7 @@ hr {
   .subtitle strong,
   .title,
   .title strong {
-    color: #f0f0f0;
+    color: var(--light);
   }
 }
 
@@ -80,7 +87,7 @@ hr {
 }
 
 .colorful-background {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background: var(--gradient);
 }
 
 .text-clip {
@@ -91,21 +98,16 @@ hr {
   -moz-text-fill-color: transparent;
 }
 
-.colorful-background.is-animated {
-  animation: gradient 15s ease infinite;
-  background-size: 400% 400%;
-}
-
 
 .notification {
-  background: #fafafa;
+  background: var(--light);
   border-radius: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {
   .notification {
     background: #1d1d1d;
-    color: white;
+    color: var(--light);
   }
 }
 
