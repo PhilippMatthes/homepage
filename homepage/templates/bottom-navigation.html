@@ -1,10 +1,12 @@
+{% load i18n %}
+
 <div class="is-sticky-top has-text-weight-bold">
   <nav class="navbar secondary">
     <div class="navbar-blur"></div>
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="/">
-          Expertise
+          {% trans 'bottom_navigation_brand' %}
         </a>
         <div class="navbar-burger burger"
              data-target="bottom-navigation"
@@ -18,13 +20,16 @@
       <div id="bottom-navigation" class="navbar-menu py-0">
         <div class="navbar-end">
           <a class="navbar-item" href="#apps">
-            Ubiquitous Applications
+            {% trans 'ubiquitous_applications' %}
           </a>
           <a class="navbar-item" href="#ml">
-            Machine Learning
+            {% trans 'machine_learning' %}
           </a>
           <a class="navbar-item" href="#cloud">
-            Cloud Computing
+            {% trans 'cloud_computing' %}
+          </a>
+          <a class="navbar-item" href="#fullstack">
+            {% trans 'fullstack' %}
           </a>
         </div>
       </div>

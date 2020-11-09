@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <section id="apps" class="px-3">
   <div class="container">
@@ -6,12 +7,12 @@
     <div class="hero is-small pt-6">
       <div class="hero-body px-0">
         <h1 class="title colorful-background text-clip pb-5">
-          Ubiquitous Applications.
+          {% trans 'ubiquitous_applications' %}
         </h1>
       </div>
     </div>
     <h2 class="title">
-      I love to create apps. I worked on and distributed many apps, for Android and mostly iOS devices, and also academically focused myself on application development in my Computer Science studies. To me it not only matters that an app is well-designed to fit its use cases, but also that the user experience is top-notch. I achieve this by thinking structured and domain-oriented to include many possible solutions to a use case. I never stop learning about strategies such as <strong>engineering context-adaptive apps</strong> and driving <strong>offline + mobile first approaches</strong>. Likewise, I keep up-to-date with the current system-native improvements and am already experienced with frameworks such as <strong>SwiftUI</strong>, <strong>Metal</strong>, <strong>Core ML, Vision</strong> and many more.
+      {% trans 'ubiquitous_applications_description' %}
     </h2>
   </div>
 
@@ -19,14 +20,18 @@
     <div class="columns">
       <div id="featured-project-description" class="column is-6">
         <h2 class="subtitle mt-6">
-          Featured Project
+          {% trans 'featured_project' %}
         </h2>
         <h2 class="subtitle">
-          <strong><a href="https://github.com/peerbridge" target="_blank">The Peerbridge Blockchain Messenger</a></strong> employs new SwiftUI features such as the new <a href="https://developer.apple.com/documentation/swiftui/lazyvstack" target="_blank">LazyVStack</a> or the new <a href="https://developer.apple.com/documentation/cryptokit" target="_blank">CryptoKit</a> framework. The messenger is an experimental proof-of-concept to demonstrate how a distributed blockchain can be used to create a shared, fully-anonymous and confidential message distribution system.
+          {% trans 'peerbridge_description' %}
         </h2>
       </div>
     </div>
     <hr class="mt-2">
-    <canvas width="1920" height="1920" id="peerbridge-animation"></canvas>
+    <img id="peerbridge-animation-preview" alt="Peerbridge"
+         src="{% static 'img/peerbridge-animation/animation_120.webp' %}"
+         style="display: block">
+    <canvas width="1920" height="1920" id="peerbridge-animation"
+            style="display: none"></canvas>
   </div>
 </section>

@@ -1,0 +1,141 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "website_title"
+msgstr "Philipp Matthes - Softwareentwicklung, Ubiquitous Applications, Machine Learning und Cloud Computing."
+
+msgid "website_description"
+msgstr "Ihr Ansprechpartner für digitale Innovation, ubiquitäre und adaptive Software-Anwendungen, zielorientierte IT-Projektrealisierung, künstliche Intelligenz, Cloud Computing und mehr."
+
+msgid "website_subject"
+msgstr "Homepage von Philipp Matthes."
+
+msgid "welcome_message"
+msgstr "Hi! 👋🏼"
+
+msgid "personal_description"
+msgstr "Ich bin Philipp Matthes, selbstständiger Softwareentwickler und Informatik-Student an der TU Dresden seit 2016, wo ich voraussichtlich im Herbst 2021 mein Diplom erhalte. Seit 2018 bin ich außerdem als Tutor für die Module Softwaretechnologie und Softwarepraktikum an der TU Dresden angestellt. Zwischen 2018 und Herbst 2020 entwickelte ich an der TU Dresden ein E-Assessment-System für Online-Programmierkurse namens <a href=\"https://github.com/st-tu-dresden/inloop\" target=\"_blank\">INLOOP</a> weiter."
+
+msgid "services"
+msgstr "Dienstleistungen"
+
+msgid "bottom_navigation_brand"
+msgstr "Expertise"
+
+msgid "top_navigation_brand"
+msgstr "Philipp Matthes"
+
+msgid "cv"
+msgstr "Lebenslauf"
+
+msgid "github"
+msgstr "GitHub"
+
+msgid "blog"
+msgstr "Blog"
+
+msgid "twitter"
+msgstr "Twitter"
+
+msgid "email"
+msgstr "E-Mail"
+
+msgid "telephone"
+msgstr "+49 176 42090978"
+
+msgid "featured_project"
+msgstr "Vorgestelltes Projekt"
+
+msgid "ubiquitous_applications"
+msgstr "Ubiquitous Applications"
+
+msgid "ubiquitous_applications_description"
+msgstr "Ich liebe es, Apps zu erstellen. Ich habe bereits mehrere Apps entwickelt und distribuiert, auf Android und hauptsächlich iOS. Außerdem habe ich mich im Studium auf App-Entwicklung spezialisiert. Für mich zählt es nicht nur, dass eine App für ihre Anwendungsfälle gut entworfen ist, sondern auch eine bestmögliche Nutzererfahrung bietet. Ich erreiche dies durch eine strukturierte und domänenorientierte Denkweise, um viele mögliche Lösungen für einen Anwendungsfall einzubeziehen. So bin ich unter anderem mit Strategien wie der Integration von Kontextadaptivität und Mobile/Offline-First-Ansätzen vertraut. Außerdem halte ich mich stets auf dem Laufenden, was aktuelle Technologien und Systemupdates betrifft, und kenne die aktuellsten Frameworks wie SwiftUI, Metal, CoreML, Vision und viele weitere."
+
+msgid "peerbridge_description"
+msgstr "<strong><a href=\"https://github.com/peerbridge\" target=\"_blank\">Der Peerbridge Blockchain Messenger</a></strong> nutzt die neuesten SwiftUI-Features wie den <a href=\"https://developer.apple.com/documentation/swiftui/lazyvstack\" target=\"_blank\">LazyVStack</a> oder das neue <a href=\"https://developer.apple.com/documentation/cryptokit\" target=\"_blank\">CryptoKit</a> Framework. Der Messenger ist ein experimentelles Proof-of-Concept, um zu demonstrieren, wie eine verteilte Blockchain dazu genutzt werden kann, um ein öffentliches und dennoch vollständig anonymes Nachrichtenverteilsystem zu realisieren."
+
+msgid "cloud_computing"
+msgstr "Cloud Computing"
+
+msgid "cloud_computing_title"
+msgstr "Die Entwicklung von ubiquitären Systemen wie Smartphone- oder IOT-Apps erfordert neuartige Lösungen, um Programmierung, Distribution und Datenfluss effizienter, skalierbarer und robuster zu machen."
+
+msgid "blockchain_and_consensus"
+msgstr "Blockchain und Konsensus"
+
+msgid "blockchain_and_consensus_description"
+msgstr "Blockchain löst Probleme, bei denen die Realisation einer schreibbaren und verteilten Datenbank sowie deren Synchronisation zwischen mehreren nicht vertrauenswürdigen Netzwerkteilnehmern notwendig ist. Zum Beispiel nutzt unser experimenteller Messenger Peerbridge eine verteilte Blockchain, um Nachrichten zu speichern und zu verteilen."
+
+msgid "continuous_everything_and_devops"
+msgstr "Continuous Everything und DevOps"
+
+msgid "continuous_everything_and_devops_description"
+msgstr "Cloud-Systeme können genutzt werden, um die Zeit zur Markteinführung eines Produktes signifikant zu reduzieren und gleichzeitig Validierungs- und Verifikationsaufwand auszulagern. Bestimmte Aufgaben, die sonst Zeit und Kraft in Anspruch nehmen können so effizient in der Cloud ausgeführt werden. Bei der so genannten Continuous Integration wird Software in ein Cloudsystem geschickt und automatisch mithilfe von Tests und Codeanalysetools überprüft. Software, die das Cross-Feedback und die Qualitätsziele erfüllt, kann anschließend automatisiert publiziert, installiert und distribuiert werden. Bei iOS-Software zum Beispiel kann <a href=\"https://fastlane.tools/\" target=\"_blank\">Fastlane</a> genutzt werden, um Apps automatisch zu signieren und zu archivieren, so dass das fertige Archiv ohne manuellen Aufwand direkt an <a href=\"https://appstoreconnect.apple.com/\" target=\"_blank\">Apple App Store Connect</a> und <a href=\"https://testflight.apple.com/\" target=\"_blank\">TestFlight</a> zu übermitteln. Mein Blog <a href=\"https://xn--53hy230o.ws/\" target=\"_blank\">☕💻.ws</a> nutzt beispielsweise auch einen Continous Publishing Workflow, um die Blogeinträge mit einem GitHub-Repository zu synchronisieren. So wird das Änderungsmanagement vereinfacht und systematisch automatisiert."
+
+msgid "service_oriented_architecture"
+msgstr "Serviceorientierte Architektur"
+
+msgid "service_oriented_architecture_description"
+msgstr "Während monolithische Systeme normalerweise sehr gut für kleinere Applikationen geeignet sind, erfordern Cloud-Systeme mit sehr hohen Serverlasten und größeren Entwicklerteams andere Ansätze, um die Skalierbarkeit der Entwicklung und der Anwendung selbst zu gewährleisten. Gegebenenfalls kann es eine gute Lösung sein, monolithische Applikationen systematisch in kleinere Teile mit eigenen Verantwortlichkeiten zu separieren. Dies erfordert neue Softwareentwicklungsmuster und Paradigmen. So können Teams signifikant von deren Unabhängigkeit zwischeneinander und der Notwendigkeit von klaren interoperablen Schnittstellen profitieren. Die Applikation selbst kann in ihrer separierten Form besser unter einer Lastverteilung skalieren. Als ein radikalerer Ansatz kann eine Applikation auch in so genannten Microservices organisiert werden, welche jeweils nur eine sehr reduzierte Gruppe an Verantwortlichkeiten tragen, um noch besser zu skalieren, durch die individuelle Replikation der notwendigen Funktionalitäten. Zum Beispiel nutzt unsere experimentelle App <a href=\"https://ordered.online\">ordered.online</a> Microservices, die hierbei durch Docker containerisiert und mit Docker Swarm repliziert werden."
+
+msgid "distributed_systems"
+msgstr "Verteilte Systeme"
+
+msgid "distributed_systems_description"
+msgstr "Für viele Anwendungsfälle ist es möglicherweise notwendig, eine Applikation zu dezentralisieren, in Form eines verteilten Systems. Verteilte Systeme erfordern eine ausreichende Informiertheit über deren Grundprinzipien, da viele normale Softwarepatterns aus dem klassischen Client-Server-Modell nicht mehr angewendet werden können. Unser <a href=\"https://github.com/peerbridge\">Peerbridge Messenger</a> ist konzipiert als ein verteiltes System und nutzt das Prinzip von verteilten Hashtabellen (DHTs), um Nutzer miteinander zu verbinden."
+
+msgid "cloud_computing_subtitle"
+msgstr "In einer kontinuierlich fortschreitenden technischen Umgebung sind nicht nur Portierbarkeit und Nachhaltigkeit zunehmend wichtig, sondern auch eine (soziale) Verbundenheit. Die gezeigten Prinzipien aus dem Cloud Computing sind wichtig, um den Produktwert zu steigern, während Entwicklungs- und Supportaufwände reduziert werden."
+
+msgid "machine_learning"
+msgstr "Machine Learning"
+
+msgid "machine_learning_title"
+msgstr "Als die Hot Topics der Informatik lösen Künstliche Intelligenz und vor allem Machine Learning Probleme, die zuvor nicht zufriedenstellend gelöst werden konnten. Von der Datenanalyse über deren Strukturierung und Segmentierung, Klassifikation von Sensordaten bishin zur generativen Erzeugung von menschenähnlichen Stimmen - Künstliche Intelligenz ist ein mächtiges Werkzeug, um den Kontext und die Umgebung des Nutzers zu interpretieren."
+
+msgid "machine_learning_project_description"
+msgstr "<strong><a href=\"https://github.com/3dify-app\" target=\"_blank\">Die 3Dify App</a></strong> nutzt durch Multi-Kamera-Arrays gestützte Disparitätsbestimmung in Fotos für die Erzeugung eines 3D Parallax-Effektes. Durch den technischen Kontext ist dies auf manchen Endgeräten nicht möglich - hier erzeugt die kontextadaptive App die benötigten Disparitätsinformationen durch monokulare Tiefeninterpretation über das neuronale Netzwerk <a href=\"https://developer.apple.com/machine-learning/models/\" target=\"_blank\">FCRN-DepthPrediction</a>. "
+
+msgid "fullstack"
+msgstr "Fullstack"
+
+msgid "fullstack_title"
+msgstr "Ich beschränke mich niemals auf nur eine Technologie. Mithilfe einer gezielten Analyse entscheide ich im Voraus, welche Technologie sich für einen Anwendungsfall besonders eignet. Auf diese Weise bin ich immer sehr flexibel und bereit für neue Herausforderungen. Außerdem macht es Spaß, neue Technologien und Sprachen zu lernen!"
+
+msgid "fullstack_description"
+msgstr "Haben Sie eine Projektidee? Ich bin jederzeit interessiert an neuen geschäftlichen und beruflichen Opportunitäten. Kontaktieren Sie mich: <a href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
+
+msgid "to_be_continued"
+msgstr "To be continued... 😜"
+
+msgid "legal_information"
+msgstr "<p><b>Verantwortlich für diese Website</b></p> \
+        <p>Philipp Matthes<p> \
+        <p>Clara-Viebig-Straße 9</p> \
+        <p>01159 Dresden</p> \
+        <p>+49 176 42090978</p> \
+        <p>mail@philippmatth.es</p>"
+
+msgid "weblinks"
+msgstr "Weblinks"
+
+msgid "github_profile"
+msgstr "GitHub-Profil"
+
+msgid "blog_on_ccws"
+msgstr "Blog auf ☕💻.ws"
+
+msgid "twitter_profile"
+msgstr "Twitter-Profil"
+
+msgid "made_with_love"
+msgstr "Gemacht mit ❤️ von Philipp Matthes."
+
+msgid "contribute"
+msgstr "An der Website mitwirken"
+

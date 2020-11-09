@@ -1,33 +1,31 @@
 {% load static %}
+{% load i18n %}
 
 <section id="ml" class="px-3">
   <div class="container mb-6">
     <div class="hero is-small">
       <div class="hero-body px-0">
         <h1 class="title colorful-background text-clip py-5">
-          Machine Learning.
+          {% trans 'machine_learning' %}
         </h1>
       </div>
     </div>
     <h1 class="title">
-      As the hot topics of Computer Science, Artificial Intelligence and especially Machine Learning solve problems that were not sufficiently solvable before. From data analysis through structuring or segmentation to the classification of sensor data and the generation of assistive, human-like voices, applying Artificial Intelligence correctly is a powerful tool to understand and interpret the context and environment of the user.
+      {% trans 'machine_learning_title' %}
     </h1>
 
     <div id="ml-presentation-container">
-      <img id="ml-presentation-back"
-          alt="3dify-presentation"
-          src="{% static 'img/3dify-back.webp' %}">
       <div id="ml-presentation-gradient"></div>
       <img id="ml-presentation-front"
           alt="3dify-presentation"
           src="{% static 'img/3dify-front.webp' %}">
       <div id="ml-presentation-text" class="notification">
         <h1 class="title">
-          Featured Project
+          {% trans 'featured_project' %}
         </h1>
         <hr>
         <h2 class="subtitle">
-          <strong><a href="https://github.com/3dify-app" target="_blank">The 3Dify app</a></strong> uses multi-camera-array disparity computation on photos to generate depth maps and use them for a 3d parallax effect. The app is context-aware such that on devices without multi-camera-arrays, it creates the depth maps by monocular depth interpretation using the <a href="https://developer.apple.com/machine-learning/models/" target="_blank">FCRN-DepthPrediction</a> neural network and the new CoreML/Vision frameworks. In this way, even users without a device capable of disparity calculation can use the parallax effect, which is produced by a deferred shading path with the shading technique parallax occlusion mapping.
+          {% trans 'machine_learning_project_description' %}
         </h2>
       </div>
     </div>

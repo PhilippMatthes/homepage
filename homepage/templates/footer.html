@@ -1,33 +1,38 @@
-<div class="container px-3">
-  <small>To be continued... 😜</small>
-</div>
+{% load i18n %}
 
 <section id="footer" class="has-background-dark has-text-light py-6 px-3">
   <div class="container">
     <div class="columns">
       <div class="column is-3 has-text-grey">
-        <p><b>Responsible for this website</b></p>
-        <p>Philipp Matthes<p>
-        <p>Clara-Viebig-Straße 9</p>
-        <p>01159 Dresden</p>
-        <p>+49 176 42090978</p>
-        <p>mail@philippmatth.es</p>
+        {% trans 'legal_information' %}
       </div>
       <div class="column is-3 has-text-grey">
-        <p><b>Services</b></p>
-        <p><a class="has-text-grey" href="/#apps">Ubiquitous Applications</a></p>
-        <p><a class="has-text-grey" href="/#cloud">Cloud Computing</a></p>
-        <p><a class="has-text-grey" href="/#ml">Machine Learning</a></p>
+        <p><b>{% trans 'services' %}</b></p>
+        <p><a class="has-text-grey" href="/#apps">
+          {% trans 'ubiquitous_applications' %}
+        </a></p>
+        <p><a class="has-text-grey" href="/#cloud">
+          {% trans 'cloud_computing' %}
+        </a></p>
+        <p><a class="has-text-grey" href="/#ml">
+          {% trans 'machine_learning' %}
+        </a></p>
       </div>
       <div class="column is-3 has-text-grey">
-        <p><b>Weblinks</b></p>
-        <p><a class="has-text-grey" href="https://github.com/PhilippMatthes" target="_blank"><i class="fab fa-github mr-2"></i> GitHub Profile</a></p>
-        <p><a class="has-text-grey" href="https://xn--53hy230o.ws/" target="_blank"><i class="fas fa-quote-right mr-2"></i> Blog on ☕💻.ws</a></p>
-        <p><a class="has-text-grey" href="https://twitter.com/snrmtths" target="_blank"><i class="fab fa-twitter mr-2"></i> Twitter Profile</a></p>
+        <p><b>{% trans 'weblinks' %}</b></p>
+        <p><a class="has-text-grey" href="https://github.com/PhilippMatthes" target="_blank">
+          <i class="fab fa-github mr-2"></i> {% trans 'github_profile' %}
+        </a></p>
+        <p><a class="has-text-grey" href="https://xn--53hy230o.ws/" target="_blank">
+          <i class="fas fa-quote-right mr-2"></i> {% trans 'blog_on_ccws' %}
+        </a></p>
+        <p><a class="has-text-grey" href="https://twitter.com/snrmtths" target="_blank">
+          <i class="fab fa-twitter mr-2"></i> {% trans 'twitter_profile' %}
+        </a></p>
       </div>
       <div class="column is-3">
-        <p>Proudly made with ❤️ and without cookies by Philipp Matthes.</p>
-        <p><a class="has-text-grey" href="https://github.com/PhilippMatthes/homepage" target="_blank">Contribute to this Website</a></p>
+        <p>{% trans 'made_with_love' %}</p>
+        <p><a class="has-text-grey" href="https://github.com/PhilippMatthes/homepage" target="_blank">{% trans 'contribute' %}</a></p>
       </div>
     </div>
   </div>
