@@ -147,10 +147,10 @@
   border-radius: 24rem;
 
   transform: scale(1);
-  animation: pulse 4s infinite;
+  animation: light-pulse 4s infinite;
 }
 
-@keyframes pulse {
+@keyframes light-pulse {
 	0% {
 		box-shadow: 0 0 0 0 #0072ff, 0 0 0 0 #00c6ff;
 	}
@@ -164,8 +164,27 @@
 	}
 }
 
+@keyframes dark-pulse {
+	0% {
+		box-shadow: 0 0 0 0 #0072ff, 0 0 0 0 #00c6ff;
+	}
+
+	50% {
+		box-shadow: 0 0 0 8rem rgba(255, 255, 255, 0.01), 0 0 0 0.5rem rgba(255, 255, 255, 0);
+	}
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+	}
+}
+
 @media (prefers-color-scheme: dark) {
   #fullstack-image {
     background-image: url('/static/img/tech-dark.webp');
+  }
+
+  #fullstack-image::before {
+    background: #1d1d1d;
+    animation: dark-pulse 4s infinite;
   }
 }
