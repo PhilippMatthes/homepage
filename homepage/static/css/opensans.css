@@ -82,3 +82,32 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   font-display: swap;
 }
+
+html *:not(i) {
+  font-family: "Open Sans" !important;
+}
+
+html {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+h1 {
+  font-size: 6rem;
+  font-weight: 700;
+  line-height: 22.4px;
+}
+
+h3 {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 15.4px;
+}
+
+blockquote {
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 30px;
+}
+
