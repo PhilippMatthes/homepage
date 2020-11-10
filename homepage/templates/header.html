@@ -9,10 +9,14 @@
           <div id="profile-icon-webgl"
                style="display: none;"></div>
           <img id="profile-icon-preview"
+               alt="Profile Icon Preview"
                width="512"
                height="512"
                class="is-rounded" style="display: block;"
                src="{% static 'img/ausschnitt.webp' %}"
+               srcset="{% static 'img/ausschnitt-768.webp' %} 768w,
+                       {% static 'img/ausschnitt-512.webp' %} 512w"
+               sizes="100vw"
                loading="lazy">
         </figure>
         <h1 class="title colorful-text py-5">

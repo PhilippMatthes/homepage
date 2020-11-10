@@ -68,8 +68,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         function onMouseMove(e) {
             var rect = element.getBoundingClientRect();
-            var x = Math.max(-300, Math.min(300, e.clientX - rect.left));
-            var y = Math.max(-300, Math.min(300, e.clientY - rect.top));
+            var x = Math.max(-500, Math.min(500, e.clientX - rect.left));
+            var y = Math.max(-500, Math.min(500, e.clientY - rect.top));
             shaderMaterial.uniforms.mouseX.value = -x / 15000;
             shaderMaterial.uniforms.mouseY.value = y / 15000;
             element.style.transform = `rotate3d(0, 1, 1, ${x / 50}deg)`;

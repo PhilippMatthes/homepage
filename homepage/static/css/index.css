@@ -127,7 +127,7 @@
   max-height: 100vw;
   width: 48rem;
   max-width: 100%;
-  background-image: url('/static/img/tech-light.webp');
+  background-image: url('/static/img/tech-light-1000.webp');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -180,7 +180,7 @@
 
 @media (prefers-color-scheme: dark) {
   #fullstack-image {
-    background-image: url('/static/img/tech-dark.webp');
+    background-image: url('/static/img/tech-dark-1000.webp');
   }
 
   #fullstack-image::before {

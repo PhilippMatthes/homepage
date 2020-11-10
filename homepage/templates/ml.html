@@ -20,7 +20,12 @@
            width="1920"
            height="1280"
            alt="3dify-presentation"
-           src="{% static 'img/3dify-front.webp' %}"
+           src="{% static 'img/3dify.webp' %}"
+           srcset="{% static 'img/3dify-1920.webp' %} 1920w,
+                   {% static 'img/3dify-1400.webp' %} 1400w,
+                   {% static 'img/3dify-1000.webp' %} 1000w,
+                   {% static 'img/3dify-600.webp' %} 600w"
+           sizes="100vw"
            loading="lazy">
       <div id="ml-presentation-text" class="notification">
         <h1 class="title">

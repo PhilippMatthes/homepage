@@ -2,6 +2,7 @@
   --gradient: linear-gradient(45deg, #00c6ff, #0072ff);
   --lightblue: #00c6ff;
   --darkblue: #0072ff;
+  --verydarkblue: #4834d4; /* very dark blue for better accessibility */
   --dark: #0d0d0d;
   --light: #fafafa;
 }
@@ -12,10 +13,21 @@ body {
 
 a {
   text-decoration: none !important;
+  color: var(--verydarkblue);
 }
 
 .notification a:not(.button):not(.dropdown-item) {
-  color: var(--darkblue);
+  color: var(--verydarkblue);
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: var(--lightblue);
+  }
+
+  .notification a:not(.button):not(.dropdown-item) {
+    color: var(--lightblue);
+  }
 }
 
 html {
