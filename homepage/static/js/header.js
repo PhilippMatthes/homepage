@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         script.setAttribute('src', '/static/vendor/js/three.min.js');
         script.onload = setup;
         document.body.appendChild(script);
+        threeIsLoaded = true;
     }
 
     loadThreeAndSetupIfNeeded();
