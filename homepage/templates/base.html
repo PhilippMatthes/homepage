@@ -68,25 +68,50 @@
           href="{% static 'img/favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
 
-    <link rel="prefetch" href="//fonts.googleapis.com/css?family=Open+Sans">
-    <link rel="stylesheet"
-          type="text/css"
-          href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="preload"
+          href="{% static '/css/opensans.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static 'css/opensans.css' %}" rel="stylesheet">
+    </noscript>
 
-    <link rel="prefetch" href="{% static 'vendor/css/bulma.min.css' %}">
-    <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
+    <link rel="preload"
+          href="{% static 'vendor/css/bulma.min.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
+    </noscript>
 
-    <link rel="prefetch" href="{% static 'vendor/css/fa.min.css' %}">
-    <link href="{% static 'vendor/css/fa.min.css' %}" rel="stylesheet">
+    <link rel="preload"
+          href="{% static 'vendor/css/fa.min.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static 'vendor/css/fa.min.css' %}" rel="stylesheet">
+    </noscript>
 
-    <link rel="prefetch" href="{% static 'css/homepage.css' %}">
-    <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+    <link rel="preload"
+          href="{% static '/css/homepage.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+    </noscript>
 
-    <link rel="prefetch" href="{% static 'css/navigation.css' %}">
-    <link href="{% static 'css/navigation.css' %}" rel="stylesheet">
+    <link rel="preload"
+          href="{% static '/css/navigation.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static 'css/navigation.css' %}" rel="stylesheet">
+    </noscript>
 
-    <link rel="prefetch" href="{% static 'css/fontstack.css' %}">
-    <link href="{% static 'css/fontstack.css' %}" rel="stylesheet">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="{% static 'vendor/webfonts/fa-solid-900.woff2' %}"/>
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="{% static 'vendor/webfonts/fa-brands-400.woff2' %}"/>
 
     {% block head %}{% endblock %}
   </head>
@@ -97,9 +122,6 @@
     <main>
       {% block main %}{% endblock %}
     </main>
-
-    <link rel="prefetch" href="{% static 'vendor/js/three.min.js' %}">
-    <script src="{% static 'vendor/js/three.min.js' %}"></script>
 
     {% block extrabody %}{% endblock %}
   </body>

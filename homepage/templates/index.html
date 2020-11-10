@@ -3,8 +3,13 @@
 {% load static %}
 
 {% block head %}
-<link rel="prefetch" href="{% static 'css/index.css' %}">
-<link href="{% static 'css/index.css' %}" rel="stylesheet">
+<link rel="preload"
+      href="{% static 'css/index.css' %}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet';">
+<noscript>
+  <link href="{% static 'css/index.css' %}" rel="stylesheet">
+</noscript>
 {% endblock %}
 
 
@@ -22,8 +27,8 @@
 
 {% block extrabody %}
 <link rel="prefetch" href="{% static 'js/header.js' %}">
-<script src="{% static 'js/header.js' %}"></script>
+<script defer src="{% static 'js/header.js' %}"></script>
 
 <link rel="prefetch" href="{% static 'js/apps.js' %}">
-<script src="{% static 'js/apps.js' %}"></script>
+<script defer src="{% static 'js/apps.js' %}"></script>
 {% endblock %}
