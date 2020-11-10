@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   function frameURL(index) {
-    return `/static/img/peerbridge-animation/animation_${index}.webp`;
+    return `/static/img/peerbridge-animation/animation-1000_${index}.webp`;
   }
 
   function updateCurrentFrame() {

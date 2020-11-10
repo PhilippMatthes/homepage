@@ -61,10 +61,8 @@ TEMPLATES = [
         ],
         'OPTIONS': {
             'loaders': [
-                ('django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                ]),
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ],
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -75,6 +73,11 @@ TEMPLATES = [
         },
     },
 ]
+
+if not DEBUG:
+    TEMPLATES[0]['OPTIONS']['loaders'] = [
+        ('django.template.loaders.cached.Loader', TEMPLATES[0]['OPTIONS']['loaders']),
+    ]
 
 WSGI_APPLICATION = 'homepage.wsgi.application'
 
