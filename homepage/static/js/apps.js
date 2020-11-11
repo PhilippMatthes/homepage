@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+  var macbookContainer = document.getElementById('macbook-container');
+  var macbookCodeContainer = document.getElementById('macbook-code-container');
   var preview = document.getElementById('peerbridge-animation-preview');
   var canvas = document.getElementById('peerbridge-animation');
   var ctx = canvas.getContext('2d');
@@ -18,26 +20,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
     return `/static/img/peerbridge-animation/animation-1000_${index}.webp`;
   }
 
-  function updateCurrentFrame() {
+  function updateCurrentPeerbridgeFrame() {
     var rect = canvas.getBoundingClientRect();
-    var progress = (rect.bottom - window.innerHeight * 0.8) / window.innerHeight;
+    var progress = 1 - (rect.y + window.innerHeight) / (rect.height + window.innerHeight);
     if (progress > 1 || progress < 0) return;
-    var clippedProgress = 1 - Math.min(1, Math.max(0, progress));
     var numberOfFrames = 120 - 38;
-    var frameIndex = 38 + Math.round(clippedProgress * numberOfFrames);
+    var frameIndex = 38 + Math.round(progress * numberOfFrames);
     frame.src = frameURL(frameIndex);
+  }
+
+  function updateCodeScroll() {
+    var rect = macbookContainer.getBoundingClientRect();
+    var progress = 1 - (rect.y + window.innerHeight) / (rect.height + window.innerHeight);
+    if (progress > 1 || progress < 0) return;
+    macbookCodeContainer.scrollTop = progress * 1000;
   }
 
   function updateDeviceWidth() {
     if (document.documentElement.clientWidth < 1023) {
       canvas.style.display = 'none';
       preview.style.display = 'block';
-      window.removeEventListener('scroll', updateCurrentFrame, true);
+      window.removeEventListener('scroll', updateCurrentPeerbridgeFrame, true);
+
+      window.removeEventListener('scroll', updateCodeScroll, true);
     } else {
       preview.style.display = 'none';
       canvas.style.display = 'block';
-      updateCurrentFrame();
-      window.addEventListener('scroll', updateCurrentFrame, true);
+      updateCurrentPeerbridgeFrame();
+      window.addEventListener('scroll', updateCurrentPeerbridgeFrame, true);
+      updateCodeScroll();
+      window.addEventListener('scroll', updateCodeScroll, true);
     }
   }
 

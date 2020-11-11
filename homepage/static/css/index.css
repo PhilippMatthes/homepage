@@ -19,27 +19,53 @@
   height: 16rem;
 }
 
-#macbook {
-  height: 48rem;
+#macbook-container {
+  height: 52rem;
   position: relative;
 }
 
-#macbook:before {
-  content: '';
+#macbook {
   position: absolute;
   top: 2rem;
-  left: -6.5rem;
-  right: -6rem;
-  height: 100%;
-  background-image: url('/static/img/macbook-light.webp');
+  left: -13.2rem;
+  right: -13.5rem;
+  height: 110%;
+  background-image: url('/static/img/macbook-light-1920.webp');
   background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  #macbook {
+    background-image: url('/static/img/macbook-dark-1920.webp');
+  }
+}
+
+#macbook-code-container {
+  position: absolute;
+  top: 14.75rem;
+  left: 11.9rem;
+  right: 17.7rem;
+  bottom: 4.65rem;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+#macbook-code {
+  height: 1250px;
+  width: 100%;
+  background-image: url('/static/img/code-light-686.webp');
+  background-size: contain;
+  background-position: top;
   background-repeat: no-repeat;
 }
 
 @media (prefers-color-scheme: dark) {
-  #macbook:before {
-    background-image: url('/static/img/macbook-dark.webp');
+  #macbook-code {
+    height: 1262px;
+    background-image: url('/static/img/code-dark-686.webp');
   }
 }
 

@@ -3,7 +3,12 @@
 
 <section id="apps" class="px-3">
   <div class="container">
-    <div id="macbook" class="is-hidden-touch"></div>
+    <div id="macbook-container" class="is-hidden-touch">
+      <div id="macbook"></div>
+      <div id="macbook-code-container">
+        <div id="macbook-code"></div>
+      </div>
+    </div>
     <div class="hero is-small pt-6">
       <div class="hero-body px-0">
         <h1 class="title colorful-background text-clip pb-5">
@@ -29,8 +34,8 @@
     </div>
     <hr class="mt-2">
     <img id="peerbridge-animation-preview" alt="Peerbridge"
-         width="2225"
-         height="2541"
+         width="1920"
+         height="2193"
          src="{% static 'img/peerbridge-1920.webp' %}"
          srcset="{% static 'img/peerbridge-1920.webp' %} 1920w,
                  {% static 'img/peerbridge-1400.webp' %} 1400w,
