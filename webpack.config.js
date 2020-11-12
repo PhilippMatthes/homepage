@@ -4,8 +4,10 @@ const typeScriptConfig = {
   mode: 'production',
   devtool: 'source-map',
   entry: {
-    'header': path.resolve(__dirname, 'homepage/static/src/ts/header.ts'),
-    'apps': path.resolve(__dirname, 'homepage/static/src/ts/apps.ts'),
+    'index': [
+      path.resolve(__dirname, 'homepage/static/src/ts/header.ts'),
+      path.resolve(__dirname, 'homepage/static/src/ts/apps.ts'),
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'homepage/static/dist/js/'),
