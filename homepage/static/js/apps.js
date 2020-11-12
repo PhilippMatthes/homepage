@@ -20,11 +20,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
     return `/static/img/peerbridge-animation/animation-1000_${index}.webp`;
   }
 
+  var hasPreloadedFrames = false;
+
   function updateCurrentPeerbridgeFrame() {
     var rect = canvas.getBoundingClientRect();
     var progress = 1 - (rect.y + window.innerHeight) / (rect.height + window.innerHeight);
     if (progress > 1 || progress < 0) return;
     var numberOfFrames = 120 - 38;
+    if (!hasPreloadedFrames) {
+      for (var i = 38; i <= 120; i++) {
+        new Promise(r => {
+          var image = new Image();
+          image.onload = r;
+          image.onerror = r;
+          image.src = frameURL(i);
+        });
+      }
+      hasPreloadedFrames = true;
+    }
     var frameIndex = 38 + Math.round(progress * numberOfFrames);
     frame.src = frameURL(frameIndex);
   }
