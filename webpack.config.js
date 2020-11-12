@@ -1,39 +1,22 @@
 const path = require('path');
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-module.exports = {
+const typeScriptConfig = {
   mode: 'production',
-
   devtool: 'source-map',
-
   entry: {
-    'js/header.min.js':
-      path.resolve(__dirname, 'homepage/static/src/ts/header.ts'),
-    'js/apps.min.js':
-      path.resolve(__dirname, 'homepage/static/src/ts/apps.ts'),
-    'css/homepage.min.js':
-      path.resolve(__dirname, 'homepage/static/src/css/homepage.js'),
-    'css/index.min.js':
-      path.resolve(__dirname, 'homepage/static/src/css/index.js'),
-    'css/navigation.min.js':
-      path.resolve(__dirname, 'homepage/static/src/css/navigation.js'),
-    'css/opensans.min.js':
-      path.resolve(__dirname, 'homepage/static/src/css/opensans.js'),
+    'header': path.resolve(__dirname, 'homepage/static/src/ts/header.ts'),
+    'apps': path.resolve(__dirname, 'homepage/static/src/ts/apps.ts'),
   },
-
   output: {
-    path: path.resolve(__dirname, 'homepage/static/dist/'),
-    filename: '[name]'
+    path: path.resolve(__dirname, 'homepage/static/dist/js/'),
+    filename: '[name].min.js'
   },
-
   resolve: {
     extensions: [
       '.ts',
       '.js'
     ],
   },
-
   module: {
     rules: [
       {
@@ -41,6 +24,33 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+    ],
+  },
+};
+
+
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const sassConfig = {
+  mode: 'production',
+  devtool: 'source-map',
+
+  entry: {
+    'base': [
+      path.resolve(__dirname, 'homepage/static/src/css/homepage.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/navigation.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/opensans.scss'),
+    ],
+    'index':
+      path.resolve(__dirname, 'homepage/static/src/css/index.scss'),
+  },
+
+  output: {
+    path: path.resolve(__dirname, 'homepage/static/dist/css/'),
+    filename: '[name].js'
+  },
+
+  module: {
+    rules: [
       {
         test: /\.s[ac]ss$/,
         use: [
@@ -49,6 +59,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               url: false,
+              sourceMap: true,
             },
           },
           'sass-loader',
@@ -59,8 +70,14 @@ module.exports = {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css",
+      filename: "[name].min.css",
+      chunkFilename: "[id].min.css",
     }),
   ],
 };
+
+
+module.exports = [
+  typeScriptConfig,
+  sassConfig,
+]
