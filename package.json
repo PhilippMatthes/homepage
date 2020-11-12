@@ -1,0 +1,20 @@
+{
+  "name": "homepage",
+  "version": "1.0.0",
+  "description": "My personal homepage",
+  "repository": "git@github.com:PhilippMatthes/homepage.git",
+  "author": "PhilippMatthes <github@philippmatth.es>",
+  "private": false,
+  "devDependencies": {
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.0.5",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "three": "^0.122.0"
+  }
+}

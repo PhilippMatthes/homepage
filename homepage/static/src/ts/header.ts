@@ -1,18 +1,22 @@
+// THREE is loaded asynchronously, only on non-mobile devices
+// therefore, don't import the THREE modules and mock the THREE import
+declare var THREE: any
+
 document.addEventListener("DOMContentLoaded", function(event) {
     function setup() {
-        var preview = document.getElementById('profile-icon-preview');
-        var element = document.getElementById('profile-icon-webgl');
+        const preview = document.getElementById('profile-icon-preview');
+        const element = document.getElementById('profile-icon-webgl');
 
-        var camera = new THREE.PerspectiveCamera(
+        const camera = new THREE.PerspectiveCamera(
             45, element.clientWidth / element.clientHeight, 1, 1000
         );
         camera.position.z = 200;
 
-        var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(element.clientWidth, element.clientHeight);
         element.prepend(renderer.domElement);
 
-        var vertexShader = `
+        const vertexShader = `
             varying vec2 vUv;
             void main()	{
                 vUv = uv;
@@ -20,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
         `;
 
-        var fragmentShader = `
+        const fragmentShader = `
             #extension GL_OES_standard_derivatives : enable
             varying vec2 vUv;
             uniform float mouseX;
@@ -39,17 +43,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
         `;
 
-        var textureLoader = new THREE.TextureLoader()
+        const textureLoader = new THREE.TextureLoader()
             .load('/static/img/ausschnitt.webp', function() {
                 onWindowResize();
             });
 
-        var depthTextureLoader = new THREE.TextureLoader()
+        const depthTextureLoader = new THREE.TextureLoader()
             .load('/static/img/ausschnitt-depth.webp', function() {
                 onWindowResize();
             });
 
-        var shaderMaterial = new THREE.ShaderMaterial({
+        const shaderMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 mouseX: {value: 0},
                 mouseY: {value: 0},
@@ -61,15 +65,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
             fragmentShader
         });
 
-        var scene = new THREE.Scene();
-        var geometry = new THREE.PlaneBufferGeometry(1, 1);
-        var mesh = new THREE.Mesh(geometry, shaderMaterial);
+        const scene = new THREE.Scene();
+        const geometry = new THREE.PlaneBufferGeometry(1, 1);
+        const mesh = new THREE.Mesh(geometry, shaderMaterial);
         scene.add(mesh);
 
-        function onMouseMove(e) {
-            var rect = element.getBoundingClientRect();
-            var x = Math.max(-500, Math.min(500, e.clientX - rect.left));
-            var y = Math.max(-500, Math.min(500, e.clientY - rect.top));
+        function onMouseMove(e: MouseEvent) {
+            const rect = element.getBoundingClientRect();
+            const x = Math.max(-500, Math.min(500, e.clientX - rect.left));
+            const y = Math.max(-500, Math.min(500, e.clientY - rect.top));
             shaderMaterial.uniforms.mouseX.value = -x / 15000;
             shaderMaterial.uniforms.mouseY.value = y / 15000;
             element.style.transform = `rotate3d(0, 1, 1, ${x / 50}deg)`;
@@ -82,11 +86,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
             camera.aspect = element.clientWidth / element.clientHeight;
             camera.updateProjectionMatrix();
 
-            var vFOV = THREE.Math.degToRad(camera.fov);
-            var maxHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
-            var imageAspect = 600 / 600;
-            var height = maxHeight;
-            var width = maxHeight * imageAspect;
+            const vFOV = THREE.Math.degToRad(camera.fov);
+            const maxHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
+            const imageAspect = 600 / 600;
+            const height = maxHeight;
+            const width = maxHeight * imageAspect;
             mesh.scale.set(width, height, 1);
 
             renderer.setSize(element.clientWidth, element.clientHeight);
@@ -114,12 +118,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         window.addEventListener('resize', updateDeviceWidth, false);
     }
 
-    var threeIsLoaded = false;
+    let threeIsLoaded = false;
 
     function loadThreeAndSetupIfNeeded() {
         if (document.documentElement.clientWidth < 1023) return;
         if (threeIsLoaded) return;
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.setAttribute('src', '/static/vendor/js/three.min.js');
         script.onload = setup;
         document.body.appendChild(script);
