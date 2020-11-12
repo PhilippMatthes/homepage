@@ -4,11 +4,11 @@
 
 {% block head %}
 <link rel="preload"
-      href="{% static 'src/css/index.css' %}"
+      href="{% static 'dist/css/index.min.js.css' %}"
       as="style"
       onload="this.onload=null;this.rel='stylesheet';">
 <noscript>
-  <link href="{% static 'src/css/index.css' %}" rel="stylesheet">
+  <link href="{% static 'dist/css/index.min.js.css' %}" rel="stylesheet">
 </noscript>
 {% endblock %}
 
@@ -26,6 +26,9 @@
 {% endblock %}
 
 {% block extrabody %}
-<link rel="prefetch" href="{% static 'dist/js/index.bundle.js' %}">
-<script defer src="{% static 'dist/js/index.bundle.js' %}"></script>
+<link rel="prefetch" href="{% static 'dist/js/apps.min.js' %}">
+<script defer src="{% static 'dist/js/apps.min.js' %}"></script>
+
+<link rel="prefetch" href="{% static 'dist/js/header.min.js' %}">
+<script defer src="{% static 'dist/js/header.min.js' %}"></script>
 {% endblock %}

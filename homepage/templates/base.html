@@ -71,14 +71,6 @@
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
 
     <link rel="preload"
-          href="{% static '/src/css/opensans.css' %}"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet';">
-    <noscript>
-      <link href="{% static 'css/opensans.css' %}" rel="stylesheet">
-    </noscript>
-
-    <link rel="preload"
           href="{% static 'vendor/css/bulma.min.css' %}"
           as="style"
           onload="this.onload=null;this.rel='stylesheet';">
@@ -95,19 +87,27 @@
     </noscript>
 
     <link rel="preload"
-          href="{% static '/src/css/homepage.css' %}"
+          href="{% static '/dist/css/opensans.min.js.css' %}"
           as="style"
           onload="this.onload=null;this.rel='stylesheet';">
     <noscript>
-      <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+      <link href="{% static '/dist/css/opensans.min.js.css' %}" rel="stylesheet">
     </noscript>
 
     <link rel="preload"
-          href="{% static '/src/css/navigation.css' %}"
+          href="{% static '/dist/css/homepage.min.js.css' %}"
           as="style"
           onload="this.onload=null;this.rel='stylesheet';">
     <noscript>
-      <link href="{% static 'css/navigation.css' %}" rel="stylesheet">
+      <link href="{% static 'dist/css/homepage.min.js.css' %}" rel="stylesheet">
+    </noscript>
+
+    <link rel="preload"
+          href="{% static '/dist/css/navigation.min.js.css' %}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet';">
+    <noscript>
+      <link href="{% static '/dist/css/navigation.min.js.css' %}" rel="stylesheet">
     </noscript>
 
     <link rel="preload" as="font" type="font/woff2" crossorigin

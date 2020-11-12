@@ -6,6 +6,10 @@
   "author": "PhilippMatthes <github@philippmatth.es>",
   "private": false,
   "devDependencies": {
+    "css-loader": "^5.0.1",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.1.0",
+    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.11",
     "typescript": "^4.0.5",
     "webpack": "^5.4.0",
@@ -15,6 +19,6 @@
     "build": "webpack"
   },
   "dependencies": {
-    "three": "^0.122.0"
+    "mini-css-extract-plugin": "^1.3.0"
   }
 }
