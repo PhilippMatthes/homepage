@@ -1,24 +1,29 @@
 const path = require('path');
 
+const TerserPlugin = require("terser-webpack-plugin");
 const typeScriptConfig = {
   mode: 'production',
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
+
   entry: {
     'index': [
-      path.resolve(__dirname, 'homepage/static/src/ts/header.ts'),
+      path.resolve(__dirname, 'homepage/static/src/ts/parallax/index.ts'),
       path.resolve(__dirname, 'homepage/static/src/ts/apps.ts'),
     ],
   },
+
   output: {
     path: path.resolve(__dirname, 'homepage/static/dist/js/'),
     filename: '[name].min.js'
   },
+
   resolve: {
     extensions: [
       '.ts',
       '.js'
     ],
   },
+
   module: {
     rules: [
       {
