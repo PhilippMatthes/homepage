@@ -1,5 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
+
 
 const typeScriptConfig = {
   entry: {
@@ -16,6 +18,7 @@ const typeScriptConfig = {
 
   plugins: [
     new CleanWebpackPlugin(),
+    new CompressionPlugin(),
   ],
 
   resolve: {
