@@ -28,6 +28,15 @@ nav.navbar.primary, nav.navbar.primary a {
   background: transparent;
 }
 
+.navbar-menu .navbar-item {
+  transition: border-bottom 0.1s ease;
+}
+
+.navbar-menu .navbar-item.active {
+  border-bottom-style: solid;
+  border-bottom-color: var(--darkblue);
+}
+
 @media (prefers-color-scheme: dark) {
   .navbar-blur {
     background-color: rgba(10, 10, 10, 0.5);

@@ -38,7 +38,7 @@ import { ThreeLoader } from './loader'
 import { ParallaxImage } from './image'
 
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const threeLink = <HTMLLinkElement>document
         .querySelector('link[rel="parallax-three-js"]')
 
@@ -51,16 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateWindowDimensions = async () => {
         if (document.documentElement.clientWidth < 1023) {
             for (let parallaxImage of parallaxImages) {
-                console.log('Hiding parallax image...')
                 parallaxImage.hide()
             }
         } else {
-            console.log('Loading THREE.js...')
             await threeLoader.load()
             for (let parallaxImage of parallaxImages) {
-                console.log('Loading parallax image...')
                 await parallaxImage.load()
-                console.log('Showing parallax image...')
                 parallaxImage.show()
             }
         }

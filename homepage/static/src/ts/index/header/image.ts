@@ -68,7 +68,6 @@ export class ParallaxImage {
             }
             const textureLoader = new THREE.TextureLoader()
                 .load(src, () => {
-                    console.log(`Loaded image resource ${src}`)
                     resolve(textureLoader)
                 })
         })

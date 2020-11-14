@@ -95,6 +95,9 @@
       {% block main %}{% endblock %}
     </main>
 
+    <link rel="prefetch" href="{% static 'dist/js/base.min.js' %}">
+    <script defer src="{% static 'dist/js/base.min.js' %}"></script>
+
     {% block extrabody %}{% endblock %}
   </body>
 
