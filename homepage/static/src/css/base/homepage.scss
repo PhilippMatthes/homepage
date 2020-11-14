@@ -111,14 +111,11 @@ hr {
   -moz-text-fill-color: transparent;
 }
 
-
 .notification {
   background: var(--light);
   border-radius: 2rem;
-}
 
-@media (prefers-color-scheme: dark) {
-  .notification {
+  @media (prefers-color-scheme: dark) {
     background: #1d1d1d;
     color: var(--light);
   }
@@ -126,4 +123,8 @@ hr {
 
 #footer {
   margin-top: 6rem;
+}
+
+.scroll-container {
+  scroll-padding-top: 4rem;
 }

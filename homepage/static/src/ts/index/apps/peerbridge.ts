@@ -46,12 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             preview.style.display = 'block'
             hook.detach()
         } else {
-            const height = preview.clientHeight
-            const width = preview.clientWidth
             preview.style.display = 'none'
             canvas.style.display = 'block'
-            canvas.height = height
-            canvas.width = width
             hook.attach()
         }
     }

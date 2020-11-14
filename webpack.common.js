@@ -48,15 +48,17 @@ const typeScriptConfig = {
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const sassConfig = {
   entry: {
+    'vendor': [
+      path.resolve(__dirname, 'homepage/static/src/css/vendor/fontawesome.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/vendor/bulma.scss'),
+    ],
     'base': [
-      path.resolve(__dirname, 'homepage/static/src/css/fontawesome.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/bulma.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/homepage.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/navigation.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/opensans.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/base/homepage.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/base/navigation.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/base/opensans.scss'),
     ],
     'index':
-      path.resolve(__dirname, 'homepage/static/src/css/index.scss'),
+      path.resolve(__dirname, 'homepage/static/src/css/index/index.scss'),
   },
 
   output: {
