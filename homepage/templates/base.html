@@ -70,21 +70,8 @@
           href="{% static 'img/favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
 
-    <link rel="preload"
-          href="{% static 'dist/css/vendor.min.css' %}"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet';">
-    <noscript>
-      <link href="{% static 'dist/css/vendor.min.css' %}" rel="stylesheet">
-    </noscript>
-
-    <link rel="preload"
-          href="{% static 'dist/css/base.min.css' %}"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet';">
-    <noscript>
-      <link href="{% static 'dist/css/base.min.css' %}" rel="stylesheet">
-    </noscript>
+    <link href="{% static 'dist/css/vendor.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/css/base.min.css' %}" rel="stylesheet">
 
     <link rel="preload" as="font" type="font/woff2" crossorigin
           href="{% static 'vendor/webfonts/fa-solid-900.woff2' %}"/>

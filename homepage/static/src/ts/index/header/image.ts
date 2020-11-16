@@ -206,7 +206,7 @@ class ParallaxScene {
     }
 
     public show(): void {
-        this.canvas.style.display = 'block'
+        this.canvas.style.display = 'inline-block'
         this.image.style.display = 'none'
         if (this.canvas.parentNode === null) {
             this.image.parentNode.insertBefore(
@@ -232,7 +232,7 @@ class ParallaxScene {
     }
 
     public hide(): void {
-        this.image.style.display = 'block'
+        this.image.style.display = 'inline-block'
         this.canvas.style.display = 'none'
         window.removeEventListener(
             'resize',

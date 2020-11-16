@@ -3,13 +3,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="preload"
-      href="{% static 'dist/css/index.min.css' %}"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet';">
-<noscript>
-  <link href="{% static 'dist/css/index.min.css' %}" rel="stylesheet">
-</noscript>
+<link href="{% static 'dist/css/index.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 
