@@ -6,6 +6,7 @@
   --verydarkblue: #4834d4; /* very dark blue for better accessibility */
   --dark: #0d0d0d;
   --light: #fafafa;
+  --lynx-white: #f5f6fa;
 }
 
 body {
@@ -112,7 +113,7 @@ hr {
 }
 
 .notification {
-  background: var(--light);
+  background: var(--lynx-white);
   border-radius: 2rem;
 
   @media (prefers-color-scheme: dark) {

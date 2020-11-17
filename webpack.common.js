@@ -6,7 +6,6 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const typeScriptConfig = {
   entry: {
     'base': [
-      path.resolve(__dirname, 'homepage/static/src/ts/base/navbar.ts'),
       path.resolve(__dirname, 'homepage/static/src/ts/base/hook.ts'),
     ],
     'index': [

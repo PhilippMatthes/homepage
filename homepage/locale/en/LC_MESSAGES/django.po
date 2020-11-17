@@ -15,7 +15,7 @@ msgid "website_subject"
 msgstr "Homepage of Philipp Matthes."
 
 msgid "welcome_message"
-msgstr "Hi! 👋🏼"
+msgstr "Hi!"
 
 msgid "personal_description"
 msgstr "I am Philipp Matthes, self employed software developer and student of Computer Science at TU Dresden since 2016. As of now, I will graduate in fall 2021 with a Diploma. Since 2018, I am also employed as a tutor for the Software Engineering Lecture + Labs at TU Dresden. Between 2018 and fall 2020, I worked at TU Dresden on an E-Assessment-System for online programming courses named <a rel=\"noreferrer\" href=\"https://github.com/st-tu-dresden/inloop\" target=\"_blank\">INLOOP</a>."
