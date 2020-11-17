@@ -101,6 +101,12 @@ msgstr "Als die Hot Topics der Informatik lösen Künstliche Intelligenz und vor
 msgid "machine_learning_project_description"
 msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">Die 3Dify App</a></strong> nutzt durch Multi-Kamera-Arrays gestützte Disparitätsbestimmung in Fotos für die Erzeugung eines 3D Parallax-Effektes. Durch den technischen Kontext ist dies auf manchen Endgeräten nicht möglich - hier erzeugt die kontextadaptive App die benötigten Disparitätsinformationen durch monokulare Tiefeninterpretation über das neuronale Netzwerk <a rel=\"noreferrer\" href=\"https://developer.apple.com/machine-learning/models/\" target=\"_blank\">FCRN-DepthPrediction</a>. "
 
+msgid "machine_learning_project_adaption_title"
+msgstr "Adaptivität durch CoreML und Vision"
+
+msgid "machine_learning_project_adaption_description"
+msgstr "Der Einsatz von <strong>On-Device Machine Learning</strong> eröffnet neue Horizonte. In der 3Dify App wird beispielsweise eine Künstliche Intelligenz verwendet, welche Tiefeninformationen in Fotos herein interpretiert. Ein sehr gutes Beispiel dafür, wie KI-Spitzenforschung in mobilen Anwendungen eingesetzt werden kann, um einen konkreten Anwendungsfall zu lösen."
+
 msgid "fullstack"
 msgstr "Fullstack"
 

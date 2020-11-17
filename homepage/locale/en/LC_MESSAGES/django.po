@@ -101,6 +101,12 @@ msgstr "As the hot topics of Computer Science, Artificial Intelligence and espec
 msgid "machine_learning_project_description"
 msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">The 3Dify app</a></strong> uses multi-camera-array disparity computation on photos to generate depth maps and use them for a 3d parallax effect. The app is context-aware such that on devices without multi-camera-arrays, it creates the depth maps by monocular depth interpretation using the <a rel=\"noreferrer\" href=\"https://developer.apple.com/machine-learning/models/\" target=\"_blank\">FCRN-DepthPrediction</a> neural network and the new CoreML/Vision frameworks. In this way, even users without a device capable of disparity calculation can use the parallax effect."
 
+msgid "machine_learning_project_adaption_title"
+msgstr "Adaptivity through CoreML and Vision"
+
+msgid "machine_learning_project_adaption_description"
+msgstr "<strong>On-Device Machine Learning</strong> brings new possibilities. For example, the 3Dify app uses an Artificial Intelligence to interpret depth information into photos. This is a very good example for how current AI research can be used in mobile applications to solve a specific use case."
+
 msgid "fullstack"
 msgstr "Fullstack"
 

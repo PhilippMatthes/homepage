@@ -70,7 +70,13 @@
           href="{% static 'img/favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
 
+    <link rel="preload"
+          href="{% static 'dist/css/vendor.min.css' %}"
+          as="style">
     <link href="{% static 'dist/css/vendor.min.css' %}" rel="stylesheet">
+    <link rel="preload"
+          href="{% static 'dist/css/base.min.css' %}"
+          as="style">
     <link href="{% static 'dist/css/base.min.css' %}" rel="stylesheet">
 
     <link rel="preload" as="font" type="font/woff2" crossorigin
