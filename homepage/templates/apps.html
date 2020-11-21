@@ -1,6 +1,33 @@
 {% load static %}
 {% load i18n %}
 
+<style>
+#peerbridge-demo {
+  margin-top: -18rem;
+  height: 64rem;
+  background-image: url('/static/img/peerbridge-light.webp');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  #peerbridge-demo {
+    background-image: url('/static/img/peerbridge-dark.webp');
+  }
+}
+
+@media (max-width: 1023px) {
+  #peerbridge-demo {
+    margin-top: 0rem;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    background-size: cover;
+    background-position: -40rem 0;
+  }
+}
+</style>
+
 <section id="apps" class="px-3">
   <div class="container">
     <div id="macbook-container" class="is-hidden-touch">
@@ -21,9 +48,9 @@
     </h2>
   </div>
 
-  <div class="container" id="peerbridge-animation-container">
+  <div class="container" id="peerbridge-demo-container">
     <div class="columns">
-      <div id="featured-project-description" class="column is-6">
+      <div class="column is-6 featured-project-description">
         <h2 class="subtitle mt-6">
           {% trans 'featured_project' %}
         </h2>
@@ -33,18 +60,6 @@
       </div>
     </div>
     <hr class="mt-2">
-    <img id="peerbridge-animation-preview" alt="Peerbridge"
-         width="1920"
-         height="2193"
-         src="{% static 'img/peerbridge-1920.webp' %}"
-         srcset="{% static 'img/peerbridge-1920.webp' %} 1920w,
-                 {% static 'img/peerbridge-1400.webp' %} 1400w,
-                 {% static 'img/peerbridge-1000.webp' %} 1000w,
-                 {% static 'img/peerbridge-600.webp' %} 600w"
-         sizes="100vw"
-         style="display: block"
-         loading="lazy">
-    <canvas width="1920" height="2193" id="peerbridge-animation"
-            style="display: none"></canvas>
+    <div id="peerbridge-demo"></div>
   </div>
 </section>

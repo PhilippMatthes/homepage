@@ -80,30 +80,33 @@ abstract class Hook {
      * Update the hook based on the current element position
      * and dispatch the onEnter or the onLeave event accordingly.
      */
-    private updatePosition(): void {
-        const newProgress = this.calculateProgress()
-        if (this.progress === undefined) {
+    private async updatePosition(): Promise<void> {
+        return new Promise(resolve => {
+            const newProgress = this.calculateProgress()
+            if (this.progress === undefined) {
+                if (newProgress.isInside()) {
+                    // The progress is set initially and
+                    // the element is inside the viewport
+                    this.onEnter()
+                }
+            } else {
+                if (this.progress!.isInside() && !newProgress.isInside()) {
+                    // The progress did change and the element
+                    // left the viewport
+                    this.onLeave()
+                }
+                if (!this.progress!.isInside() && newProgress.isInside()) {
+                    // The progress did change and the element
+                    // entered the viewport
+                    this.onEnter()
+                }
+            }
             if (newProgress.isInside()) {
-                // The progress is set initially and
-                // the element is inside the viewport
-                this.onEnter()
+                this.onProgressChangeInside(newProgress)
             }
-        } else {
-            if (this.progress!.isInside() && !newProgress.isInside()) {
-                // The progress did change and the element
-                // left the viewport
-                this.onLeave()
-            }
-            if (!this.progress!.isInside() && newProgress.isInside()) {
-                // The progress did change and the element
-                // entered the viewport
-                this.onEnter()
-            }
-        }
-        if (newProgress.isInside()) {
-            this.onProgressChangeInside(newProgress)
-        }
-        this.progress = newProgress
+            this.progress = newProgress
+            resolve()
+        })
     }
 
     /**

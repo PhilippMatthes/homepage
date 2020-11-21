@@ -1,6 +1,6 @@
 
 :root {
-  --gradient: linear-gradient(45deg, #00c6ff, #0072ff);
+  --gradient: linear-gradient(45deg, #0072ff, #4834d4);
   --lightblue: #00c6ff;
   --darkblue: #0072ff;
   --verydarkblue: #4834d4; /* very dark blue for better accessibility */
@@ -100,20 +100,31 @@ hr {
 	}
 }
 
+
 .colorful-background {
-  background: var(--gradient);
+  background: linear-gradient(15deg, #0072ff,#4834d4);
 }
 
 .text-clip {
   background-clip: text;
   -webkit-background-clip: text;
-  -moz-background-clip: text;
   -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
+}
+
+@-moz-document url-prefix() {
+  .text-clip {
+    background: inherit;
+    background-attachment: inherit;
+    background-size: inherit;
+    background-clip: inherit;
+    -webkit-background-clip: inherit;
+    -webkit-text-fill-color: inherit;
+    color: #4834d4;
+  }
 }
 
 .notification {
-  background: var(--lynx-white);
+  background: var(--light);
   border-radius: 2rem;
 
   @media (prefers-color-scheme: dark) {

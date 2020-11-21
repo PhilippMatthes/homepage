@@ -3,54 +3,15 @@ declare var ParallaxHook: any
 
 document.addEventListener('DOMContentLoaded', async () => {
     const container = <HTMLDivElement>
-        document.getElementById('peerbridge-animation-container')
-    const preview = <HTMLImageElement>
-        document.getElementById('peerbridge-animation-preview')
-    const canvas = <HTMLCanvasElement>
-        document.getElementById('peerbridge-animation')
-    const context = canvas.getContext('2d');
-
-    const frame = new Image()
-    frame.onload = () => {
-        context.clearRect(0, 0, canvas.width, canvas.height)
-        context.drawImage(
-            frame,
-            0, 0, frame.width, frame.height,
-            0, 0, canvas.width, canvas.height
-        )
-    }
-
-    const frameURL = (index: number) => {
-        return `/static/img/peerbridge-animation/animation-1000_${index}.webp`
-    }
-
-    const hook = new ParallaxHook(
+        document.getElementById('peerbridge-demo-container')
+    const element = <HTMLDivElement>
+        document.getElementById('peerbridge-demo')
+    new ParallaxHook(
         container,
-        () => {
-
-        },
+        () => {},
         (progress: any) => {
-            const firstFrameIndex = 38
-            const lastFrameIndex = 120
-            const numberOfFrames = lastFrameIndex - firstFrameIndex
-            const frameIndex = firstFrameIndex +
-                Math.round(progress.value * numberOfFrames)
-            frame.src = frameURL(frameIndex);
+            element.style.transform = `translateY(${-10 + progress.value * 20}rem)`
         },
         () => {}
-    )
-
-    const updateDeviceWidth = () => {
-        if (document.documentElement.clientWidth < 1023) {
-            canvas.style.display = 'none'
-            preview.style.display = 'block'
-            hook.detach()
-        } else {
-            preview.style.display = 'none'
-            canvas.style.display = 'block'
-            hook.attach()
-        }
-    }
-    updateDeviceWidth()
-    window.addEventListener('resize', updateDeviceWidth, false)
+    ).attach()
 })
