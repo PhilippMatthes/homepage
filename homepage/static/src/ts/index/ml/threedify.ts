@@ -5,6 +5,8 @@ declare var ParallaxHook: any
 document.addEventListener('DOMContentLoaded', async () => {
     const container = <HTMLDivElement>
         document.getElementById('three-dify-tech-demo-container')
+    const backElement = <HTMLDivElement>
+        document.getElementById('three-dify-tech-back')
     const depthElement = <HTMLDivElement>
         document.getElementById('three-dify-tech-demo-depth')
     const photoElement = <HTMLDivElement>
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             depthElement.style.transform = `translateY(${-5 + progress.value * 10}rem)`
             photoElement.style.opacity = `${1 - opacity}`
             photoElement.style.transform = `translateY(${-5 + progress.value * 10}rem)`
+            backElement.style.transform = `translateY(${ -progress.value * 10 }rem)`
         },
         () => {}
     ).attach()

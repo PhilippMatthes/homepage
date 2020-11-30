@@ -55,7 +55,6 @@ const sassConfig = {
     'base': [
       path.resolve(__dirname, 'homepage/static/src/css/base/homepage.scss'),
       path.resolve(__dirname, 'homepage/static/src/css/base/navigation.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/base/opensans.scss'),
     ],
     'index':
       path.resolve(__dirname, 'homepage/static/src/css/index/index.scss'),

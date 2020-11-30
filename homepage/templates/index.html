@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load static %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block head %}
 <link href="{% static 'dist/css/index.min.css' %}" rel="stylesheet">
 {% endblock %}
@@ -15,6 +17,11 @@
   {% include 'ml.html' %}
   {% include 'cloud.html' %}
   {% include 'fullstack.html' %}
+  {% if LANGUAGE_CODE == 'de' %}
+  {% language 'de' %}
+  {% include 'research.html' %}
+  {% endlanguage %}
+  {% endif %}
   {% include 'footer.html' %}
 
 {% endblock %}

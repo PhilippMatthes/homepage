@@ -1,33 +1,6 @@
 {% load static %}
 {% load i18n %}
 
-<style>
-#peerbridge-demo {
-  margin-top: -18rem;
-  height: 64rem;
-  background-image: url('/static/img/peerbridge-light.webp');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-@media (prefers-color-scheme: dark) {
-  #peerbridge-demo {
-    background-image: url('/static/img/peerbridge-dark.webp');
-  }
-}
-
-@media (max-width: 1023px) {
-  #peerbridge-demo {
-    margin-top: 0rem;
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
-    background-size: cover;
-    background-position: -40rem 0;
-  }
-}
-</style>
-
 <section id="apps" class="px-3">
   <div class="container">
     <div id="macbook-container" class="is-hidden-touch">

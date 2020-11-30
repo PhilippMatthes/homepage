@@ -127,6 +127,31 @@
   }
 }
 
+#peerbridge-demo {
+  margin-top: -18rem;
+  height: 64rem;
+  background-image: url('/static/img/peerbridge-light.webp');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  #peerbridge-demo {
+    background-image: url('/static/img/peerbridge-dark.webp');
+  }
+}
+
+@media (max-width: 1023px) {
+  #peerbridge-demo {
+    margin-top: 0rem;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    background-size: cover;
+    background-position: -40rem 0;
+  }
+}
+
 #cloud-tile {
   position: relative;
 }
@@ -154,17 +179,6 @@
 #three-dify-tech-back-container {
   position: relative;
   height: 24rem;
-}
-
-#three-dify-tech-back-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
-  background-image: linear-gradient(0deg, var(--light), rgba(255, 255, 255, 0));
 }
 
 @media(prefers-color-scheme: dark) {
@@ -209,7 +223,9 @@
 }
 
 
-#three-dify-tech-demo-depth::after {
+#three-dify-tech-demo-depth::after,
+#three-dify-tech-demo-photo::after,
+#three-dify-tech-back::after {
   content: '';
   position: absolute;
   top: 0;
@@ -221,7 +237,9 @@
 }
 
 @media(prefers-color-scheme: dark) {
-  #three-dify-tech-demo-depth::after {
+  #three-dify-tech-demo-depth::after,
+  #three-dify-tech-demo-photo::after,
+  #three-dify-tech-back::after {
     background-image: linear-gradient(0deg, var(--dark), rgba(0, 0, 0, 0));
   }
 }

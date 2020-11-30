@@ -1,5 +1,7 @@
 {% load i18n %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 <div class="is-sticky-top has-text-weight-bold">
   <nav class="navbar secondary">
     <div class="navbar-blur"></div>
@@ -43,6 +45,16 @@
              href="#fullstack">
             {% trans 'fullstack' %}
           </a>
+          {% if LANGUAGE_CODE == 'de' %}
+          {% language 'de' %}
+          <a class="navbar-item hook"
+             data-hook-id="research"
+             data-hook-title="Forschung"
+             href="#research">
+            Forschung
+          </a>
+          {% endlanguage %}
+          {% endif %}
         </div>
       </div>
     </div>
