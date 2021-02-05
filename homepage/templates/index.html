@@ -13,15 +13,11 @@
 
   {% include 'header.html' %}
   {% include 'bottom-navigation.html' %}
+  {% include 'research.html' %}
   {% include 'apps.html' %}
   {% include 'ml.html' %}
   {% include 'cloud.html' %}
   {% include 'fullstack.html' %}
-  {% if LANGUAGE_CODE == 'de' %}
-  {% language 'de' %}
-  {% include 'research.html' %}
-  {% endlanguage %}
-  {% endif %}
   {% include 'footer.html' %}
 
 {% endblock %}

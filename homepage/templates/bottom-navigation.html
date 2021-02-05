@@ -22,6 +22,12 @@
       <div id="bottom-navigation" class="navbar-menu py-0">
         <div class="navbar-end">
           <a class="navbar-item hook"
+             data-hook-id="research"
+             data-hook-title="Research"
+             href="#research">
+            {% trans 'research' %}
+          </a>
+          <a class="navbar-item hook"
              data-hook-id="apps"
              data-hook-title="Apps"
              href="#apps">
@@ -45,16 +51,6 @@
              href="#fullstack">
             {% trans 'fullstack' %}
           </a>
-          {% if LANGUAGE_CODE == 'de' %}
-          {% language 'de' %}
-          <a class="navbar-item hook"
-             data-hook-id="research"
-             data-hook-title="Forschung"
-             href="#research">
-            Forschung
-          </a>
-          {% endlanguage %}
-          {% endif %}
         </div>
       </div>
     </div>

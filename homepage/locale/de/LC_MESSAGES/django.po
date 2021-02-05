@@ -29,8 +29,17 @@ msgstr "Expertise"
 msgid "top_navigation_brand"
 msgstr "Philipp Matthes"
 
+msgid "research"
+msgstr "Forschung"
+
 msgid "cv"
 msgstr "Lebenslauf"
+
+msgid "english"
+msgstr "Englisch"
+
+msgid "german"
+msgstr "Deutsch"
 
 msgid "github"
 msgstr "GitHub"

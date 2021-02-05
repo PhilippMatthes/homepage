@@ -32,6 +32,15 @@ msgstr "Philipp Matthes"
 msgid "cv"
 msgstr "CV"
 
+msgid "research"
+msgstr "Research"
+
+msgid "english"
+msgstr "English"
+
+msgid "german"
+msgstr "German"
+
 msgid "github"
 msgstr "GitHub"
 
