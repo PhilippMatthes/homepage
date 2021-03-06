@@ -64,6 +64,7 @@
   padding: 0.5rem;
   border-radius: 0.5rem;
   margin-bottom: 0.25rem;
+  background: white;
 
   img {
     height: 3rem;
@@ -83,6 +84,8 @@
   }
 
   @media (prefers-color-scheme: dark) {
+    background: #1d1d1d;
+
     div, strong, small {
       color: white;
     }
