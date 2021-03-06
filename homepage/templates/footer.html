@@ -12,7 +12,7 @@
   align-items: center;">
             {% if address.image %}
             <img alt="icon" src="{{ address.image.url }}"
-                 style="height: 1.5rem; width: 1.5rem">
+                 style="height: 1.5rem; width: 1.5rem; object-fit: contain">
             {% endif %}
             <p style="padding-left: 0.5rem">{{ address.blockchain }}: {{ address.address }}</p>
           </a>
