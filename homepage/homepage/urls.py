@@ -14,8 +14,9 @@ urlpatterns = [
     path('', homepage_views.IndexView.as_view(), name='index'),
 ]
 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(
         settings.STATIC_URL,
         view=cache_control(max_age=settings.CACHE_CONTROL_MAX_AGE)(serve),
