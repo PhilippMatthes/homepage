@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Ich bin Philipp Matthes, selbstständiger Softwareentwickler und Informatik-Student an der TU Dresden seit 2016, wo ich voraussichtlich im Herbst 2021 mein Diplom erhalte. Seit 2018 bin ich außerdem als Tutor für die Module Softwaretechnologie und Softwarepraktikum an der TU Dresden angestellt. Zwischen 2018 und Herbst 2020 entwickelte ich an der TU Dresden ein E-Assessment-System für Online-Programmierkurse namens <a rel=\"noreferrer\" href=\"https://github.com/st-tu-dresden/inloop\" target=\"_blank\">INLOOP</a> weiter."
+msgstr "Mein Name ist Philipp Matthes. Ich arbeite gerade an meiner Diplomarbeit im Bereich Machine-Learning auf Smartphones. Außerdem bin ich Tutor für Softwaretechnologie. Hier sind weitere Projekte, an denen ich gearbeitet habe:"
 
 msgid "services"
 msgstr "Dienstleistungen"
@@ -127,6 +127,9 @@ msgstr "Haben Sie eine Projektidee? Ich bin jederzeit interessiert an neuen gesc
 
 msgid "to_be_continued"
 msgstr "To be continued... 😜"
+
+msgid "blockchain_addresses"
+msgstr "Blockchain-Adressen"
 
 msgid "legal_information"
 msgstr "<p><b>Verantwortlich für diese Website</b></p> \

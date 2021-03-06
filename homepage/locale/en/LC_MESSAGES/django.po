@@ -9,7 +9,7 @@ msgid "website_title"
 msgstr "Philipp Matthes - Software Development, Ubiquitous Applications, Machine Learning and Cloud Computing."
 
 msgid "website_description"
-msgstr "Your partner for digital innovation, ubiquitous and adaptive computing, goal-driven project realization, artificial intelligence and more."
+msgstr "Your partner in digital innovation, ubiquitous and adaptive computing, goal-driven project realization, artificial intelligence and more."
 
 msgid "website_subject"
 msgstr "Homepage of Philipp Matthes."
@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "I am Philipp Matthes, self employed software developer and student of Computer Science at TU Dresden since 2016. As of now, I will graduate in fall 2021 with a Diploma. Since 2018, I am also employed as a tutor for the Software Engineering Lecture + Labs at TU Dresden. Between 2018 and fall 2020, I worked at TU Dresden on an E-Assessment-System for online programming courses named <a rel=\"noreferrer\" href=\"https://github.com/st-tu-dresden/inloop\" target=\"_blank\">INLOOP</a>."
+msgstr "My name is Philipp Matthes. I am currently working on my diploma thesis in the field of machine learning on smartphones. I am also a tutor for software technology. Here are other projects I've worked on:"
 
 msgid "services"
 msgstr "Services"
@@ -127,6 +127,9 @@ msgstr "Do you have something in mind? I am always interested in new business op
 
 msgid "to_be_continued"
 msgstr "To be continued... 😜"
+
+msgid "blockchain_addresses"
+msgstr "Blockchain Addresses"
 
 msgid "legal_information"
 msgstr "<p><b>Responsible for this website</b></p> \

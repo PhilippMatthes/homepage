@@ -2,7 +2,26 @@
 
 <section id="footer" class="has-background-dark has-text-light py-6 px-3">
   <div class="container">
-    <div class="columns">
+    <div class="columns is-multiline">
+      {% if addresses %}
+      <div class="column is-12">
+        <p class="pb-1"><b>{% trans 'blockchain_addresses' %}</b></p>
+        {% for address in addresses %}
+          {% if address.tracking_url %}
+          <a class="has-text-light" href="{{ address.tracking_url }}" style="display: inline-flex;
+  align-items: center;">
+            {% if address.image %}
+            <img alt="icon" src="{{ address.image.url }}"
+                 style="height: 1.5rem">
+            {% endif %}
+            <p style="padding-left: 0.5rem">{{ address.blockchain }}: {{ address.address }}</p>
+          </a>
+          {% else %}
+          <p>{{ address.blockchain }}: {{ address.address }}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
       <div class="column is-3">
         {% trans 'legal_information' %}
       </div>
@@ -31,7 +50,7 @@
         </a></p>
       </div>
       <div class="column is-3">
-        <p>{% trans 'made_with_love' %}</p>
+        <p><b>{% trans 'made_with_love' %}</b></p>
         <p><a class="has-text-light" rel="noreferrer" href="https://github.com/PhilippMatthes/homepage" target="_blank">{% trans 'contribute' %}</a></p>
       </div>
     </div>

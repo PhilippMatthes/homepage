@@ -57,6 +57,38 @@
   }
 }
 
+#header span.project-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.25rem;
+
+  img {
+    height: 3rem;
+    border-radius: 0.5rem;
+  }
+
+  a, div {
+    color: black;
+    display: inline-block;
+    padding-left: 0.5rem;
+    text-align: left;
+
+    strong {
+      margin-bottom: 0;
+      display: block;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    div, strong, small {
+      color: white;
+    }
+  }
+}
+
 #macbook-container {
   height: 52rem;
   position: relative;

@@ -15,11 +15,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        view=cache_control(max_age=settings.CACHE_CONTROL_MAX_AGE)(serve),
-        document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(
         settings.STATIC_URL,
         view=cache_control(max_age=settings.CACHE_CONTROL_MAX_AGE)(serve),
