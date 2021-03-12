@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "I am Philipp Matthes - computer scientist and <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">self made billionaire</a>. I am currently working on my diploma thesis in the field of machine learning on smartphones. I am also a tutor for software technology. Here are other projects I've worked on:"
+msgstr "I am Philipp Matthes - computer scientist and <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">self made PhilippCoin billionaire</a>. I am currently working on my diploma thesis in the field of machine learning on smartphones. I am also a tutor for software technology. Here are other projects I've worked on:"
 
 msgid "services"
 msgstr "Services"
