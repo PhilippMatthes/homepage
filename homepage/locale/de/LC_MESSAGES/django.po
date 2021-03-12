@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Mein Name ist Philipp Matthes. Ich arbeite gerade an meiner Diplomarbeit im Bereich Machine-Learning auf Smartphones. Außerdem bin ich Tutor für Softwaretechnologie. Hier sind weitere Projekte, an denen ich gearbeitet habe:"
+msgstr "Ich bin Philipp Matthes - Informatiker und <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made Milliardär</a>. Ich arbeite gerade an meiner Diplomarbeit im Bereich Machine-Learning auf Smartphones. Außerdem bin ich Tutor für Softwaretechnologie. Hier sind weitere Projekte, an denen ich gearbeitet habe:"
 
 msgid "services"
 msgstr "Dienstleistungen"
