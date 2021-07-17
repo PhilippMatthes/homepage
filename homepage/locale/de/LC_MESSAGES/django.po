@@ -60,10 +60,10 @@ msgid "featured_project"
 msgstr "Vorgestelltes Projekt"
 
 msgid "ubiquitous_applications"
-msgstr "Ubiquitous Applications"
+msgstr "Ubiquitäre Applikationen"
 
 msgid "ubiquitous_applications_description"
-msgstr "Ich liebe es, Apps zu erstellen. Ich habe bereits mehrere Apps entwickelt und distribuiert, auf Android und hauptsächlich iOS. Außerdem habe ich mich im Studium auf App-Entwicklung spezialisiert. Für mich zählt es nicht nur, dass eine App für ihre Anwendungsfälle gut entworfen ist, sondern auch eine bestmögliche Nutzererfahrung bietet. Ich erreiche dies durch eine strukturierte und domänenorientierte Denkweise, um viele mögliche Lösungen für einen Anwendungsfall einzubeziehen. So bin ich unter anderem mit Strategien wie der Integration von Kontextadaptivität und Mobile/Offline-First-Ansätzen vertraut. Außerdem halte ich mich stets auf dem Laufenden, was aktuelle Technologien und Systemupdates betrifft, und kenne die aktuellsten Frameworks wie SwiftUI, Metal, CoreML, Vision und viele weitere."
+msgstr "Brauchen Sie jemanden mit Know-How, der Ihre App-Idee realisiert? Dann lassen Sie uns Ihre Idee an den Start bringen. Als Allrounder vereine ich fachliche Kompetenzen aus dem nutzerorientierten UI/UX-Design und dem Motivation Engineering, sowie der softwaretechnischen Realisation und Team-Koordination. Kontaktieren Sie mich einfach ganz unverbindlich und wir packen das an."
 
 msgid "peerbridge_description"
 msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/peerbridge\" target=\"_blank\">Der Peerbridge Blockchain Messenger</a></strong> nutzt die neuesten SwiftUI-Features wie den <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/swiftui/lazyvstack\" target=\"_blank\">LazyVStack</a> oder das neue <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/cryptokit\" target=\"_blank\">CryptoKit</a> Framework. Der Messenger ist ein experimentelles Proof-of-Concept, um zu demonstrieren, wie eine verteilte Blockchain dazu genutzt werden kann, um ein öffentliches und dennoch vollständig anonymes Nachrichtenverteilsystem zu realisieren."
@@ -105,10 +105,10 @@ msgid "machine_learning"
 msgstr "Machine Learning"
 
 msgid "machine_learning_title"
-msgstr "Als die Hot Topics der Informatik lösen Künstliche Intelligenz und vor allem Machine Learning Probleme, die zuvor nicht zufriedenstellend gelöst werden konnten. Von der Datenanalyse über deren Strukturierung und Segmentierung, Klassifikation von Sensordaten bishin zur generativen Erzeugung von menschenähnlichen Stimmen - Künstliche Intelligenz ist ein mächtiges Werkzeug, um den Kontext und die Umgebung des Nutzers zu interpretieren."
+msgstr "Möchten Sie Nutzerverhalten klassifizieren, Produkte vorschlagen oder Trends vorhersagen? Das sind nur Beispiele, welche Anwendungsfälle ich für Sie durch meine Expertise im Bereich künstliche Intelligenz abdecken kann. Brauchen Sie KI direkt auf dem Smartphone? Damit kenne ich mich bestens aus."
 
 msgid "machine_learning_project_description"
-msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">Die 3Dify App</a></strong> nutzt durch Multi-Kamera-Arrays gestützte Disparitätsbestimmung in Fotos für die Erzeugung eines 3D Parallax-Effektes. Durch den technischen Kontext ist dies auf manchen Endgeräten nicht möglich - hier erzeugt die kontextadaptive App die benötigten Disparitätsinformationen durch monokulare Tiefeninterpretation über das neuronale Netzwerk <a rel=\"noreferrer\" href=\"https://developer.apple.com/machine-learning/models/\" target=\"_blank\">FCRN-DepthPrediction</a>. "
+msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">Die 3Dify App</a></strong> nutzt durch Multi-Kamera-Arrays gestützte Disparitätsbestimmung in Fotos für die Erzeugung eines 3D Parallax-Effektes. Durch den technischen Kontext ist dies auf manchen Endgeräten nicht möglich - hier erzeugt die kontextadaptive App die benötigten Disparitätsinformationen durch monokulare Tiefeninterpretation über eine neuronale Pipeline. "
 
 msgid "machine_learning_project_adaption_title"
 msgstr "Adaptivität durch CoreML und Vision"

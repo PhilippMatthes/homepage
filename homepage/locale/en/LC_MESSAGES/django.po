@@ -63,7 +63,7 @@ msgid "ubiquitous_applications"
 msgstr "Ubiquitous Applications"
 
 msgid "ubiquitous_applications_description"
-msgstr "I love to create apps. I worked on and distributed many apps, for Android and mostly iOS devices, and also academically focused myself on application development in my Computer Science studies. To me it not only matters that an app is well-designed to fit its use cases, but also that the user experience is top-notch. I achieve this by thinking structured and domain-oriented to include many possible solutions to a use case. I never stop learning about strategies such as <strong>engineering context-adaptive apps</strong> and driving <strong>offline + mobile first approaches</strong>. Likewise, I keep up-to-date with the current system-native improvements and am already experienced with frameworks such as <strong>SwiftUI</strong>, <strong>Metal</strong>, <strong>Core ML, Vision</strong> and many more."
+msgstr "Do you need someone with the know-how to realize your app idea? Let’s go. I am familiar with everything you need. User-oriented UI/UX-Design and motivation engineering, technical realization of the software, team coordination - I combine multiple disciplines to engineer the product you need. Contact me to get started."
 
 msgid "peerbridge_description"
 msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/peerbridge\" target=\"_blank\">The Peerbridge Blockchain Messenger</a></strong> employs new SwiftUI features such as the new <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/swiftui/lazyvstack\" target=\"_blank\">LazyVStack</a> or the new <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/cryptokit\" target=\"_blank\">CryptoKit</a> framework. The messenger is an experimental proof-of-concept to demonstrate how a distributed blockchain can be used to create a shared, fully-anonymous and confidential message distribution system."
@@ -105,10 +105,10 @@ msgid "machine_learning"
 msgstr "Machine Learning"
 
 msgid "machine_learning_title"
-msgstr "As the hot topics of Computer Science, Artificial Intelligence and especially Machine Learning solve problems that were not sufficiently solvable before. From data analysis through structuring or segmentation to the classification of sensor data and the generation of assistive, human-like voices, applying Artificial Intelligence correctly is a powerful tool to understand and interpret the context and environment of the user."
+msgstr "Do you want to classify user behavior, suggest products or predict trends? These are just some examples of what’s possible with expertise in the field of artificial intelligence. Do you need ai directly on your smartphone? I am your man."
 
 msgid "machine_learning_project_description"
-msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">The 3Dify app</a></strong> uses multi-camera-array disparity computation on photos to generate depth maps and use them for a 3d parallax effect. The app is context-aware such that on devices without multi-camera-arrays, it creates the depth maps by monocular depth interpretation using the <a rel=\"noreferrer\" href=\"https://developer.apple.com/machine-learning/models/\" target=\"_blank\">FCRN-DepthPrediction</a> neural network and the new CoreML/Vision frameworks. In this way, even users without a device capable of disparity calculation can use the parallax effect."
+msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">The 3Dify app</a></strong> uses multi-camera-array disparity computation on photos to generate depth maps and use them for a 3d parallax effect. The app is context-aware such that on devices without multi-camera-arrays, it creates the depth maps by monocular depth interpretation using a neural pipeline and the new CoreML/Vision frameworks. In this way, even users without a device capable of disparity calculation can use the parallax effect."
 
 msgid "machine_learning_project_adaption_title"
 msgstr "Adaptivity through CoreML and Vision"
