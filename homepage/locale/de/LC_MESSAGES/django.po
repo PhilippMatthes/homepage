@@ -74,32 +74,20 @@ msgstr "Cloud Computing"
 msgid "cloud_computing_title"
 msgstr "Die Entwicklung von ubiquitären Systemen wie Smartphone- oder IOT-Apps erfordert neuartige Lösungen, um Programmierung, Distribution und Datenfluss effizienter, skalierbarer und robuster zu machen."
 
-msgid "blockchain_and_consensus"
-msgstr "Blockchain und Konsensus"
+msgid "cloud_computing_1"
+msgstr "DevOps"
 
-msgid "blockchain_and_consensus_description"
-msgstr "Blockchain löst Probleme, bei denen die Realisation einer schreibbaren und verteilten Datenbank sowie deren Synchronisation zwischen mehreren nicht vertrauenswürdigen Netzwerkteilnehmern notwendig ist. Zum Beispiel nutzt unser experimenteller Messenger Peerbridge eine verteilte Blockchain, um Nachrichten zu speichern und zu verteilen."
+msgid "cloud_computing_2"
+msgstr "Containerisierung"
 
-msgid "continuous_everything_and_devops"
-msgstr "Continuous Everything und DevOps"
+msgid "cloud_computing_3"
+msgstr "Edge AI"
 
-msgid "continuous_everything_and_devops_description"
-msgstr "Cloud-Systeme können genutzt werden, um die Zeit zur Markteinführung eines Produktes signifikant zu reduzieren und gleichzeitig Validierungs- und Verifikationsaufwand auszulagern. Bestimmte Aufgaben, die sonst Zeit und Kraft in Anspruch nehmen, können so effizient in der Cloud ausgeführt werden. Bei der so genannten Continuous Integration wird Software in ein Cloudsystem geschickt und automatisch mithilfe von Tests und Codeanalysetools überprüft. Software, die das Cross-Feedback und die Qualitätsziele erfüllt, kann anschließend automatisiert publiziert, installiert und distribuiert werden. Bei iOS-Software zum Beispiel kann <a rel=\"noreferrer\" href=\"https://fastlane.tools/\" target=\"_blank\">Fastlane</a> genutzt werden, um Apps automatisch zu signieren und zu archivieren, so dass das fertige Archiv ohne manuellen Aufwand direkt an <a rel=\"noreferrer\" href=\"https://appstoreconnect.apple.com/\" target=\"_blank\">Apple App Store Connect</a> und <a rel=\"noreferrer\" href=\"https://testflight.apple.com/\" target=\"_blank\">TestFlight</a> übermittelt wird. Mein Blog <a rel=\"noreferrer\" href=\"https://xn--53hy230o.ws/\" target=\"_blank\">☕💻.ws</a> nutzt beispielsweise auch einen Continous Publishing Workflow, um die Blogeinträge mit einem GitHub-Repository zu synchronisieren. So wird das Änderungsmanagement vereinfacht und systematisch automatisiert."
-
-msgid "service_oriented_architecture"
-msgstr "Serviceorientierte Architektur"
-
-msgid "service_oriented_architecture_description"
-msgstr "Während monolithische Systeme normalerweise sehr gut für kleinere Applikationen geeignet sind, erfordern Cloud-Systeme mit sehr hohen Serverlasten und größeren Entwicklerteams andere Ansätze, um die Skalierbarkeit der Entwicklung und der Anwendung selbst zu gewährleisten. Gegebenenfalls kann es eine gute Lösung sein, monolithische Applikationen systematisch in kleinere Teile mit eigenen Verantwortlichkeiten zu separieren. Dies erfordert neue Softwareentwicklungsmuster und Paradigmen. So können Teams signifikant von deren Unabhängigkeit zwischeneinander und der Notwendigkeit von klaren interoperablen Schnittstellen profitieren. Die Applikation selbst kann in ihrer separierten Form besser unter einer Lastverteilung skalieren. Als ein radikalerer Ansatz kann eine Applikation auch in so genannten Microservices organisiert werden, welche jeweils nur eine sehr reduzierte Gruppe an Verantwortlichkeiten tragen, um noch besser zu skalieren, durch die individuelle Replikation der notwendigen Funktionalitäten. Zum Beispiel nutzt unsere experimentelle App <a rel=\"noreferrer\" href=\"https://ordered.online\">ordered.online</a> Microservices, die hierbei durch Docker containerisiert und mit Docker Swarm repliziert werden."
-
-msgid "distributed_systems"
-msgstr "Verteilte Systeme"
-
-msgid "distributed_systems_description"
-msgstr "Für viele Anwendungsfälle ist es möglicherweise notwendig, eine Applikation zu dezentralisieren, in Form eines verteilten Systems. Verteilte Systeme erfordern eine ausreichende Informiertheit über deren Grundprinzipien, da viele normale Softwarepatterns aus dem klassischen Client-Server-Modell nicht mehr angewendet werden können. Unser <a rel=\"noreferrer\" href=\"https://github.com/peerbridge\">Peerbridge Messenger</a> ist konzipiert als ein verteiltes System und nutzt das Prinzip von verteilten Hashtabellen (DHTs), um Nutzer miteinander zu verbinden."
+msgid "cloud_computing_4"
+msgstr "Micro Services"
 
 msgid "cloud_computing_subtitle"
-msgstr "In einer kontinuierlich fortschreitenden technischen Umgebung sind nicht nur Portierbarkeit und Nachhaltigkeit zunehmend wichtig, sondern auch eine (soziale) Verbundenheit. Die gezeigten Prinzipien aus dem Cloud Computing sind wichtig, um den Produktwert zu steigern, während Entwicklungs- und Supportaufwände reduziert werden."
+msgstr "In einer kontinuierlich fortschreitenden technischen Umgebung sind nicht nur Portierbarkeit und Nachhaltigkeit zunehmend wichtig, sondern auch eine (soziale) Verbundenheit. Ziel ist es, den Produktwert zu steigern, während Entwicklungs- und Supportaufwände reduziert werden."
 
 msgid "machine_learning"
 msgstr "Machine Learning"

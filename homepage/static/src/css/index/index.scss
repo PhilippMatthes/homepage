@@ -90,6 +90,11 @@
   img {
     height: 3rem;
     border-radius: 0.5rem;
+
+    @media (max-width: 900px) {
+      height: 2rem;
+      border-radius: 0.3rem;
+    }
   }
 
   a, div {
@@ -102,6 +107,14 @@
       margin-bottom: 0;
       display: block;
     }
+  }
+
+  @media (max-width: 900px) {
+    min-height: 1rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.1rem;
+    font-size: 0.75rem;
   }
 
   @media (prefers-color-scheme: dark) {

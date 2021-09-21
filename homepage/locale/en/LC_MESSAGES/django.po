@@ -74,32 +74,20 @@ msgstr "Cloud Computing"
 msgid "cloud_computing_title"
 msgstr "Engineering ubiquitous systems, like mobile or IOT applications, requires solutions to make development, distribution and data flow more efficient, scalable and robust."
 
-msgid "blockchain_and_consensus"
-msgstr "Blockchain and Consensus"
+msgid "cloud_computing_1"
+msgstr "DevOps"
 
-msgid "blockchain_and_consensus_description"
-msgstr "Blockchain solves problems where it is of interest to share and synchronize a writable database across many untrustworthy hosts, not only in the field of cryptocurrency. For Example, we use a Blockchain for our experimental proof-of-concept Messenger Peerbridge to store and distribute messages."
+msgid "cloud_computing_2"
+msgstr "Containerization"
 
-msgid "continuous_everything_and_devops"
-msgstr "Continuous Everything and DevOps"
+msgid "cloud_computing_3"
+msgstr "Edge AI"
 
-msgid "continuous_everything_and_devops_description"
-msgstr "Cloud systems can be used to significantly reduce time to market while opening new possibilities for software validation and verification workflows. Jobs that would take time and effort to perform can be efficiently performed in the cloud. In Continuous Integration, the software is committed to a cloud system and automatically validated with tests and code analysis tools. Software that passes cross-feedback and quality gates can be continuously published, deployed and distributed. For example, <a rel=\"noreferrer\" href=\"https://fastlane.tools/\" target=\"_blank\">Fastlane</a> can be used on iOS to directly build, sign and distribute application archives to <a rel=\"noreferrer\" href=\"https://appstoreconnect.apple.com/\" target=\"_blank\">Apple App Store Connect</a> and <a rel=\"noreferrer\" href=\"https://testflight.apple.com/\" target=\"_blank\">TestFlight</a>. My blog <a rel=\"noreferrer\" href=\"https://xn--53hy230o.ws/\" target=\"_blank\">☕💻.ws</a> uses a continuous publishing workflow to synchronize its blog entries with a content repository. This makes change management very straightforward, without any needs to manually deploy and update the blog."
-
-msgid "service_oriented_architecture"
-msgstr "Service Oriented Architecture"
-
-msgid "service_oriented_architecture_description"
-msgstr "While monolithic systems are perfect to fit smaller applications with only a few contributors, systems with very high server loads and many development teams usually directly depend on their scalability, load-wise and development-wise. If applicable, it can be a good solution to split a monolithic system into smaller individual systems that each cover a unique set of capabilities. This requires new software development paradigms and patterns. Teams may then be able to significantly profit from their independent development cycles and the clear interfaces they have to offer in terms of interoperability. The application itself scales better under, for example, an elastic load balancer which distributes load to the individual services. As an even more radical approach, Microservices can be tailored to encapsulate only a tiny set of functionalitites. Our experimental app <a rel=\"noreferrer\" href=\"https://ordered.online\">ordered.online</a> uses such a principle together with Docker Swarm based containerization."
-
-msgid "distributed_systems"
-msgstr "Distributed Systems"
-
-msgid "distributed_systems_description"
-msgstr "For many use cases it may be necessary to decentralize an application in the form of a distributed system. Distributed systems require a sufficient informedness about their basic principles, since many regular software patterns found in the classical client-server concept can no longer be used. Our <a rel=\"noreferrer\" href=\"https://github.com/peerbridge\">Peerbridge Messenger</a> is a distributed system and uses the concept of distributed hash tables to connect clients."
+msgid "cloud_computing_4"
+msgstr "Micro Services"
 
 msgid "cloud_computing_subtitle"
-msgstr "In a continuously evolving technological environment, not only portability and durability is increasingly important, but also (social) connectedness. The shown principles of Cloud Computing are important to maximize the product value while minimizing development and support expenses."
+msgstr "In a continuously evolving technological environment, not only portability and durability is increasingly important, but also (social) connectedness. The goal of Cloud Computing is to maximize the product value while minimizing development and support expenses."
 
 msgid "machine_learning"
 msgstr "Machine Learning"

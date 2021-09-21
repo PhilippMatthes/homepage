@@ -91,6 +91,24 @@ hr {
   .title {
     font-size: 1.5rem;
   }
+
+  .hero .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero .title {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
 }
 
 @keyframes gradient {

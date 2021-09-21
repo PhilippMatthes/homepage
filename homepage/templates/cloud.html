@@ -13,43 +13,14 @@
     <h1 class="title pt-3">
       {% trans 'cloud_computing_title' %}
     </h1>
-    <div id="cloud-tile" class="tile is-ancestor is-vertical my-6">
-      <div class="tile">
-        <div class="tile is-parent">
-            <div class="tile is-child notification">
-                <p class="title">{% trans 'blockchain_and_consensus' %}</p>
-                <p>
-                  {% trans 'blockchain_and_consensus_description' %}
-                </p>
-            </div>
-        </div>
-        <div class="tile is-8 is-parent">
-            <div class="tile is-child notification">
-                <p class="title">{% trans 'continuous_everything_and_devops' %}</p>
-                <p>
-                  {% trans 'continuous_everything_and_devops_description' %}
-                </p>
-            </div>
-        </div>
-      </div>
-      <div class="tile">
-        <div class="tile is-8 is-parent">
-            <div class="tile is-child notification">
-                <p class="title">{% trans 'service_oriented_architecture' %}</p>
-                <p>
-                  {% trans 'service_oriented_architecture_description' %}
-                </p>
-            </div>
-        </div>
-        <div class="tile is-parent">
-            <div class="tile is-child notification">
-                <p class="title">{% trans 'distributed_systems' %}</p>
-                <p>
-                  {% trans 'distributed_systems_description' %}
-                </p>
-            </div>
-        </div>
-      </div>
+    <div id="termynal" class="mt-6 mb-6" data-termynal>
+        <span data-ty="input">ls cloud-computing-tech</span>
+        <span data-ty data-ty-prompt=">>>">Docker</span>
+        <span data-ty data-ty-prompt=">>>">Microservices</span>
+        <span data-ty data-ty-prompt=">>>">Blockchain and Consensus</span>
+        <span data-ty data-ty-prompt=">>>">Distributed Systems</span>
+        <span data-ty data-ty-prompt=">>>">Edge AI and Federated Learning</span>
+        <span data-ty>Display more results? (y/n)</span>
     </div>
     <h2 class="subtitle mt-6">
       {% trans 'cloud_computing_subtitle' %}
@@ -57,3 +28,5 @@
     <hr class="mt-2">
   </div>
 </section>
+
+<script src="{% static 'vendor/js/termynal.js' %}" data-termynal-container="#termynal"></script>
