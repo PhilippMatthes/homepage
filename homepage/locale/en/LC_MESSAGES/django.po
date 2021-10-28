@@ -6,7 +6,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "website_title"
-msgstr "Philipp Matthes - Software Development, Ubiquitous Applications, Machine Learning and Cloud Computing."
+msgstr "Dipl.-Inf. Philipp Matthes - Software Development, Ubiquitous Applications, Machine Learning and Cloud Computing."
 
 msgid "website_description"
 msgstr "Your partner in digital innovation, ubiquitous and adaptive computing, goal-driven project realization, artificial intelligence and more."
@@ -27,7 +27,7 @@ msgid "bottom_navigation_brand"
 msgstr "Expertise"
 
 msgid "top_navigation_brand"
-msgstr "Philipp Matthes"
+msgstr "Dipl.-Inf. Philipp Matthes"
 
 msgid "cv"
 msgstr "CV"

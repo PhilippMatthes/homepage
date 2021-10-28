@@ -6,7 +6,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "website_title"
-msgstr "Philipp Matthes - Softwareentwicklung, Ubiquitous Applications, Machine Learning und Cloud Computing."
+msgstr "Dipl.-Inf. Philipp Matthes - Softwareentwicklung, Ubiquitous Applications, Machine Learning und Cloud Computing."
 
 msgid "website_description"
 msgstr "Ihr Ansprechpartner für digitale Innovation, ubiquitäre und adaptive Software-Anwendungen, zielorientierte IT-Projektrealisierung, künstliche Intelligenz, Cloud Computing und mehr."
@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Ich bin Philipp Matthes - Informatiker und <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made PhilippCoin-Milliardär</a>. Ab Dezember 2021 promoviere ich als wissenschaftlicher Mitarbeiter in einem Forschungsprojekt an der TU Dresden. Während meines Diplomstudiums war ich für mehrere Jahre Tutor in den Lehrveranstaltungen Softwaretechnologie und Softwarepraktikum. Seit 2016 betreue und realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
+msgstr "Ich bin Philipp Matthes - Diplom-Informatiker und <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made PhilippCoin-Milliardär</a>. Ab Dezember 2021 promoviere ich als wissenschaftlicher Mitarbeiter in einem Forschungsprojekt an der TU Dresden. Während meines Diplomstudiums war ich für mehrere Jahre Tutor in den Lehrveranstaltungen Softwaretechnologie und Softwarepraktikum. Seit 2016 betreue und realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
 
 msgid "services"
 msgstr "Dienstleistungen"
@@ -27,7 +27,7 @@ msgid "bottom_navigation_brand"
 msgstr "Expertise"
 
 msgid "top_navigation_brand"
-msgstr "Philipp Matthes"
+msgstr "Dipl.-Inf. Philipp Matthes"
 
 msgid "research"
 msgstr "Forschung"
