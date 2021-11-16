@@ -13,6 +13,31 @@ nav.navbar.primary, nav.navbar.primary a {
   color: #f0f0f0;
 }
 
+#top-navigation {
+  .navbar-link:not(.is-arrowless)::after {
+    border-color: white;
+  }
+
+  .navbar-dropdown {
+    background-color: #000;
+
+    a.navbar-item:focus, a.navbar-item:hover {
+      background-color: #292929;
+      color: white;
+    }
+  }
+
+  .navbar-item.has-dropdown:hover, .navbar-item.has-dropdown:focus {
+    background-color: #292929;
+    color: white;
+
+    .navbar-link {
+      background-color: #292929;
+      color: white;
+    }
+  }
+}
+
 .navbar-blur {
   position: absolute;
   left: 0;

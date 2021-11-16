@@ -18,24 +18,22 @@
 
     <div id="top-navigation" class="navbar-menu py-0">
       <div class="navbar-end">
-        <a rel="noreferrer" class="navbar-item" href="https://docs.google.com/document/d/1yvaCCbVUEx6UWH6WM0ibv94-DgeGC6SuvWACuypVUDA/edit?usp=sharing" target="_blank">
-          <i class="fas fa-calendar-check mr-2"></i> {% trans 'cv' %}
-        </a>
-        <a rel="noreferrer" class="navbar-item"
-           target="_blank"
-           href="https://github.com/PhilippMatthes">
-          <i class="fab fa-github mr-2"></i> {% trans 'github' %}
-        </a>
-        <a rel="noreferrer" class="navbar-item"
-           target="_blank"
-           href="https://philippmatthes.medium.com/">
-          <i class="fas fa-quote-right mr-2"></i> {% trans 'blog' %}
-        </a>
-        <a rel="noreferrer" class="navbar-item"
-           target="_blank"
-           href="https://twitter.com/snrmtths">
-          <i class="fab fa-twitter mr-2"></i> {% trans 'twitter' %}
-        </a>
+        {% if weblinks %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            {% trans 'weblinks' %}
+          </a>
+
+          <div class="navbar-dropdown">
+            {% for weblink in weblinks %}
+            <a rel="noreferrer" target="_blank" class="navbar-item" href={{ weblink.url }}>
+              <i class="{{ weblink.fontawesome_icon_css }} mr-2"></i> {{ weblink.title }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
         <a rel="noreferrer" class="navbar-item" href="mailto:mail@philippmatth.es">
           <i class="fas fa-envelope mr-2"></i> {% trans 'email' %}
         </a>

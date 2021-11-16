@@ -26,6 +26,9 @@ msgstr "Services"
 msgid "bottom_navigation_brand"
 msgstr "Expertise"
 
+msgid "weblinks"
+msgstr "Links"
+
 msgid "top_navigation_brand"
 msgstr "Dipl.-Inf. Philipp Matthes"
 
@@ -126,9 +129,6 @@ msgstr "<p><b>Responsible for this website</b></p> \
         <p>01159 Dresden</p> \
         <p>+49 176 42090978</p> \
         <p>mail@philippmatth.es</p>"
-
-msgid "weblinks"
-msgstr "Weblinks"
 
 msgid "github_profile"
 msgstr "GitHub Profile"

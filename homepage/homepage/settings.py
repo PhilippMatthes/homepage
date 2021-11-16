@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'projects',
     'addresses',
+    'weblinks',
 
     'whitenoise.runserver_nostatic',
 ]

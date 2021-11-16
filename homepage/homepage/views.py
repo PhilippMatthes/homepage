@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 
 from projects.models import Project
 from addresses.models import BlockchainAddress
+from weblinks.models import Weblink
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -10,4 +11,5 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['projects'] = Project.objects.all()
         context['addresses'] = BlockchainAddress.objects.all()
+        context['weblinks'] = Weblink.objects.all()
         return context
