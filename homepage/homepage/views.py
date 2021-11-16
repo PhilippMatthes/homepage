@@ -11,5 +11,5 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['projects'] = Project.objects.all()
         context['addresses'] = BlockchainAddress.objects.all()
-        context['weblinks'] = Weblink.objects.all()
+        context['weblinks'] = Weblink.objects.order_by('title')
         return context
