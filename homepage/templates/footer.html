@@ -23,6 +23,14 @@
       </div>
       {% endif %}
       <div class="column is-3">
+        <p><b>{% trans 'weblinks' %}</b></p>
+        {% for weblink in weblinks %}
+        <p><a rel="noreferrer" target="_blank" class="has-text-light" href={{ weblink.url }}>
+          <i class="{{ weblink.fontawesome_icon_css }} mr-2"></i> {{ weblink.title }}
+        </a></p>
+        {% endfor %}
+      </div>
+      <div class="column is-3">
         {% trans 'legal_information' %}
       </div>
       <div class="column is-3">
@@ -35,18 +43,6 @@
         </a></p>
         <p><a class="has-text-light" rel="noreferrer" href="/#ml">
           {% trans 'machine_learning' %}
-        </a></p>
-      </div>
-      <div class="column is-3">
-        <p><b>{% trans 'weblinks' %}</b></p>
-        <p><a class="has-text-light" rel="noreferrer" href="https://github.com/PhilippMatthes" target="_blank">
-          <i class="fab fa-github mr-2"></i> {% trans 'github_profile' %}
-        </a></p>
-        <p><a class="has-text-light" rel="noreferrer" href="https://philippmatthes.medium.com/" target="_blank">
-          <i class="fas fa-quote-right mr-2"></i> {% trans 'blog_on_medium' %}
-        </a></p>
-        <p><a class="has-text-light" rel="noreferrer" href="https://twitter.com/snrmtths" target="_blank">
-          <i class="fab fa-twitter mr-2"></i> {% trans 'twitter_profile' %}
         </a></p>
       </div>
       <div class="column is-3">
