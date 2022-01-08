@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "I am Philipp Matthes - computer scientist and <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">self made PhilippCoin billionaire</a>. From December 2021 I will be doing my doctorate as a research assistant at the TU Dresden. During my diploma studies, I was a tutor in the software technology and software project courses for several years. Since 2016 I have been supervising and realizing software projects for customers on a freelance basis. Here are a few projects I've worked on:"
+msgstr "I'm Philipp Matthes - a computer scientist and <a target=\"_blank\" href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">self made PhilippCoin billionaire</a>. I am working as a <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/die-professur/beschaeftigte\">research associate at the TU Dresden since December 2021</a>. During my diploma studies, I was a tutor in the <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/smt/st/studium/lehrveranstaltungen\">software technology and software project courses</a> for several years. Since 2016 I am supervising and realizing software projects for customers on a freelance basis. Here are a few projects I've worked on:"
 
 msgid "services"
 msgstr "Services"

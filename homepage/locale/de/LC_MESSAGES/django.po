@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Ich bin Philipp Matthes - Informatiker und <a href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made PhilippCoin-Milliardär</a>. Ab Dezember 2021 promoviere ich als wissenschaftlicher Mitarbeiter in einem Forschungsprojekt an der TU Dresden. Während meines Diplomstudiums war ich für mehrere Jahre Tutor in den Lehrveranstaltungen Softwaretechnologie und Softwarepraktikum. Seit 2016 betreue und realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
+msgstr "Ich bin Philipp - Informatiker und <a target=\"_blank\" href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made PhilippCoin-Milliardär</a>. Seit Dezember 2021 arbeite ich als <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/die-professur/beschaeftigte\">wissenschaftlicher Mitarbeiter an der TU Dresden</a>. Während meines Diplomstudiums war ich für mehrere Jahre Tutor in den Lehrveranstaltungen <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/smt/st/studium/lehrveranstaltungen\">Softwaretechnologie und Softwarepraktikum</a>. Seit 2016 betreue und realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
 
 msgid "services"
 msgstr "Dienstleistungen"
