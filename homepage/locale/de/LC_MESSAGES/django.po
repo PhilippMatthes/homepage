@@ -6,10 +6,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "website_title"
-msgstr "Dipl.-Inf. Philipp Matthes - Softwareentwicklung, Ubiquitous Applications, Machine Learning und Cloud Computing."
+msgstr "Dipl.-Inf. Philipp Matthes - Softwareentwicklung und Design"
 
 msgid "website_description"
-msgstr "Ihr Ansprechpartner für digitale Innovation, ubiquitäre und adaptive Software-Anwendungen, zielorientierte IT-Projektrealisierung, künstliche Intelligenz, Cloud Computing und mehr."
+msgstr "Wissenschaftlicher Mitarbeiter und Doktorand an der TU Dresden, Software-Spezialist"
 
 msgid "website_subject"
 msgstr "Homepage von Philipp Matthes."
@@ -18,10 +18,10 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Ich bin Philipp - Informatiker und <a target=\"_blank\" href=\"https://ropsten.etherscan.io/token/0x0ff809878aff65dc553b7be1b68e9851c49c3fb5?a=0xe66bA65d2e7c61df343D3Df7A28F94fcd8c06240\">Self Made PhilippCoin-Milliardär</a>. Seit Dezember 2021 arbeite ich als <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/die-professur/beschaeftigte\">wissenschaftlicher Mitarbeiter an der TU Dresden</a>. Während meines Diplomstudiums war ich für mehrere Jahre Tutor in den Lehrveranstaltungen <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/smt/st/studium/lehrveranstaltungen\">Softwaretechnologie und Softwarepraktikum</a>. Seit 2016 betreue und realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
+msgstr "Ich bin Philipp. Seit Dezember 2021 arbeite ich als <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/die-professur/beschaeftigte\">wissenschaftlicher Mitarbeiter und Doktorand an der TU Dresden</a>. Hier bin ich für die Entwicklung der <a target=\"_blank\" href=\"https://www.hamburg.de/bvm/priobike/\">PrioBike-App</a> verantwortlich und forsche an der intelligenten Integration von Radfahr- und Infrastrukturdaten. Vorher war ich für mehrere Jahre Tutor in den Lehrveranstaltungen <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/smt/st/studium/lehrveranstaltungen\">Softwaretechnologie und Softwarepraktikum</a>. Seit 2016 realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
 
 msgid "services"
-msgstr "Dienstleistungen"
+msgstr "Expertise"
 
 msgid "bottom_navigation_brand"
 msgstr "Expertise"
@@ -59,23 +59,23 @@ msgstr "E-Mail"
 msgid "telephone"
 msgstr "+49 176 42090978"
 
-msgid "featured_project"
-msgstr "Vorgestelltes Projekt"
+msgid "stack"
+msgstr "Tech Stack"
 
-msgid "ubiquitous_applications"
-msgstr "Ubiquitäre Applikationen"
+msgid "apps"
+msgstr "Apps."
 
-msgid "ubiquitous_applications_description"
-msgstr "Brauchen Sie jemanden mit Know-How, der Ihre App-Idee realisiert? Dann lassen Sie uns Ihre Idee an den Start bringen. Als Allrounder vereine ich fachliche Kompetenzen aus dem nutzerorientierten UI/UX-Design und dem Motivation Engineering, sowie der softwaretechnischen Realisation und Team-Koordination. Kontaktieren Sie mich einfach ganz unverbindlich und wir packen das an."
+msgid "apps_description"
+msgstr "Meine erste iOS-App habe ich 2016 entwickelt. Seitdem kamen zahlreiche weitere hinzu – auch Android-Apps. Heute komme ich auf über 25.000 Downloads und ein großes Portfolio an Technologien."
 
 msgid "peerbridge_description"
-msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/peerbridge\" target=\"_blank\">Der Peerbridge Blockchain Messenger</a></strong> nutzt die neuesten SwiftUI-Features wie den <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/swiftui/lazyvstack\" target=\"_blank\">LazyVStack</a> oder das neue <a rel=\"noreferrer\" href=\"https://developer.apple.com/documentation/cryptokit\" target=\"_blank\">CryptoKit</a> Framework. Der Messenger ist ein experimentelles Proof-of-Concept, um zu demonstrieren, wie eine verteilte Blockchain dazu genutzt werden kann, um ein öffentliches und dennoch vollständig anonymes Nachrichtenverteilsystem zu realisieren."
+msgstr "Plattformübergreifend: <strong class=\"colorful-background\">Flutter, Dart</strong>. Nativ: <strong class=\"colorful-background\">Swift (UI), Kotlin</strong>. Web: <strong class=\"colorful-background\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"colorful-background\">Fastlane, GitHub Actions</strong>."
 
 msgid "cloud_computing"
-msgstr "Cloud Computing"
+msgstr "Cloud."
 
 msgid "cloud_computing_title"
-msgstr "Die Entwicklung von ubiquitären Systemen wie Smartphone- oder IOT-Apps erfordert neuartige Lösungen, um Programmierung, Distribution und Datenfluss effizienter, skalierbarer und robuster zu machen."
+msgstr "Ich arbeite vorrangig mit Backend-Architekturen aus containerisierten Microservices, um Erweiterbarkeit, Skalierbarkeit und Robustheit zu maximieren."
 
 msgid "cloud_computing_1"
 msgstr "DevOps"
@@ -90,31 +90,31 @@ msgid "cloud_computing_4"
 msgstr "Micro Services"
 
 msgid "cloud_computing_subtitle"
-msgstr "In einer kontinuierlich fortschreitenden technischen Umgebung sind nicht nur Portierbarkeit und Nachhaltigkeit zunehmend wichtig, sondern auch eine (soziale) Verbundenheit. Ziel ist es, den Produktwert zu steigern, während Entwicklungs- und Supportaufwände reduziert werden."
+msgstr "Übrigens: Ich probiere regelmäßig neue Technologien aus, um mein Portfolio zu erweitern. Letztes Jahr habe ich mich zum Beispiel <a rel=\"noreferrer\" href=\"https://philippmatthes.medium.com/we-developed-a-blockchain-messenger-here-are-the-key-takeaways-1cbee12ba2d5\" target=\"_blank\" >kritisch mit Blockchain auseinandergesetzt</a>, indem ich selbst eine implementiert habe."
 
 msgid "machine_learning"
-msgstr "Machine Learning"
+msgstr "ML."
 
 msgid "machine_learning_title"
-msgstr "Möchten Sie Nutzerverhalten klassifizieren, Produkte vorschlagen oder Trends vorhersagen? Das sind nur Beispiele, welche Anwendungsfälle ich für Sie durch meine Expertise im Bereich künstliche Intelligenz abdecken kann. Brauchen Sie KI direkt auf dem Smartphone? Damit kenne ich mich bestens aus."
+msgstr "Machine Learning ist ein wichtiges Lösungskonzept für komplexe Probleme. Ich habe ML zum Beispiel schon dafür verwendet, durch Portierung auf Smartphones das Verkehrmittel zu erkennen, oder um durch Transfer Learning meine eigene Stimme zu rekonstruieren. ML ist auch ein zentraler Teil meiner Forschung."
 
 msgid "machine_learning_project_description"
-msgstr "<strong><a rel=\"noreferrer\" href=\"https://github.com/3dify-app\" target=\"_blank\">Die 3Dify App</a></strong> nutzt durch Multi-Kamera-Arrays gestützte Disparitätsbestimmung in Fotos für die Erzeugung eines 3D Parallax-Effektes. Durch den technischen Kontext ist dies auf manchen Endgeräten nicht möglich - hier erzeugt die kontextadaptive App die benötigten Disparitätsinformationen durch monokulare Tiefeninterpretation über eine neuronale Pipeline. "
+msgstr "Datenanalyse: <strong class=\"colorful-background\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training von Modellen: <strong class=\"colorful-background\">TensorFlow (Keras), SciKit-Learn.</strong> Portierung: <strong class=\"colorful-background\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"colorful-background\">Google Colab</strong>. "
 
 msgid "machine_learning_project_adaption_title"
-msgstr "Adaptivität durch CoreML und Vision"
+msgstr "Big Data"
 
 msgid "machine_learning_project_adaption_description"
-msgstr "Der Einsatz von <strong>On-Device Machine Learning</strong> eröffnet neue Horizonte. In der 3Dify App wird beispielsweise eine Künstliche Intelligenz verwendet, welche Tiefeninformationen in Fotos herein interpretiert. Ein sehr gutes Beispiel dafür, wie KI-Spitzenforschung in mobilen Anwendungen eingesetzt werden kann, um einen konkreten Anwendungsfall zu lösen."
+msgstr "Machine Learning heißt Daten verstehen. In meiner Forschung beschäftige ich mich damit, wie mit Daten ein Mehrwert für App-Nutzende generiert werden kann."
 
 msgid "fullstack"
-msgstr "Fullstack"
+msgstr "Fullstack."
 
 msgid "fullstack_title"
-msgstr "Ich beschränke mich niemals auf nur eine Technologie. Mithilfe einer gezielten Analyse entscheide ich im Voraus, welche Technologie sich für einen Anwendungsfall besonders eignet. Auf diese Weise bin ich immer sehr flexibel und bereit für neue Herausforderungen. Außerdem macht es Spaß, neue Technologien und Sprachen zu lernen!"
+msgstr "Durch ein breites und sich ständig erweiterndes Technologie-Portfolio bleibe ich flexibel und gewappnet für neue Herausforderungen."
 
 msgid "fullstack_description"
-msgstr "Haben Sie eine Projektidee? Ich bin jederzeit interessiert an neuen geschäftlichen und beruflichen Opportunitäten. Kontaktieren Sie mich: <a rel=\"noreferrer\" href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
+msgstr "Haben Sie eine Projektidee? Ich bin jederzeit interessiert an neuen Opportunitäten. Kontaktieren Sie mich: <a rel=\"noreferrer\" href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
 
 msgid "to_be_continued"
 msgstr "To be continued... 😜"
@@ -128,7 +128,7 @@ msgstr "<p><b>Verantwortlich für diese Website</b></p> \
         <p>Clara-Viebig-Straße 9</p> \
         <p>01159 Dresden</p> \
         <p>+49 176 42090978</p> \
-        <p>mail@philippmatth.es</p>"
+        <p>complaints@philippmatth.es</p>"
 
 msgid "github_profile"
 msgstr "GitHub-Profil"
@@ -144,4 +144,3 @@ msgstr "Gemacht mit ❤️ von Philipp Matthes."
 
 msgid "contribute"
 msgstr "An der Website mitwirken"
-
