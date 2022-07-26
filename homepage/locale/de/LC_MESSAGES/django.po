@@ -69,7 +69,7 @@ msgid "apps_description"
 msgstr "Meine erste iOS-App habe ich 2016 entwickelt. Seitdem kamen zahlreiche weitere hinzu – auch Android-Apps. Heute komme ich auf über 25.000 Downloads und ein großes Portfolio an Technologien."
 
 msgid "peerbridge_description"
-msgstr "Plattformübergreifend: <strong class=\"colorful-background\">Flutter, Dart</strong>. Nativ: <strong class=\"colorful-background\">Swift (UI), Kotlin</strong>. Web: <strong class=\"colorful-background\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"colorful-background\">Fastlane, GitHub Actions</strong>."
+msgstr "Plattformübergreifend: <strong class=\"\">Flutter, Dart</strong>. Nativ: <strong class=\"\">Swift (UI), Kotlin</strong>. Web: <strong class=\"\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"\">Fastlane, GitHub Actions</strong>."
 
 msgid "cloud_computing"
 msgstr "Cloud."
@@ -99,7 +99,7 @@ msgid "machine_learning_title"
 msgstr "Machine Learning ist ein wichtiges Lösungskonzept für komplexe Probleme. Ich habe ML zum Beispiel schon dafür verwendet, durch Portierung auf Smartphones das Verkehrmittel zu erkennen, oder um durch Transfer Learning meine eigene Stimme zu rekonstruieren. ML ist auch ein zentraler Teil meiner Forschung."
 
 msgid "machine_learning_project_description"
-msgstr "Datenanalyse: <strong class=\"colorful-background\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training von Modellen: <strong class=\"colorful-background\">TensorFlow (Keras), SciKit-Learn.</strong> Portierung: <strong class=\"colorful-background\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"colorful-background\">Google Colab</strong>. "
+msgstr "Datenanalyse: <strong class=\"\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training von Modellen: <strong class=\"\">TensorFlow (Keras), SciKit-Learn.</strong> Portierung: <strong class=\"\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"\">Google Colab</strong>. "
 
 msgid "machine_learning_project_adaption_title"
 msgstr "Big Data"

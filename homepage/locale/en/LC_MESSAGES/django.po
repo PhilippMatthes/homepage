@@ -69,7 +69,7 @@ msgid "apps_description"
 msgstr "I developed my first iOS app in 2016. Since then, I've added numerous others - including Android apps. Today, I have over 25,000 downloads and a large portfolio of technologies."
 
 msgid "peerbridge_description"
-msgstr "Cross-Platform: <strong class=\"colorful-background\">Flutter, Dart</strong>. Native: <strong class=\"colorful-background\">Swift (UI), Kotlin</strong>. Web: <strong class=\"colorful-background\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"colorful-background\">Fastlane, GitHub Actions</strong>."
+msgstr "Cross-Platform: <strong class=\"\">Flutter, Dart</strong>. Native: <strong class=\"\">Swift (UI), Kotlin</strong>. Web: <strong class=\"\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"\">Fastlane, GitHub Actions</strong>."
 
 msgid "cloud_computing"
 msgstr "Cloud."
@@ -99,7 +99,7 @@ msgid "machine_learning_title"
 msgstr "Machine Learning is an important solution concept for complex problems. For example, I have already used ML to recognize the transportation mode by porting to smartphones, or to reconstruct my own voice by transfer learning. ML is also a central part of my research."
 
 msgid "machine_learning_project_description"
-msgstr "Data Analysis: <strong class=\"colorful-background\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training of Models: <strong class=\"colorful-background\">TensorFlow (Keras), SciKit-Learn.</strong> Porting: <strong class=\"colorful-background\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"colorful-background\">Google Colab</strong>. "
+msgstr "Data Analysis: <strong class=\"\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training of Models: <strong class=\"\">TensorFlow (Keras), SciKit-Learn.</strong> Porting: <strong class=\"\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"\">Google Colab</strong>. "
 
 msgid "machine_learning_project_adaption_title"
 msgstr "Big Data"
