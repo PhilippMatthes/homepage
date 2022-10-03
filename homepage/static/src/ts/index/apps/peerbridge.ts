@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         container,
         () => {},
         (progress: any) => {
-            element.style.transform = `translateY(${-10 + progress.value * 20}rem)`
+            element.style.transform = `translateY(${-2.5 + progress.value * 15}rem)`
+            // Scale the phone up as it moves up
+            element.style.transform += ` scale(${1 + progress.value * 0.2})`
         },
         () => {}
     ).attach()

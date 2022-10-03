@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         (progress: any) => {
             macbookCodeContainer.scrollTop = progress.value * 700;
             macbookContainer.style.transform = `translateY(${5 - progress.value * 10}rem)`
+            // Scale the macbook up as it moves up
+            macbookContainer.style.transform += ` scale(${1 + progress.value * 0.2})`
         },
         () => {}
     )

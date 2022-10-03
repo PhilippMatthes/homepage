@@ -247,7 +247,7 @@
 
 #three-dify-tech-back-container {
   position: relative;
-  height: 24rem;
+  height: 16rem;
 }
 
 @media(prefers-color-scheme: dark) {
@@ -265,6 +265,7 @@
   background-image: url('/static/img/3dify-demo/back.webp');
   background-size: 100%;
   z-index: -1;
+  opacity: 0.15;
 }
 
 #three-dify-tech-demo-container {
@@ -288,7 +289,7 @@
 }
 
 #three-dify-tech-demo-depth {
-  background-image: url('/static/img/3dify-demo/depth.webp');
+  background-image: url('/static/img/3dify-demo/demo.webp');
 }
 
 

@@ -102,10 +102,10 @@ msgid "machine_learning_project_description"
 msgstr "Datenanalyse: <strong class=\"\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training von Modellen: <strong class=\"\">TensorFlow (Keras), SciKit-Learn.</strong> Portierung: <strong class=\"\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"\">Google Colab</strong>. "
 
 msgid "machine_learning_project_adaption_title"
-msgstr "Big Data"
+msgstr "Demo: 3Dify App"
 
 msgid "machine_learning_project_adaption_description"
-msgstr "Machine Learning heißt Daten verstehen. In meiner Forschung beschäftige ich mich damit, wie mit Daten ein Mehrwert für App-Nutzende generiert werden kann."
+msgstr "Die 3Dify App ist ein schönes Beispiel für eine Lösung, in der ich Technologien aus vielen verschiedenen Bereichen genutzt habe, um eine komplexe Idee zu realisieren. Sie nutzt Computer Vision, um die Tiefe eines Bildes zu rekonstruieren. Das geht aber nur, wenn das Smartphone über 2 oder mehr Kameras verfügt. Auf anderen Smartphones wird ein KI-Modell genutzt, um Tiefeninformationen in das Bild zu interpretieren. Mit den generierten Tiefendaten kann das Foto anschließend in ein 3D-Foto verwandelt werden. Durch Anwendung von bilateraler Filtrierung und Parallax Mapping kann der Nutzer das Foto in 3D erneut erleben. Das sind Techniken, die auch in neuesten Computergrafik-Engines wie der Unreal Engine 5 zum Einsatz kommen."
 
 msgid "fullstack"
 msgstr "Fullstack."

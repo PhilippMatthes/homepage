@@ -12,13 +12,14 @@
 {% block main %}
 
   {% include 'header.html' %}
-  {% include 'bottom-navigation.html' %}
-  {% include 'apps.html' %}
-  {% include 'ml.html' %}
-  {% include 'cloud.html' %}
-  {% include 'fullstack.html' %}
-  {% comment %} {% include 'research.html' %} {% endcomment %}
-  {% include 'footer.html' %}
+  <div class="is-hidden-touch">
+    {% include 'bottom-navigation.html' %}
+    {% include 'apps.html' %}
+    {% include 'ml.html' %}
+    {% include 'cloud.html' %}
+    {% include 'fullstack.html' %}
+    {% include 'footer.html' %}
+  </div>
 
 {% endblock %}
 

@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 
+<div class="pt-6 is-hidden-touch"></div>
 <section id="cloud" class="px-3 pt-6">
   <div class="container pt-6">
     <div class="hero is-small pt-6">
@@ -13,13 +14,15 @@
     <h1 class="title pt-3">
       {% trans 'cloud_computing_title' %}
     </h1>
-    <div id="termynal" class="mt-6 mb-6" data-termynal>
+    <div class="py-3"></div>
+    <div id="termynal" class="mt-6 mb-6 pt-6 pb-6" data-termynal>
         <span data-ty="input">grep "Advanced Experience" tech.stack</span>
         <span data-ty data-ty-prompt=">>>">Containerization: <strong class="" style="color: white">Docker</strong>.</span>
         <span data-ty data-ty-prompt=">>>">Deployment: <strong class="" style="color: white">Docker Compose</strong>.</span>
         <span data-ty data-ty-prompt=">>>">Monitoring: <strong class="" style="color: white">Prometheus, Grafana, Sentry</strong>.</span>
         <span data-ty data-ty-prompt=">>>">CI/CD: <strong class="" style="color: white">GitHub Actions, Watchtower</strong>.</span>
     </div>
+    <div class="py-3"></div>
     <h2 class="subtitle mt-6">
       {% trans 'cloud_computing_subtitle' %}
     </h2>

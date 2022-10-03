@@ -152,7 +152,11 @@ export class SectionHook extends Hook {
         const offsetScrollTop = scrollTop + windowHeight
         const progressValue =
             (offsetScrollTop - elementTop) / elementHeight
-        return new Progress(progressValue)
+        // Apply quad in out easing
+        const easedProgressValue = progressValue < 0.5
+            ? 2 * progressValue * progressValue
+            : -1 + (4 - 2 * progressValue) * progressValue
+        return new Progress(easedProgressValue)
     }
 }
 
@@ -173,7 +177,11 @@ export class ParallaxHook extends Hook {
         const offsetScrollTop = scrollTop + windowHeight
         const progressValue =
             (offsetScrollTop - elementTop) / (elementHeight + windowHeight)
-        return new Progress(progressValue)
+        // Apply quad in out easing
+        const easedProgressValue = progressValue < 0.5
+            ? 2 * progressValue * progressValue
+            : -1 + (4 - 2 * progressValue) * progressValue
+        return new Progress(easedProgressValue)
     }
 }
 

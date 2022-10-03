@@ -14,6 +14,8 @@ const typeScriptConfig = {
       path.resolve(__dirname, 'homepage/static/src/ts/index/apps/macbook.ts'),
       path.resolve(__dirname, 'homepage/static/src/ts/index/apps/peerbridge.ts'),
       path.resolve(__dirname, 'homepage/static/src/ts/index/ml/threedify.ts'),
+      path.resolve(__dirname, 'homepage/static/src/ts/index/cloud/terminal.ts'),
+      path.resolve(__dirname, 'homepage/static/src/ts/index/fullstack/fullstack.ts'),
     ],
   },
 
