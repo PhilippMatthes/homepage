@@ -18,7 +18,7 @@ msgid "welcome_message"
 msgstr "Hi!"
 
 msgid "personal_description"
-msgstr "Ich bin Philipp. Seit Dezember 2021 arbeite ich als <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/die-professur/beschaeftigte\">wissenschaftlicher Mitarbeiter und Doktorand an der TU Dresden</a>. Hier bin ich für die Entwicklung der <a target=\"_blank\" href=\"https://www.hamburg.de/bvm/priobike/\">PrioBike-App</a> verantwortlich und forsche an der intelligenten Integration von Radfahr- und Infrastrukturdaten. Vorher war ich für mehrere Jahre Tutor in den Lehrveranstaltungen <a target=\"_blank\" href=\"https://tu-dresden.de/ing/informatik/smt/st/studium/lehrveranstaltungen\">Softwaretechnologie und Softwarepraktikum</a>. Seit 2016 realisiere ich auch freiberuflich Softwareprojekte für Kunden. Hier sind ein paar Projekte, an denen ich gearbeitet habe:"
+msgstr "Als wissenschaftlicher Mitarbeiter und Doktorand an der TU Dresden widme ich mich im Moment der Erforschung der Welt der Smart Mobility. Meine Expertise liegt in der Kombination von intelligenten Systemen mit der Entwicklung von Multiplattform-Apps und dem Aufbau skalierbarer Cloud-Backend-Infrastrukturen. Ich bringe eine vielfältige praktische Erfahrung mit den neuesten Technologien mit. Mein Ehrgeiz treibt mich an, Ingenieurteams zu einem gemeinsamen Ziel zu führen und innovative Lösungen zur Nutzung von Marktpotenzialen zu erforschen. Hier sind einige meiner bisherigen Projekte:"
 
 msgid "services"
 msgstr "Expertise"
@@ -59,23 +59,29 @@ msgstr "E-Mail"
 msgid "telephone"
 msgstr "+49 176 42090978"
 
-msgid "stack"
-msgstr "Tech Stack"
+msgid "projects"
+msgstr "Projekte"
 
 msgid "apps"
 msgstr "Apps."
 
 msgid "apps_description"
-msgstr "Meine erste iOS-App habe ich 2016 entwickelt. Seitdem kamen zahlreiche weitere hinzu – auch Android-Apps. Heute komme ich auf über 25.000 Downloads und ein großes Portfolio an Technologien."
+msgstr "<strong>Mit vielen Jahren Erfahrung in der App-Entwicklung (seit 2016) habe ich meine Fähigkeiten in der nativen, plattformübergreifenden und Web-App-Entwicklung perfektioniert. Meine Leistungen umfassen den erfolgreichen Verkauf eigener Apps mit Zehntausenden von Downloads sowie die Entwicklung von App-Lösungen für Kunden.</strong><br><br> Meine Erfahrung im Bereich 3D-Design und Animation, als Teil meiner Zeit bei einer Designagentur, gibt mir ein gutes Auge für Design und Usability. Meine Expertise reicht von der Grafikimplementierung bis hin zur Konstruktion robusten und skalierbaren Softwarearchitekturen."
 
 msgid "peerbridge_description"
-msgstr "Plattformübergreifend: <strong class=\"\">Flutter, Dart</strong>. Nativ: <strong class=\"\">Swift (UI), Kotlin</strong>. Web: <strong class=\"\">SCSS, Yarn & Webpack, TypeScript</strong>. CI/CD: <strong class=\"\">Fastlane, GitHub Actions</strong>."
+msgstr "\
+<strong>PrioBike</strong>: eine intelligente Navigations-App für Hamburg, die Radfahrern durch Vorhersagen der Echtzeit-Ampeländerungen für über 5000 Radfahrer-Ampeln einen digitalen Vorteil gegenüber Autos bietet. <br><br> \
+<strong>Koalitionspoker</strong>: ein Serious Game für den MDR, das den Benutzern die Möglichkeit gibt, Koalitionsverhandlungen auf spielerische Weise zu erleben. <br><br> \
+<strong>PeerBridge</strong>: ein Proof-of-Stake-Blockchain-Cryptosystem, sowie eine Mobile-App, die es Benutzern ermöglicht, Transaktionen zu senden und zu empfangen. <br><br> \
+<strong>3Dify</strong>: eine interaktiven App, die eine Shader-Technik aus Spielen und KI-generierte Informationen nutzt, um Fotos zum Leben zu erwecken. <br><br> \
+<strong>INLOOP</strong>: eine interaktive Lernplattform, die es Studierenden ermöglicht, ihre Programmieraufgaben einzureichen und automatisch zu testen. <br><br> \
+Jedes dieser Projekte war eine Gelegenheit für mich, meine Fähigkeiten in der App-Entwicklung zu erweitern, zusammen mit meinem Ziel für die Schaffung innovativer und hochwertiger Apps, die dem Benutzer echten Mehrwert bieten."
 
 msgid "cloud_computing"
 msgstr "Cloud."
 
 msgid "cloud_computing_title"
-msgstr "Ich arbeite vorrangig mit Backend-Architekturen aus containerisierten Microservices, um Erweiterbarkeit, Skalierbarkeit und Robustheit zu maximieren."
+msgstr "<strong>Cloud-Computing hat die Art und Weise, wie wir Daten speichern, verarbeiten und zugreifen, revolutioniert, und es ist entscheidend, eine gut gestaltete Cloud-Architektur zu haben, um sich steigenden Geschäftsanforderungen anzupassen.</strong><br><br> Meine Kompetenz in diesem Bereich liegt auf der Konzeption und Umsetzung erweiterbarer und skalierbarer Cloud-Architekturen, die mühelos zunehmenden Traffic verarbeiten können. Meine praktische Erfahrung ermöglicht es mir, Cloud-Lösungen zu entwerfen, die den einzigartigen Bedürfnissen jedes Projekts gerecht werden und nahtlos mit bestehenden IT-Systemen integriert werden. Darüber hinaus verstehe ich die Bedeutung von Sicherheit und Datenschutz in der Cloud und stelle sicher, dass die von mir entworfenen Architekturen sicher, konform und zuverlässig sind."
 
 msgid "cloud_computing_1"
 msgstr "DevOps"
@@ -90,28 +96,31 @@ msgid "cloud_computing_4"
 msgstr "Micro Services"
 
 msgid "cloud_computing_subtitle"
-msgstr "Übrigens: Ich probiere regelmäßig neue Technologien aus, um mein Portfolio zu erweitern. Letztes Jahr habe ich mich zum Beispiel <a rel=\"noreferrer\" href=\"https://philippmatthes.medium.com/we-developed-a-blockchain-messenger-here-are-the-key-takeaways-1cbee12ba2d5\" target=\"_blank\" >kritisch mit Blockchain auseinandergesetzt</a>, indem ich selbst eine implementiert habe."
+msgstr "DevOps ist ein Ansatz, der die Zusammenarbeit von Entwicklern und IT-Betriebsteams verbessert, um schnellere und effizientere Software-Lieferzyklen zu ermöglichen. Durch eine enge Zusammenarbeit und die Verwendung von Automatisierungstools können Prozesse wie Builds, Tests, Deployments und Überwachung optimiert werden. Als erfahrener DevOps-Spezialist verstehe ich die Bedeutung von Continous Integration und Continuous Delivery, und ich bin in der Lage, effektive Workflows und Prozesse zu implementieren, um sicherzustellen, dass Software schnell, zuverlässig und sicher bereitgestellt wird. Darüber hinaus achte ich bei der Implementierung von DevOps-Lösungen auf die Verwendbarkeit, Skalierbarkeit und Nachverfolgbarkeit."
 
 msgid "machine_learning"
 msgstr "ML."
 
+msgid "use_cases"
+msgstr "Anwendungsfälle"
+
 msgid "machine_learning_title"
-msgstr "Machine Learning ist ein wichtiges Lösungskonzept für komplexe Probleme. Ich habe ML zum Beispiel schon dafür verwendet, durch Portierung auf Smartphones das Verkehrmittel zu erkennen, oder um durch Transfer Learning meine eigene Stimme zu rekonstruieren. ML ist auch ein zentraler Teil meiner Forschung."
+msgstr "<strong>Maschinelles Lernen ist ein zunehmend wichtiges Werkzeug für die Entwicklung intelligenter Lösungen. Seine Fähigkeit, aus Daten zu lernen, ermöglicht die Schaffung von Systemen, die auf komplexe reale Probleme reagieren und Vorhersagen treffen können.</strong><br><br> Meine Fähigkeiten im maschinellen Lernen sind vielfältig und reichen von der Entwicklung von Modellen auf dem Server bis hin zu Modellen auf dem Smartphone. Mein Forschungshintergrund in der Datenanalytik und in der Bewertung von maschinellen Lernmodellen erstreckt sich weit über Klassifikationssysteme für Signalanalyse hinaus."
 
 msgid "machine_learning_project_description"
-msgstr "Datenanalyse: <strong class=\"\">Jupyter, Matplotlib, Pandas, Numpy</strong>. Training von Modellen: <strong class=\"\">TensorFlow (Keras), SciKit-Learn.</strong> Portierung: <strong class=\"\">TensorFlow Lite, CoreML</strong>. Hardware: <strong class=\"\">Google Colab</strong>. "
+msgstr "Neben der Verwendung von maschinellen Lernmodellen zur Lösung spezifischer Probleme nutze ich diese Werkzeuge auch, um meine eigene Produktivität und Kreativität zu steigern. Zum Beispiel wurde der Text dieser Website mit einem generativen Modell erstellt. Haben Sie es erraten?"
 
 msgid "machine_learning_project_adaption_title"
-msgstr "Demo: 3Dify App"
+msgstr "Am Puls der Zeit bleiben"
 
 msgid "machine_learning_project_adaption_description"
-msgstr "Die 3Dify App ist ein schönes Beispiel für eine Lösung, in der ich Technologien aus vielen verschiedenen Bereichen genutzt habe, um eine komplexe Idee zu realisieren. Sie nutzt Computer Vision, um die Tiefe eines Bildes zu rekonstruieren. Das geht aber nur, wenn das Smartphone über 2 oder mehr Kameras verfügt. Auf anderen Smartphones wird ein KI-Modell genutzt, um Tiefeninformationen in das Bild zu interpretieren. Mit den generierten Tiefendaten kann das Foto anschließend in ein 3D-Foto verwandelt werden. Durch Anwendung von bilateraler Filtrierung und Parallax Mapping kann der Nutzer das Foto in 3D erneut erleben. Das sind Techniken, die auch in neuesten Computergrafik-Engines wie der Unreal Engine 5 zum Einsatz kommen."
+msgstr "GitHub Copilot, ChatGPT, Stable Diffusion - Durch ständige Erkundung neuer Möglichkeiten, maschinelles Lernen in meinen Arbeitsablauf zu integrieren, bleibe ich am Puls der Zeit und stelle sicher, dass ich die neuesten und innovativsten Lösungen anbieten kann."
 
 msgid "fullstack"
 msgstr "Fullstack."
 
 msgid "fullstack_title"
-msgstr "Durch ein breites und sich ständig erweiterndes Technologie-Portfolio bleibe ich flexibel und gewappnet für neue Herausforderungen."
+msgstr "<strong>Als Fullstack-Ingenieur bringe ich umfassendes Know-how in der Entwicklung von Anwendungen mit. Von der Datenbank über das Backend bis hin zur Benutzeroberfläche verfüge ich über breite Erfahrung in allen Schichten einer Anwendung.</strong><br><br> Durch mein Verständnis für die gesamte Technologiekette bin ich in der Lage, Lösungen zu entwickeln, die nahtlos miteinander verknüpft sind und eine reibungslose Benutzererfahrung bieten. Ich arbeite eng mit Designern, Product Owners und anderen Entwicklern zusammen, um eine Anwendung zu schaffen, die nicht nur funktional ist, sondern auch attraktiv und benutzerfreundlich. Ich bin immer auf dem neuesten Stand der Technik und setze moderne Tools und Methoden ein, um sicherzustellen, dass die von mir entwickelten Lösungen skalierbar, performant und zukunftssicher sind."
 
 msgid "fullstack_description"
 msgstr "Haben Sie eine Projektidee? Ich bin jederzeit interessiert an neuen Opportunitäten. Kontaktieren Sie mich: <a rel=\"noreferrer\" href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
@@ -140,7 +149,7 @@ msgid "twitter_profile"
 msgstr "Twitter-Profil"
 
 msgid "made_with_love"
-msgstr "Gemacht mit ❤️ von Philipp Matthes."
+msgstr "Gemacht mit ❤️ von Philipp Matthes und ChatGPT."
 
 msgid "contribute"
 msgstr "An der Website mitwirken"
