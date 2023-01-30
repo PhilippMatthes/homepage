@@ -73,7 +73,7 @@ msgstr "\
 <strong>PrioBike</strong>: eine intelligente Navigations-App für Hamburg, die Radfahrern durch Vorhersagen der Echtzeit-Ampeländerungen für über 5000 Radfahrer-Ampeln einen digitalen Vorteil gegenüber Autos bietet. <br><br> \
 <strong>Koalitionspoker</strong>: ein Serious Game für den MDR, das den Benutzern die Möglichkeit gibt, Koalitionsverhandlungen auf spielerische Weise zu erleben. <br><br> \
 <strong>PeerBridge</strong>: ein Proof-of-Stake-Blockchain-Cryptosystem, sowie eine Mobile-App, die es Benutzern ermöglicht, Transaktionen zu senden und zu empfangen. <br><br> \
-<strong>3Dify</strong>: eine interaktiven App, die eine Shader-Technik aus Spielen und KI-generierte Informationen nutzt, um Fotos zum Leben zu erwecken. <br><br> \
+<strong>3Dify</strong>: eine interaktive App, die eine Shader-Technik aus Spielen und KI-generierte Informationen nutzt, um Fotos zum Leben zu erwecken. <br><br> \
 <strong>INLOOP</strong>: eine interaktive Lernplattform, die es Studierenden ermöglicht, ihre Programmieraufgaben einzureichen und automatisch zu testen. <br><br> \
 Jedes dieser Projekte war eine Gelegenheit für mich, meine Fähigkeiten in der App-Entwicklung zu erweitern, zusammen mit meinem Ziel für die Schaffung innovativer und hochwertiger Apps, die dem Benutzer echten Mehrwert bieten."
 
