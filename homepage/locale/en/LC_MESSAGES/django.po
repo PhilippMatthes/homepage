@@ -15,10 +15,10 @@ msgid "website_subject"
 msgstr "Homepage of Philipp Matthes."
 
 msgid "welcome_message"
-msgstr "Hi!"
+msgstr "Hey!"
 
 msgid "personal_description"
-msgstr "As a research associate and Ph.D. student at TU Dresden, I dedicate myself to exploring the world of smart mobility. My expertise lies in combining intelligence systems with the engineering of impactful multiplatform app solutions and the building of scalable cloud backend infrastructures. I bring diverse practical experiences with cutting-edge technologies to the table. My ambition drives me to lead engineering teams toward a shared goal and research innovative solutions to unleash market potential. Here are some of my recent projects:"
+msgstr "I am a research associate and Ph.D. student at TU Dresden, specializing in smart mobility. My main areas of expertise are multiplatform apps, machine learning, and cloud architectures. Here are some of my projects:"
 
 msgid "services"
 msgstr "Expertise"
@@ -54,37 +54,36 @@ msgid "twitter"
 msgstr "Twitter"
 
 msgid "email"
-msgstr "Mail"
+msgstr "Email"
 
 msgid "telephone"
 msgstr "+49 176 42090978"
 
 msgid "projects"
-msgstr "Projects"
+msgstr "Featured Projects"
 
 msgid "apps"
-msgstr "Apps."
+msgstr "Apps"
 
 msgid "apps_description"
-msgstr "<strong>With years of experience in app development since 2016, I have honed my skills in native, cross-platform, and web app development. My track record includes the successful sale and distribution of my own apps with tens of thousands of downloads and the development of app solutions for customers.</strong><br><br> My background in 3D design and animation as a part of my design agency experience gives me a keen eye for design and usability. My expertise ranges from low-level graphics implementation to constructing robust and scalable software architecture."
+msgstr "<strong>Over the time, I have collected diverse experiences in building native, cross-platform, and web applications.</strong>"
 
 msgid "peerbridge_description"
 msgstr "\
-<strong>PrioBike</strong>: an intelligent navigation app for Hamburg that gives cyclists a digital advantage over cars by predicting real-time traffic light changes for over 5000 cyclist traffic lights. <br><br> \
-<strong>Koalitionspoker</strong>: a serious game for the MDR (public broadcaster) that lets users experience coalition negotiations in a playful way. <br><br> \
-<strong>PeerBridge</strong>: a proof-of-stake blockchain cryptosystem and a mobile app that allows users to send and receive transactions. <br><br> \
-<strong>3Dify</strong>: an interactive app that utilizes shader techniques from games and partially AI-generated depth maps to bring photos to life in 3D. <br><br> \
-<strong>INLOOP</strong>: an interactive learning platform that enables students to submit and automatically test their programming assignments. <br><br> \
-Each of these projects has been an opportunity for me to showcase my skills in app development and my commitment to creating innovative, high-quality apps that deliver real value to users."
+<strong>PrioBike</strong>: An intelligent navigation app for Hamburg that predicts real-time traffic light changes for over 5000 cyclist traffic lights. <br><br> \
+<strong>Koalitionspoker</strong>: A serious web game for the MDR (public broadcaster) that simulates coalition negotiations. <br><br> \
+<strong>PeerBridge</strong>: A proof-of-stake blockchain cryptosystem and a mobile app for secure transactions. <br><br> \
+<strong>3Dify</strong>: An interactive app that brings photos to life in 3D using shader techniques and AI-generated depth maps. <br><br> \
+<strong>INLOOP</strong>: An interactive learning platform for programming assignments. <br><br>"
 
 msgid "cloud_computing"
-msgstr "Cloud."
+msgstr "Cloud"
 
 msgid "cloud_computing_title"
-msgstr "<strong>Cloud computing has revolutionized the way we store, process, and access data, and it's crucial to have a well-designed cloud architecture to support growth and meet changing business requirements.</strong><br><br> My expertise in this area is centered around creating extensible and scalable cloud architectures that can handle increasing amounts of data and traffic with ease. My practical experience allows me to design cloud solutions that meet the unique needs of each project and integrate seamlessly with existing IT systems. Additionally, I understand the importance of security and privacy in the cloud and ensure that the architectures I design are secure, compliant, and reliable."
+msgstr "<strong>My experiences in leading smaller and medium-sized projects allow me to leverage cloud-based automation in team and backend processes, ensuring scalable teams and scalable backends whenever needed.</strong>"
 
 msgid "cloud_computing_1"
-msgstr "DevOps"
+msgstr "Robust and Scalable Architectures"
 
 msgid "cloud_computing_2"
 msgstr "Containerization"
@@ -93,43 +92,43 @@ msgid "cloud_computing_3"
 msgstr "Edge AI"
 
 msgid "cloud_computing_4"
-msgstr "Micro Services"
+msgstr "Microservices"
 
 msgid "cloud_computing_subtitle"
-msgstr "The DevOps philosophy is a set of practices that emphasize collaboration and communication between development and operations teams, enabling organizations to deliver high-quality software faster and more reliably. As a practitioner of DevOps, I understand the importance of automation, continuous integration and deployment, and infrastructure as code. I use these principles to streamline development processes, improve efficiency, and ensure that software is delivered to end-users with minimal downtime and maximum stability."
+msgstr "It's all about ensuring that everyone in the team focuses on the tasks that really matter."
 
 msgid "machine_learning"
-msgstr "ML."
+msgstr "ML"
 
 msgid "use_cases"
-msgstr "Use Cases"
+msgstr "Featured Project"
 
 msgid "machine_learning_title"
-msgstr "<strong>Machine learning is an increasingly important tool for developing intelligent solutions. Its ability to learn from data enables the creation of systems that can respond to and make predictions about complex real-world problems.</strong><br><br> My skills in machine learning are diverse, ranging from developing models on-server to on-smartphone. I have a strong background in data analytics and experience evaluating machine learning models through my research. My expertise extends to supervised classification systems for signal analysis, giving me a well-rounded understanding of the field."
+msgstr "<strong>In my research and previous projects, I have designed data processing pipelines and machine learning models for various tasks. <a target=\"_blank\" href=\"https://ieeexplore.ieee.org/abstract/document/9976004\">Here is an example.</a></strong>"
 
 msgid "machine_learning_project_description"
-msgstr "In addition to using machine learning models to solve specific use-case problems, I also leverage these tools to boost my own productivity and creativity. For example, this website's text was facilitated with a generative model. Have you guessed it?"
+msgstr "In the 3Dify app, I created an AI image processing pipeline to generate depth maps for photos, enabling the user to relive the moment through a 3D-like scene."
 
 msgid "machine_learning_project_adaption_title"
-msgstr "Staying on the Edge"
+msgstr "Mobile AI"
 
 msgid "machine_learning_project_adaption_description"
-msgstr "GitHub Copilot, ChatGPT, Stable Diffusion – By constantly exploring new ways to integrate machine learning into my workflow, I remain at the cutting edge of the field and ensure that I am able to bring the latest and most innovative solutions to my clients."
+msgstr "Within previous projects, I have obtained a thorough understanding of developing machine learning models for smartphones and other hardware-constraint devices."
 
 msgid "fullstack"
-msgstr "Fullstack."
+msgstr "Fullstack"
 
 msgid "fullstack_title"
-msgstr "<strong>As a full-stack engineer, I have a comprehensive understanding of both front-end and back-end technologies. My experience with a variety of programming languages, frameworks, and tools allows me to build end-to-end solutions from the ground up.</strong><br><br> From designing and implementing user interfaces to crafting robust and scalable back-end systems, I bring a holistic approach to software development. In my projects, I prioritize maintainability, scalability, and performance, ensuring that the solutions I deliver are well-architected and equipped to meet the evolving needs of businesses. Whether working with a small startup or a large enterprise, I have a proven track record of delivering high-quality, reliable software that drives business value. Whether you are looking to build a new app, modernize your existing systems, or need support for an ongoing project, I am confident that my expertise in full-stack engineering will enable me to deliver solutions that exceed your expectations."
+msgstr "<strong>I always focus on finding the simplest and most straightforward solution for a problem. This includes selecting the best technology within the team's and the problem's requirements. Within the recent years, I have worked with hundreds of different technologies and frameworks.</strong>"
 
 msgid "fullstack_description"
-msgstr "Do you have a project idea? I am always interested in new opportunities. Please contact me: <a rel=\"noreferrer\" href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
+msgstr "Do you have a project idea? I'm always interested in new opportunities. Please contact me: <a rel=\"noreferrer\" href=\"mailto:contact@philippmatth.es\">contact@philippmatth.es</a>"
 
 msgid "to_be_continued"
 msgstr "To be continued... 😜"
 
 msgid "blockchain_addresses"
-msgstr "Blockchain-Adressen"
+msgstr "Blockchain Addresses"
 
 msgid "legal_information"
 msgstr "<p><b>Responsible for this website</b></p> \
@@ -137,7 +136,7 @@ msgstr "<p><b>Responsible for this website</b></p> \
         <p>Clara-Viebig-Straße 9</p> \
         <p>01159 Dresden</p> \
         <p>+49 176 42090978</p> \
-        <p>complaints@philippmatth.es</p>"
+        <p>hi@philippmatth.es</p>"
 
 msgid "github_profile"
 msgstr "GitHub Profile"
@@ -149,7 +148,7 @@ msgid "twitter_profile"
 msgstr "Twitter Profile"
 
 msgid "made_with_love"
-msgstr "Made with ❤️ by Philipp Matthes and ChatGPT."
+msgstr "Made with ❤️ by Philipp Matthes."
 
 msgid "contribute"
 msgstr "Contribute"
