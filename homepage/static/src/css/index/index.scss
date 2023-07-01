@@ -262,7 +262,7 @@
 }
 
 .timeline-entry-image {
-  width: 100%;
+  max-width: 100%;
   height: auto;
   border-radius: 0.25rem;
   // Limit to 40 rem but keep aspect ratio
