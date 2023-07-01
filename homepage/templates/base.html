@@ -1,39 +1,30 @@
 {% load static %}
-{% load i18n %}
 
 <!DOCTYPE html>
 
-{% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="en">
 
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% trans 'website_title' %}</title>
+    <title>Philipp Matthes 💡</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0072ff">
 
     <meta name="author" content="Philipp Matthes">
-    {% language 'en' %}
     <meta name="description"
           lang="en"
-          content="{% trans 'website_description' %}">
-    {% endlanguage %}
-    {% language 'de' %}
-    <meta name="description"
-          lang="de"
-          content="{% trans 'website_description' %}">
-    {% endlanguage %}
+          content="Research Associate and Ph.D. Student at TU Dresden, Software Specialist">
 
     <meta name="twitter:title"
-          content="{% trans 'website_title' %}">
+          content="Philipp Matthes">
     <meta name="twitter:description"
-          content="{% trans 'website_description' %}">
+          content="Research Associate and Ph.D. Student at TU Dresden, Software Specialist">
 
     <meta name="generator" content="Django">
-    <meta name="subject" content="{% trans 'website_subject' %}">
+    <meta name="subject" content="Homepage of Philipp Matthes.">
     <meta name="rating" content="General">
 
     <meta name="msapplication-TileColor" content="#ffffff">

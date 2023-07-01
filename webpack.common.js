@@ -11,11 +11,6 @@ const typeScriptConfig = {
     'index': [
       path.resolve(__dirname, 'homepage/static/src/ts/index/navigation.ts'),
       path.resolve(__dirname, 'homepage/static/src/ts/index/header/header.ts'),
-      path.resolve(__dirname, 'homepage/static/src/ts/index/apps/macbook.ts'),
-      path.resolve(__dirname, 'homepage/static/src/ts/index/apps/peerbridge.ts'),
-      path.resolve(__dirname, 'homepage/static/src/ts/index/ml/threedify.ts'),
-      path.resolve(__dirname, 'homepage/static/src/ts/index/cloud/terminal.ts'),
-      path.resolve(__dirname, 'homepage/static/src/ts/index/fullstack/fullstack.ts'),
     ],
   },
 
@@ -54,7 +49,6 @@ const sassConfig = {
     'vendor': [
       path.resolve(__dirname, 'homepage/static/src/css/vendor/fontawesome.scss'),
       path.resolve(__dirname, 'homepage/static/src/css/vendor/bulma.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/vendor/termynal.scss'),
     ],
     'base': [
       path.resolve(__dirname, 'homepage/static/src/css/base/homepage.scss'),

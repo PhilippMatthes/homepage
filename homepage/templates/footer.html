@@ -3,27 +3,8 @@
 <section id="footer" class="has-background-dark has-text-light py-6 px-3">
   <div class="container">
     <div class="columns is-multiline">
-      {% if addresses %}
-      <div class="column is-12">
-        <p class="pb-1"><b>{% trans 'blockchain_addresses' %}</b></p>
-        {% for address in addresses %}
-          {% if address.tracking_url %}
-          <a class="has-text-light" href="{{ address.tracking_url }}" style="display: inline-flex;
-  align-items: center;">
-            {% if address.image %}
-            <img alt="icon" src="{{ address.image.url }}"
-                 style="height: 1.5rem; width: 1.5rem; object-fit: contain">
-            {% endif %}
-            <p style="padding-left: 0.5rem; word-break: break-all;">{{ address.blockchain }}: {{ address.address }}</p>
-          </a>
-          {% else %}
-          <p>{{ address.blockchain }}: {{ address.address }}</p>
-          {% endif %}
-        {% endfor %}
-      </div>
-      {% endif %}
       <div class="column is-3">
-        <p><b>{% trans 'weblinks' %}</b></p>
+        <p><b>Links</b></p>
         {% for weblink in weblinks %}
         <p><a rel="noreferrer" target="_blank" class="has-text-light" href={{ weblink.url }}>
           <i class="{{ weblink.fontawesome_icon_css }} mr-2"></i> {{ weblink.title }}
@@ -31,26 +12,23 @@
         {% endfor %}
       </div>
       <div class="column is-3">
-        {% trans 'legal_information' %}
+        <p><b>Responsible for this website</b></p> 
+        <p>Philipp Matthes</p><p>         
+        </p><p>Clara-Viebig-Straße 9</p>         
+        <p>01159 Dresden</p>         
+        <p>+49 176 42090978</p>         
+        <p>hi@philippmatth.es</p>
       </div>
       <div class="column is-3">
-        <p><b>{% trans 'services' %}</b></p>
-        <p><a class="has-text-light" rel="noreferrer" href="/#apps">
-          {% trans 'apps' %}
-        </a></p>
-        <p><a class="has-text-light" rel="noreferrer" href="/#cloud">
-          {% trans 'cloud_computing' %}
-        </a></p>
-        <p><a class="has-text-light" rel="noreferrer" href="/#ml">
-          {% trans 'machine_learning' %}
-        </a></p>
-        <p><a class="has-text-light" rel="noreferrer" href="/#fullstack">
-          {% trans 'fullstack' %}
-        </a></p>
+        <p><b>Expertise</b></p>
+        <p>📱 Mobile and Web Apps</p>
+        <p>☁️ Cloud Infrastructures</p>
+        <p>🧠 Machine Learning</p>
+        <p>💡 Fullstack Development</p>
       </div>
       <div class="column is-3">
-        <p><b>{% trans 'made_with_love' %}</b></p>
-        <p><a class="has-text-light" rel="noreferrer" href="https://github.com/PhilippMatthes/homepage" target="_blank">{% trans 'contribute' %}</a></p>
+        <p><b>Made with ❤️ with Django, Three.js, and Bulma.</b></p>
+        <p><a class="has-text-light" rel="noreferrer" href="https://github.com/PhilippMatthes/homepage" target="_blank">Contribute</a></p>
       </div>
     </div>
   </div>
