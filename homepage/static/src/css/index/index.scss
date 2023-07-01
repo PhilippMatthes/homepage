@@ -44,7 +44,7 @@
 
 #profile-icon-container {
   display: inline-block;
-  background-image: var(--gradient);
+  background-image: transparent;
   background-size: 400% 400%;
   border-radius: 50%;
   width: 16rem;
@@ -177,4 +177,90 @@
 
 .featured-project-description {
   z-index: 100;
+}
+
+.timeline-entry {
+  position: relative;
+}
+
+.timeline-entry-indicator {
+  position: absolute;
+  left: 0rem;
+  top: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: #fff;
+  @media (prefers-color-scheme: light) {
+    background-color: #efefef;
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes horizontalShine {
+  to {
+    background-position: 200% 200%;
+  }
+}
+
+.timeline-entry-indicator i {
+  font-size: 1.5rem;
+}
+
+.timeline-entry-indicator .emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.timeline-entry-content {
+  padding-left: 4rem;
+}
+
+.timeline-entry-line {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 1.25rem;
+  top: 2rem;
+  width: 0.5rem;
+  border-radius: 0.25rem;
+  height: 100%;
+  background-color: #363636;
+
+  @media (prefers-color-scheme: light) {
+    background-color: #efefef;
+  }
+}
+
+.timeline-entry-title {
+  margin: 0;
+  padding-top: 0rem;
+  padding-right: 3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.timeline-entry-date {
+  margin: 0;
+  padding-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.timeline-entry-body {
+  margin: 1rem 0;
+}
+
+.timeline-entry-description {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.timeline-entry-image {
+  width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
 }

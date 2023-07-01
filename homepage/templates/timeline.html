@@ -1,0 +1,34 @@
+<section class="px-3">
+  <div class="container my-6">
+    {% for event in events %}
+      <div class="timeline-entry">
+        {% comment %} Add a link symbol to the right {% endcomment %}
+        <a id="blog-{{ event.pk }}" href="#blog-{{ event.pk }}" class="timeline-entry-indicator" style="background-color: {{ event.color }}">
+          {% if event.icon %}
+            <img src="{{ event.icon.url }}" alt="{{ event.title }}">
+          {% elif event.emoji %}
+            <span class="emoji">{{ event.emoji }}</span>
+          {% else %}
+            <span class="emoji">ℹ️</span>
+          {% endif %}
+        </a>
+        <div class="timeline-entry-content">
+          <div class="timeline-entry-line" data-color="{{ event.color }}" style="
+            {% if event.color and event.color2 %}
+            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            background-size: 200% 200%;
+            animation: horizontalShine 4s linear infinite;
+            {% endif %}
+          "></div>
+          <p class="timeline-entry-date subtitle">{{ event.date|date:"F Y" }}</p>
+          <h3 class="timeline-entry-title title">{{ event.title }}</h3>
+          <div class="timeline-entry-body">
+            {% if event.image %}
+              <img class="timeline-entry-image mb-3" src="{{ event.image.url }}" alt="{{ event.title }}">
+            {% endif %}
+            <p class="timeline-entry-description subtitle">{{ event.description|safe|linebreaksbr }}</p>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+</section>
