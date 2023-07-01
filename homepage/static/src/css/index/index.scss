@@ -190,6 +190,8 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+  // Clip the image to the circle
+  overflow: hidden;
   background-color: #fff;
   @media (prefers-color-scheme: light) {
     background-color: #efefef;
@@ -263,4 +265,12 @@
   width: 100%;
   height: auto;
   border-radius: 0.25rem;
+  // Limit to 40 rem but keep aspect ratio
+  max-height: 40rem;
+  object-fit: contain;
+  object-position: center;
+  background-color: #efefef;
+  @media (prefers-color-scheme: dark) {
+    background-color: #363636;
+  }
 }
