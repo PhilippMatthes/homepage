@@ -1,7 +1,64 @@
+<style>
+#glow {
+  isolation: isolate;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#glow-noise {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  background-image: 
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='4' numOctaves='10' stitchTiles='stitch' /></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)' /></svg>");
+  mix-blend-mode: overlay;
+}
+
+{% for event in events %}
+  .glow-event-{{ event.pk }} {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background: radial-gradient(
+      circle at center, 
+      {% if event.glow_color_rgba %}{{ event.glow_color_rgba }}{% else %}rgba(0, 0, 0, 0){% endif %} 10%, 
+      var(--lynx-white) 100%
+     );
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .glow-event-{{ event.pk }} {
+      background: radial-gradient(
+        circle at center, 
+        {% if event.glow_color_rgba %}{{ event.glow_color_rgba }}{% else %}rgba(0, 0, 0, 0){% endif %} 10%, 
+        var(--dark) 100%
+      );
+    }
+  }
+{% endfor %}
+</style>
+
+<div id="glow">
+  {% for event in events %}
+    <div id="glow-color-{{ event.pk }}" class="glow-color glow-event-{{ event.pk }}"></div>
+  {% endfor %}
+  <div id="glow-noise"></div>
+</div>
+
 <section class="px-3">
   <div class="container my-6">
     {% for event in events %}
-      <div class="timeline-entry">
+      <section class="timeline-entry" data-glow-id="glow-color-{{ event.pk }}">
         {% comment %} Add a link symbol to the right {% endcomment %}
         <a id="blog-{{ event.pk }}" href="#blog-{{ event.pk }}" class="timeline-entry-indicator" style="background-color: {{ event.color }}">
           {% if event.icon %}
@@ -29,6 +86,89 @@
             <p class="timeline-entry-description subtitle">{{ event.description|safe|linebreaksbr }}</p>
           </div>
         </div>
+      </section>
     {% endfor %}
   </div>
 </section>
+
+<script>
+  const sections = document.querySelectorAll('[data-glow-id]');
+  const glowColorElements = document.querySelectorAll('.glow-color');
+  const noiseElement = document.getElementById('glow-noise');
+
+  // On scroll, call the function to set the background color
+  let currentSectionIdx = undefined;
+  function updateGlow() {
+    if (sections.length == 0) return;
+
+    // Check if the timeline is visible
+    const distToTop = sections[0].getBoundingClientRect().top - (window.innerHeight / 2);
+    const distToBottom = sections[sections.length - 1].getBoundingClientRect().bottom - (window.innerHeight / 2);
+    if (distToTop > 0 || distToBottom < 0) {
+      if (currentSectionIdx != undefined) { // Moving outside the timeline at this moment
+        // Hide all glow elements
+        glowColorElements.forEach((el) => el.style.opacity = 0);
+        // Hide the noise
+        noiseElement.style.opacity = 0;
+      }
+      currentSectionIdx = undefined;
+      return;
+    }
+
+    let initial = currentSectionIdx == undefined;
+    currentSectionIdx = 0;
+
+    // Look forward and check if there is a section nearer to the current scroll offset
+    let forwardIdx = currentSectionIdx + 1;
+    let foundForward = false;
+    while(true) {
+      if (forwardIdx > sections.length - 1) break;
+      const currTopDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const forwardTopDiff = Math.abs(sections[forwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const currBottomDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      const forwardBottomDiff = Math.abs(sections[forwardIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      // If the forward section is farer, break
+      if (forwardTopDiff > currTopDiff && forwardBottomDiff > currBottomDiff) break;
+      // If the forward section is nearer, update the current section
+      if (forwardTopDiff < currTopDiff || forwardBottomDiff < currBottomDiff) {
+        currentSectionIdx = forwardIdx;
+        foundForward = true;
+      }
+      forwardIdx++;
+    }
+
+    // Look backward and check if there is a section nearer to the current scroll offset
+    let backwardIdx = currentSectionIdx - 1;
+    let foundBackward = false;
+    while(true) {
+      if (backwardIdx < 0) break;
+      const currTopDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const backwardTopDiff = Math.abs(sections[backwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const currBottomDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      const backwardBottomDiff = Math.abs(sections[backwardIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      // If the backward section is farer, break
+      if (backwardTopDiff > currTopDiff && backwardBottomDiff > currBottomDiff) break;
+      // If the backward section is nearer, update the current section
+      if (backwardTopDiff < currTopDiff || backwardBottomDiff < currBottomDiff) {
+        currentSectionIdx = backwardIdx;
+        foundBackward = true;
+      }
+      backwardIdx--;
+    }
+
+    if (foundBackward || foundForward || initial) {
+
+      glowColorElements.forEach((el) => {
+        if (el.id == sections[currentSectionIdx].dataset.glowId) {
+          el.style.opacity = 1;
+        } else {
+          el.style.opacity = 0;
+        }
+        noiseElement.style.opacity = 0.25;
+      });
+    }
+  }
+
+  updateGlow(true);
+  window.addEventListener('scroll', () => updateGlow());
+</script>

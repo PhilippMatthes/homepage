@@ -33,5 +33,8 @@ class Event(models.Model):
     # The second color for the gradient.
     color2 = models.TextField(null=True, blank=True)
 
+    # The glow color in rgba() format.
+    glow_color_rgba = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return f'{self.title} ({self.date})'
