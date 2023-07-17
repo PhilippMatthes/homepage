@@ -1,26 +1,4 @@
 <style>
-#glow {
-  isolation: isolate;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-#glow-noise {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  background-image: 
-    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='4' numOctaves='10' stitchTiles='stitch' /></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)' /></svg>");
-  mix-blend-mode: overlay;
-}
-
 {% for event in events %}
   .glow-event-{{ event.pk }} {
     position: absolute;
@@ -55,10 +33,10 @@
   <div id="glow-noise"></div>
 </div>
 
-<section class="px-3">
-  <div class="container my-6">
+<section class="pl-4 my-6 pr-5 pb-6">
+  <div class="container">
     {% for event in events %}
-      <section class="timeline-entry" data-glow-id="glow-color-{{ event.pk }}">
+      <section class="timeline-entry {% if forloop.counter > 10 %}closable is-closed{% endif %}" data-glow-id="glow-color-{{ event.pk }}">
         {% comment %} Add a link symbol to the right {% endcomment %}
         <a id="blog-{{ event.pk }}" href="#blog-{{ event.pk }}" class="timeline-entry-indicator" style="background-color: {{ event.color }}">
           {% if event.icon %}
@@ -69,7 +47,7 @@
             <span class="emoji">ℹ️</span>
           {% endif %}
         </a>
-        <div class="timeline-entry-content pb-6">
+        <div class="timeline-entry-content pb-4">
           <div class="timeline-entry-line" data-color="{{ event.color }}" style="
             {% if event.color and event.color2 %}
             background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
@@ -77,21 +55,54 @@
             animation: horizontalShine 4s linear infinite;
             {% endif %}
           "></div>
+          <div class="timeline-entry-connector-dot-1" data-color="{{ event.color }}" style="
+            {% if event.color and event.color2 %}
+            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            {% endif %}
+          "></div>
+          <div class="timeline-entry-connector-dot-2" data-color="{{ event.color }}" style="
+            {% if event.color and event.color2 %}
+            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            {% endif %}
+          "></div>
           <p class="timeline-entry-date subtitle">{{ event.date|date:"F Y" }}</p>
           <h3 class="timeline-entry-title title">{{ event.title }}</h3>
-          <div class="timeline-entry-body">
-            {% if event.image %}
-              <img class="timeline-entry-image mb-3" src="{{ event.image.url }}" alt="{{ event.title }}">
-            {% endif %}
+          <div class="timeline-entry-body pb-3">
             <p class="timeline-entry-description subtitle">{{ event.description|safe|linebreaksbr }}</p>
           </div>
+          {% if event.image %}
+          <div class="timeline-entry-image-wrapper mb-6" style="
+            {% if event.color and event.color2 %}
+            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            background-size: 200% 200%;
+            animation: horizontalShine 4s linear infinite;
+            {% endif %}
+          ">
+            <img class="timeline-entry-image" src="{{ event.image.url }}" alt="{{ event.title }}">
+          </div>
+          {% endif %}
         </div>
       </section>
+
+      {% comment %} If the 10th element is reached, display an expand button. {% endcomment %}
+      {% if forloop.counter == 10 %}
+        <button class="timeline-expand-button" onclick="
+          document.querySelectorAll('.timeline-entry').forEach((el) => el.classList.remove('is-closed'));
+          document.querySelector('.timeline-expand-button').style.display = 'none';
+          document.querySelector('.timeline-expand-button-text').style.display = 'none';
+          window.areMoreThen10EventsDisplayed = true;
+        ">
+          <span class="icon">⬇️</span>
+        </button>
+        <h3 class="timeline-expand-button-text">Click here to show all {{ events.count }} posts</h3>
+      {% endif %}
     {% endfor %}
   </div>
 </section>
 
 <script>
+  window.areMoreThen10EventsDisplayed = false;
+
   const sections = document.querySelectorAll('[data-glow-id]');
   const glowColorElements = document.querySelectorAll('.glow-color');
   const noiseElement = document.getElementById('glow-noise');
@@ -103,7 +114,10 @@
 
     // Check if the timeline is visible
     const distToTop = sections[0].getBoundingClientRect().top - (window.innerHeight / 2);
-    const distToBottom = sections[sections.length - 1].getBoundingClientRect().bottom - (window.innerHeight / 2);
+    let lastSectionIdx = window.areMoreThen10EventsDisplayed ? sections.length - 1 : 9;
+    if (lastSectionIdx > sections.length - 1) lastSection = sections.length - 1;
+    const distToBottom = sections[lastSectionIdx].getBoundingClientRect().bottom - (window.innerHeight / 2);
+
     if (distToTop > 0 || distToBottom < 0) {
       if (currentSectionIdx != undefined) { // Moving outside the timeline at this moment
         // Hide all glow elements
@@ -123,14 +137,12 @@
     let foundForward = false;
     while(true) {
       if (forwardIdx > sections.length - 1) break;
-      const currTopDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
-      const forwardTopDiff = Math.abs(sections[forwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
-      const currBottomDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
-      const forwardBottomDiff = Math.abs(sections[forwardIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      const currDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const forwardDiff = Math.abs(sections[forwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
       // If the forward section is farer, break
-      if (forwardTopDiff > currTopDiff && forwardBottomDiff > currBottomDiff) break;
+      if (forwardDiff > currDiff) break;
       // If the forward section is nearer, update the current section
-      if (forwardTopDiff < currTopDiff || forwardBottomDiff < currBottomDiff) {
+      if (forwardDiff < currDiff) {
         currentSectionIdx = forwardIdx;
         foundForward = true;
       }
@@ -142,14 +154,12 @@
     let foundBackward = false;
     while(true) {
       if (backwardIdx < 0) break;
-      const currTopDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
-      const backwardTopDiff = Math.abs(sections[backwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
-      const currBottomDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
-      const backwardBottomDiff = Math.abs(sections[backwardIdx].getBoundingClientRect().bottom - (window.innerHeight / 2));
+      const currDiff = Math.abs(sections[currentSectionIdx].getBoundingClientRect().top - (window.innerHeight / 2));
+      const backwardDiff = Math.abs(sections[backwardIdx].getBoundingClientRect().top - (window.innerHeight / 2));
       // If the backward section is farer, break
-      if (backwardTopDiff > currTopDiff && backwardBottomDiff > currBottomDiff) break;
+      if (backwardDiff > currDiff) break;
       // If the backward section is nearer, update the current section
-      if (backwardTopDiff < currTopDiff || backwardBottomDiff < currBottomDiff) {
+      if (backwardDiff < currDiff) {
         currentSectionIdx = backwardIdx;
         foundBackward = true;
       }
@@ -157,7 +167,6 @@
     }
 
     if (foundBackward || foundForward || initial) {
-
       glowColorElements.forEach((el) => {
         if (el.id == sections[currentSectionIdx].dataset.glowId) {
           el.style.opacity = 1;
@@ -171,4 +180,31 @@
 
   updateGlow(true);
   window.addEventListener('scroll', () => updateGlow());
+</script>
+
+<script>
+  function applyShine(element) {
+    var shine = document.createElement("div");
+    shine.className = "timeline-entry-shine";
+    shine.style.display = "block";
+    element.append(shine);
+
+    element.addEventListener("mousemove", function(event) {
+      var rect = element.getBoundingClientRect();
+      var x = Math.abs(rect.x - event.clientX) / rect.width * 100;
+      var y = Math.abs(rect.y - event.clientY) / rect.height * 100;
+      xR = -(x-50)/5;
+      yR = -(y-50)/5;
+      shine.style.backgroundImage = `radial-gradient(circle at ${100 - x}% ${y}%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0))`;
+    });
+
+    element.addEventListener("mouseleave", function(event) {
+      element.style.transform = "none";
+    });
+  };
+
+  const timelineImageWrappers = document.querySelectorAll(".timeline-entry-image-wrapper");
+  timelineImageWrappers.forEach((el) => {
+    applyShine(el);
+  });
 </script>

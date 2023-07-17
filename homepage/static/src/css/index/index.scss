@@ -10,6 +10,10 @@
 #hand {
   display:inline-block;
   animation: wiggle-hand 2s ease infinite;
+  text-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+  @media (prefers-color-scheme: dark) {
+    text-shadow: 0 20px 30px rgba(228, 197, 161, 0.2);
+  }
 }
 
 @keyframes navbar-slide-from-top {
@@ -24,7 +28,11 @@
 }
 
 #top-navbar {
-  animation: 2s ease forwards navbar-slide-from-top;
+  animation: 2s ease-in-out forwards navbar-slide-from-top;
+}
+
+#top-navbar-blur {
+  animation: 2s ease-in-out forwards navbar-slide-from-top;
 }
 
 @keyframes header-slide-from-bottom {
@@ -39,7 +47,7 @@
 }
 
 #header {
-  animation: 2s ease header-slide-from-bottom;
+  animation: 2s ease-in-out header-slide-from-bottom;
 }
 
 #profile-icon-container {
@@ -105,78 +113,9 @@
   }
 }
 
-#macbook-container {
-  height: 52rem;
-  position: relative;
-
-  #macbook {
-    position: absolute;
-    top: 2rem;
-    left: -13.2rem;
-    right: -13.5rem;
-    height: 110%;
-    background-image: url('/static/img/macbook-light-1920.webp');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    overflow: hidden;
-
-    @media (prefers-color-scheme: dark) {
-      background-image: url('/static/img/macbook-dark-1920.webp');
-    }
-
-    @media (max-width: 500px) {
-      background-image: url('/static/img/macbook-light-600.webp');
-    }
-
-    @media (max-width: 500px) and (prefers-color-scheme: dark) {
-      background-image: url('/static/img/macbook-dark-600.webp');
-    }
-
-    @media (max-width: 900px) {
-      background-image: url('/static/img/macbook-light-1000.webp');
-    }
-
-    @media (max-width: 900px) and (prefers-color-scheme: dark) {
-      background-image: url('/static/img/macbook-dark-1000.webp');
-    }
-
-    @media (max-width: 1300px) {
-      background-image: url('/static/img/macbook-light-1400.webp');
-    }
-
-    @media (max-width: 1300px) and (prefers-color-scheme: dark) {
-      background-image: url('/static/img/macbook-dark-1400.webp');
-    }
-  }
-
-  #macbook-code-container {
-    position: absolute;
-    top: 14.75rem;
-    left: 11.9rem;
-    right: 17.7rem;
-    bottom: 4.65rem;
-    overflow-y: hidden;
-    overflow-x: hidden;
-
-    #macbook-code {
-      height: 1250px;
-      width: 100%;
-      background-image: url('/static/img/code-light-686.webp');
-      background-size: contain;
-      background-position: top;
-      background-repeat: no-repeat;
-
-      @media (prefers-color-scheme: dark) {
-        height: 1262px;
-        background-image: url('/static/img/code-dark-686.webp');
-      }
-    }
-  }
-}
-
-.featured-project-description {
-  z-index: 100;
+nav .blurry-background {
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
 }
 
 .timeline-entry {
@@ -190,7 +129,6 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  // Clip the image to the circle
   overflow: hidden;
   background-color: #fff;
   @media (prefers-color-scheme: light) {
@@ -221,14 +159,43 @@
 }
 
 .timeline-entry-line {
-  content: '';
   position: absolute;
   z-index: -1;
   left: 1.25rem;
   top: 2rem;
+  bottom: 2rem;
   width: 0.5rem;
   border-radius: 0.25rem;
-  height: 100%;
+  background-color: #363636;
+
+  @media (prefers-color-scheme: light) {
+    background-color: #efefef;
+  }
+}
+
+.timeline-entry-connector-dot-1 {
+  position: absolute;
+  z-index: -1;
+  left: 1.40rem;
+  height: 0.25rem;
+  bottom: 0.25rem;
+  width: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: #363636;
+
+  @media (prefers-color-scheme: light) {
+    background-color: #efefef;
+  }
+}
+
+.timeline-entry-connector-dot-2 {
+  position: absolute;
+  z-index: -1;
+  left: 1.25rem;
+  height: 0.5rem;
+  bottom: 1rem;
+  width: 0.5rem;
+  border-radius: 0.25rem;
   background-color: #363636;
 
   @media (prefers-color-scheme: light) {
@@ -253,6 +220,7 @@
 
 .timeline-entry-body {
   margin: 1rem 0;
+  text-align: left;
 }
 
 .timeline-entry-description {
@@ -262,11 +230,108 @@
 }
 
 .timeline-entry-image {
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  border-radius: 0.25rem;
-  // Limit to 40 rem but keep aspect ratio
-  max-height: 40rem;
-  object-fit: contain;
+  border-radius: 1rem;
+  max-height: 30rem;
+  object-fit: cover;
   object-position: center;
+}
+
+.timeline-expand-button {
+  position: absolute;
+  left: 0rem;
+  bottom: -3.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #fff;
+  transition: all 500ms ease;
+  font-size: 1.5rem;
+  border: none;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #fff;
+  }
+
+  &:hover {
+    box-shadow: 0 19px 38px rgba(0,0,0,0.15), 0 15px 12px rgba(0,0,0,0.1) !important;
+    background-color: #0072ff;
+    color: #fff;
+  }
+}
+
+.timeline-expand-button-text {
+  position: absolute;
+  left: 4rem;
+  bottom: -3rem;
+  right: 2rem;
+  color: black;
+  @media (prefers-color-scheme: dark) {
+    color: white;
+  }
+}
+
+.timeline-entry-image-wrapper:hover .timeline-entry-shine, .timeline-entry-image-wrapper.active {
+  opacity: 0.35;
+}
+
+.timeline-entry-image-wrapper:hover, .timeline-entry-image-wrapper.active {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.15), 0 15px 12px rgba(0,0,0,0.1) !important;
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0 19px 38px rgba(255, 255, 255, 0.1), 0 15px 12px rgba(255, 255, 255, 0.05) !important;
+  }
+}
+
+.timeline-entry-image-wrapper {
+  position: relative;
+  transition: all 500ms ease;
+  border-radius: 1.3rem;
+  padding-right: 0.4rem;
+  padding-top: 0.4rem;
+  padding-left: 0.4rem;
+}
+
+.timeline-entry-shine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1rem;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-size: 100% 100%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  opacity: 0.0;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity .2s ease-out;
+}
+
+.closable.is-closed {
+  display: none;
+}
+
+#glow {
+  isolation: isolate;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#glow-noise {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  background-image: 
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='4' numOctaves='10' stitchTiles='stitch' /></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)' /></svg>");
+  mix-blend-mode: overlay;
 }
