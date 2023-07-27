@@ -65,6 +65,29 @@
   }
 }
 
+// Fade in every timeline entry from the top
+@for $i from 1 through 30 {
+  .project-badge:nth-child(#{$i}n) {
+    animation-delay: #{$i * 0.1}s;
+  }
+}
+
+@keyframes scale-project-badge {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.project-badge {
+  opacity: 0;
+  animation: 2000ms ease scale-project-badge forwards;
+}
+
 #header span.project-badge {
   display: inline-flex;
   align-items: center;
@@ -120,6 +143,44 @@ nav .blurry-background {
 
 .timeline-entry {
   position: relative;
+}
+
+// Fade in every timeline entry from the top
+@for $i from 1 through 10 {
+  .timeline-entry:nth-child(#{$i}n) .timeline-entry-indicator {
+    animation-delay: #{$i * 0.5}s;
+  }
+}
+
+@keyframes pulse-animation-light {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes pulse-animation-dark {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0);
+  }
+}
+
+.timeline-entry .timeline-entry-indicator {
+  animation: pulse-animation-light 2s infinite;
+
+  @media (prefers-color-scheme: dark) {
+    animation-name: pulse-animation-dark;
+  }
+
+  // Disable on mobile devices to save battery
+  @media (max-width: 900px) {
+    animation: none;
+  }
 }
 
 .timeline-entry-indicator {
@@ -236,6 +297,13 @@ nav .blurry-background {
   max-height: 30rem;
   object-fit: cover;
   object-position: center;
+  filter: grayscale(20%);
+  transition: filter 500ms ease;
+}
+
+// Hide filter on hover
+.timeline-entry-image:hover {
+  filter: none !important;
 }
 
 .timeline-expand-button {
@@ -278,7 +346,7 @@ nav .blurry-background {
 }
 
 .timeline-entry-image-wrapper:hover, .timeline-entry-image-wrapper.active {
-  box-shadow: 0 19px 38px rgba(0,0,0,0.15), 0 15px 12px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.05), 0 15px 12px rgba(0,0,0,0.05) !important;
   @media (prefers-color-scheme: dark) {
     box-shadow: 0 19px 38px rgba(255, 255, 255, 0.1), 0 15px 12px rgba(255, 255, 255, 0.05) !important;
   }

@@ -56,13 +56,13 @@
             {% endif %}
           "></div>
           <div class="timeline-entry-connector-dot-1" data-color="{{ event.color }}" style="
-            {% if event.color and event.color2 %}
-            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            {% if event.color2 %}
+            background-color: {{ event.color2 }};
             {% endif %}
           "></div>
           <div class="timeline-entry-connector-dot-2" data-color="{{ event.color }}" style="
-            {% if event.color and event.color2 %}
-            background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
+            {% if event.color2 %}
+            background-color: {{ event.color2 }};
             {% endif %}
           "></div>
           <p class="timeline-entry-date subtitle">{{ event.date|date:"F Y" }}</p>
@@ -92,7 +92,7 @@
           document.querySelector('.timeline-expand-button-text').style.display = 'none';
           window.areMoreThen10EventsDisplayed = true;
         ">
-          <span class="icon">⬇️</span>
+          <span class="icon">...</span>
         </button>
         <h3 class="timeline-expand-button-text">Click here to show all {{ events.count }} posts</h3>
       {% endif %}
@@ -106,6 +106,13 @@
   const sections = document.querySelectorAll('[data-glow-id]');
   const glowColorElements = document.querySelectorAll('.glow-color');
   const noiseElement = document.getElementById('glow-noise');
+  const imageElements = [];
+  for (let i = 0; i < sections.length; i++) {
+    const section = sections[i];
+    const image = section.querySelector('.timeline-entry-image');
+    if (image) imageElements.push(image);
+    else imageElements.push(undefined);
+  }
 
   // On scroll, call the function to set the background color
   let currentSectionIdx = undefined;
@@ -167,14 +174,26 @@
     }
 
     if (foundBackward || foundForward || initial) {
-      glowColorElements.forEach((el) => {
-        if (el.id == sections[currentSectionIdx].dataset.glowId) {
-          el.style.opacity = 1;
-        } else {
-          el.style.opacity = 0;
-        }
-        noiseElement.style.opacity = 0.25;
-      });
+      // Show the current glow element
+      const currentGlow = glowColorElements[currentSectionIdx];
+      const currentImg = imageElements[currentSectionIdx];
+      currentGlow.style.opacity = 1;
+      if (currentImg) currentImg.style.filter = 'none';
+      // Hide the previous glow element
+      if (currentSectionIdx > 0) {
+        const prevGlow = glowColorElements[currentSectionIdx - 1];
+        const prevImg = imageElements[currentSectionIdx - 1];
+        prevGlow.style.opacity = 0;
+        if(prevImg) prevImg.style.filter = 'grayscale(20%)';
+      }
+      // Hide the next glow element
+      if (currentSectionIdx < glowColorElements.length - 1) {
+        const nextGlow = glowColorElements[currentSectionIdx + 1];
+        const nextImg = imageElements[currentSectionIdx + 1];
+        nextGlow.style.opacity = 0;
+        if (nextImg) nextImg.style.filter = 'grayscale(20%)';
+      }
+      noiseElement.style.opacity = 0.25;
     }
   }
 
