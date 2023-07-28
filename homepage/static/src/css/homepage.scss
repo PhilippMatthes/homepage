@@ -378,6 +378,7 @@ nav.navbar.primary, nav.navbar.primary a {
 .project-badge {
   opacity: 0;
   animation: 2000ms ease scale-project-badge forwards;
+  transform: scale(0.75);
 }
 
 #header span.project-badge {
