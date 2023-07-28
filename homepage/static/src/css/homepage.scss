@@ -322,6 +322,7 @@ nav.navbar.primary, nav.navbar.primary a {
   &:not(.is-active) {
     animation: navbar-menu-hide 0.5s ease forwards;
     display: block !important;
+    pointer-events: none;
   }
 }
 
