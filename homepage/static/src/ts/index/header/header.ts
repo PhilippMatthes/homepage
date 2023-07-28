@@ -49,16 +49,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map((element) => new ParallaxImage(element))
 
     const updateWindowDimensions = async () => {
-        if (document.documentElement.clientWidth < 1023) {
-            for (let parallaxImage of parallaxImages) {
-                parallaxImage.hide()
-            }
-        } else {
-            await threeLoader.load()
-            for (let parallaxImage of parallaxImages) {
-                await parallaxImage.load()
-                parallaxImage.show()
-            }
+        await threeLoader.load()
+        for (let parallaxImage of parallaxImages) {
+            await parallaxImage.load()
+            parallaxImage.show()
         }
     }
 

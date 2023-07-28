@@ -8,43 +8,6 @@
 declare var THREE: any
 
 /**
- * The vertex shader for the THREE.js web gl renderer.
- */
-const vertexShader: String = `
-    varying vec2 vUv;
-
-    void main()	{
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-`
-
-
-/**
- * The fragment shader for the THREE.js web gl renderer.
- */
-const fragmentShader: String = `
-    #extension GL_OES_standard_derivatives : enable
-    varying vec2 vUv;
-    uniform float mouseX;
-    uniform float mouseY;
-    uniform float scrollOffset;
-    uniform sampler2D depthTexture;
-    uniform sampler2D texture;
-    void main() {
-        vec2 vMouse = vec2(mouseX, mouseY);
-        vec2 vScrollOffset = vec2(0, scrollOffset);
-        float depth = texture2D(depthTexture, vUv).r;
-        gl_FragColor = texture2D(
-            texture, vUv + vMouse * (depth) + vScrollOffset
-        );
-        // Do some edge anti aliasing, because the image
-        // may contain a premultiplied alpha channel.
-        gl_FragColor.rgb = gl_FragColor.rgb * gl_FragColor.a;
-    }
-`
-
-/**
  * A parallax image, driven by THREE.js.
  */
 export class ParallaxImage {
@@ -73,6 +36,32 @@ export class ParallaxImage {
         })
     }
 
+    public async loadCubemapBehindAttribute(attribute: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const src = this.imageElement.getAttribute(attribute)
+            if (src === null) {
+                reject(new Error(`
+                    The image element must include
+                    an attribute "${attribute}"!
+                `))
+                return
+            }
+            const textureLoader = new THREE.CubeTextureLoader()
+                .setPath(src)
+                // Use: https://matheowis.github.io/HDRI-to-CubeMap/
+                // to convert an HDRI to a cubemap
+                .load([
+                    "px.png",
+                    "nx.png",
+                    "py.png",
+                    "ny.png",
+                    "pz.png",
+                    "nz.png"
+                ], () => {
+                    resolve(textureLoader)
+                })
+        })
+    }
 
     public async load() {
         if (this.parallaxScene !== undefined) {
@@ -89,12 +78,21 @@ export class ParallaxImage {
             .loadTextureBehindAttribute('src')
         const depthTextureLoader = await this
             .loadTextureBehindAttribute('data-parallax-depth-map')
+        const normalsTextureLoader = await this
+            .loadTextureBehindAttribute('data-parallax-normal-map')
+        const cubemapTextureLoader = await this
+            .loadCubemapBehindAttribute('data-parallax-cubemap-path')
         const renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
+            antialias: false,
+            alpha: false
         })
         renderer.setSize(width, height)
         const canvas = renderer.domElement
+
+        // Load the fragment and vertex shader
+        const fragmentShader = await (await fetch('/static/src/ts/index/header/shaders/frag.glsl')).text()
+        const vertexShader = await (await fetch('/static/src/ts/index/header/shaders/vert.glsl')).text()
+
         const shaderMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 mouseX: {value: 0},
@@ -102,6 +100,8 @@ export class ParallaxImage {
                 scrollOffset: {value: 0},
                 texture: {value: diffuseTextureLoader},
                 depthTexture: {value: depthTextureLoader},
+                normalsTexture: {value: normalsTextureLoader},
+                cubemapTexture: {value: cubemapTextureLoader}
             },
             vertexShader,
             fragmentShader
@@ -151,6 +151,8 @@ class ParallaxScene {
     geometry: any
     mesh: any
 
+    lastOrientation: DeviceOrientationEvent | null = null
+
     public constructor(
         image: HTMLImageElement,
         canvas: HTMLCanvasElement,
@@ -196,12 +198,27 @@ class ParallaxScene {
     }
 
     private reactToMouseMove(event: MouseEvent): void {
+        console.log(event)
         const rect = this.canvas.getBoundingClientRect()
         const x = Math.max(-500, Math.min(500, event.clientX - rect.left))
         const y = Math.max(-500, Math.min(500, event.clientY - rect.top))
         this.shaderMaterial.uniforms.mouseX.value = -x / 15000
         this.shaderMaterial.uniforms.mouseY.value = y / 15000
-        this.canvas.style.transform = `rotate3d(0, 1, 1, ${x / 50}deg)`
+        this.requestAnimationFrame()
+    }
+
+    private reactToTouchMove(event: TouchEvent): void {
+        const rect = this.canvas.getBoundingClientRect()
+        const x = Math.max(-500, Math.min(500, event.touches[0].clientX - rect.left))
+        const y = Math.max(-500, Math.min(500, event.touches[0].clientY - rect.top))
+        this.shaderMaterial.uniforms.mouseX.value = -x / 15000
+        this.shaderMaterial.uniforms.mouseY.value = y / 15000
+        this.requestAnimationFrame()
+    }
+
+    private reactToScroll(): void {
+        const scrollOffset = Math.min(Math.max(0.3 * (window.scrollY / window.innerHeight), 0), 0.5)
+        this.shaderMaterial.uniforms.scrollOffset.value = scrollOffset
         this.requestAnimationFrame()
     }
 
@@ -227,6 +244,16 @@ class ParallaxScene {
             this.reactToMouseMove.bind(this),
             true
         )
+        document.addEventListener(
+            'touchmove',
+            this.reactToTouchMove.bind(this),
+            true
+        )
+        window.addEventListener(
+            'scroll', 
+            this.reactToScroll.bind(this),
+            true
+        );
         this.updateViewportAspectRatio()
         this.requestAnimationFrame()
     }
@@ -242,6 +269,16 @@ class ParallaxScene {
         document.removeEventListener(
             'mousemove',
             this.reactToMouseMove.bind(this),
+            true
+        )
+        document.removeEventListener(
+            'touchmove',
+            this.reactToTouchMove.bind(this),
+            true
+        )
+        window.removeEventListener(
+            'scroll',
+            this.reactToScroll.bind(this),
             true
         )
     }

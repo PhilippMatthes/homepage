@@ -271,8 +271,40 @@ nav.navbar.primary, nav.navbar.primary a {
   }
 }
 
+@keyframes navbar-menu-show {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navbar-menu-hide {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+}
+
 .navbar-menu {
-  border-radius: 0.5rem;
+  max-width: 16rem;
+  margin-left: auto;
+  padding: 0.5rem;
+  border-radius: 1rem;
+
+  animation: none;
+
+  background-color: #fff;
+  @media (prefers-color-scheme: dark) {
+    background-color: #000;
+  }
 
   .navbar-item:hover {
     transition: border-bottom 0.1s ease;
@@ -281,6 +313,15 @@ nav.navbar.primary, nav.navbar.primary a {
   .navbar-item.active {
     border-bottom-style: solid;
     border-bottom-color: var(--darkblue);
+  }
+
+  // Animate from right if activated
+  &.is-active {
+    animation: navbar-menu-show 0.5s ease forwards;
+  }
+  &:not(.is-active) {
+    animation: navbar-menu-hide 0.5s ease forwards;
+    display: block !important;
   }
 }
 
@@ -349,6 +390,12 @@ nav.navbar.primary, nav.navbar.primary a {
   border-radius: 50%;
   width: 16rem;
   height: 16rem;
+
+  // Add a nice shadow
+  box-shadow: 0 0 0 0.4rem #eee, 0 2rem 2rem 0.2rem rgba(0,0,0,0.1);
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0 0 0 0.4rem rgba(255,255,255,.1), 0 2rem 2rem 0.2rem rgba(255,255,255,.1);
+  }
 
   canvas, #profile-icon-preview {
     width: 16rem;
