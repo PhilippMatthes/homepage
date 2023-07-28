@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+    {% include 'meta.html' %}
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+
+    <main>
+      {% include 'sections/header.html' %}
+      {% include 'sections/timeline.html' %}
+      {% include 'sections/footer.html' %}
+    </main>
+
+    <link rel="prefetch" href="{% static 'dist/js/base.min.js' %}">
+    <script defer src="{% static 'dist/js/base.min.js' %}"></script>
+
+    <link rel="prefetch" href="{% static 'dist/js/index.min.js' %}">
+    <script defer src="{% static 'dist/js/index.min.js' %}"></script>
+
+    <link rel="parallax-three-js"
+          data-id="three-js-script"
+          href="{% static 'vendor/js/three.min.js' %}">
+  </body>
+
+</html>

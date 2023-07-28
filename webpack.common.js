@@ -50,12 +50,9 @@ const sassConfig = {
       path.resolve(__dirname, 'homepage/static/src/css/vendor/fontawesome.scss'),
       path.resolve(__dirname, 'homepage/static/src/css/vendor/bulma.scss'),
     ],
-    'base': [
-      path.resolve(__dirname, 'homepage/static/src/css/base/homepage.scss'),
-      path.resolve(__dirname, 'homepage/static/src/css/base/navigation.scss'),
+    'homepage': [
+      path.resolve(__dirname, 'homepage/static/src/css/homepage.scss'),
     ],
-    'index':
-      path.resolve(__dirname, 'homepage/static/src/css/index/index.scss'),
   },
 
   output: {
