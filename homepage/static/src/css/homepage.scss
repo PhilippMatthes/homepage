@@ -403,13 +403,17 @@ nav.navbar.primary, nav.navbar.primary a {
 #profile-icon-container::after {
   content: "";
   display: block;
-  top: 0.3rem; left: 0.3rem; right: 0.3rem; bottom: 0.3rem;
+  // Cover the border aliasing of the parallax image
+  top: -0.2rem; left: -0.2rem; right: -0.2rem; bottom: -0.2rem;
   position: absolute;
   border-radius: 50%;
-  // Add a nice shadow
-  box-shadow: 0 0 0 0.4rem #eee, 0 2rem 2rem 0.2rem rgba(0,0,0,0.1);
+  z-index: 420;
+
+  border: 0.4rem solid #eee;
+  box-shadow: 0 2rem 2rem 0.2rem rgba(0,0,0,0.1);
   @media (prefers-color-scheme: dark) {
-    box-shadow: 0 0 0 0.4rem rgba(255,255,255,.1), 0 2rem 2rem 0.2rem rgba(255,255,255,.1);
+    border: 0.4rem solid #393939;
+    box-shadow: 0 2rem 2rem 0.2rem rgba(255,255,255,.1);
   }
 }
 

@@ -78,8 +78,6 @@ export class ParallaxImage {
             .loadTextureBehindAttribute('src')
         const depthTextureLoader = await this
             .loadTextureBehindAttribute('data-parallax-depth-map')
-        const normalsTextureLoader = await this
-            .loadTextureBehindAttribute('data-parallax-normal-map')
         const cubemapTextureLoader = await this
             .loadCubemapBehindAttribute('data-parallax-cubemap-path')
         const renderer = new THREE.WebGLRenderer({
@@ -98,16 +96,15 @@ export class ParallaxImage {
                 mouseX: {value: 0},
                 mouseY: {value: 0},
                 scrollOffset: {value: 0},
-                texture: {value: diffuseTextureLoader},
+                imageTexture: {value: diffuseTextureLoader},
                 depthTexture: {value: depthTextureLoader},
-                normalsTexture: {value: normalsTextureLoader},
                 cubemapTexture: {value: cubemapTextureLoader}
             },
             vertexShader,
             fragmentShader
         })
         const scene = new THREE.Scene()
-        const geometry = new THREE.PlaneBufferGeometry(1, 1)
+        const geometry = new THREE.PlaneGeometry(1, 1)
         const mesh = new THREE.Mesh(geometry, shaderMaterial)
         scene.add(mesh)
 
@@ -187,7 +184,7 @@ class ParallaxScene {
         this.camera.aspect =
             this.image.naturalWidth / this.image.naturalHeight
         this.camera.updateProjectionMatrix()
-        const vFOV = THREE.Math.degToRad(this.camera.fov)
+        const vFOV = THREE.MathUtils.degToRad(this.camera.fov)
         const maxHeight = 2 * Math.tan(vFOV / 2) * this.camera.position.z
         const imageAspect =
             this.image.naturalHeight / this.image.naturalWidth
@@ -199,24 +196,24 @@ class ParallaxScene {
 
     private reactToMouseMove(event: MouseEvent): void {
         const rect = this.canvas.getBoundingClientRect()
-        const x = Math.max(-500, Math.min(500, event.clientX - rect.left))
-        const y = Math.max(-500, Math.min(500, event.clientY - rect.top))
-        this.shaderMaterial.uniforms.mouseX.value = -x / 15000
-        this.shaderMaterial.uniforms.mouseY.value = y / 15000
+        const x = (event.clientX - rect.left) / rect.width
+        const y = (event.clientY - rect.top) / rect.height
+        this.shaderMaterial.uniforms.mouseX.value = x
+        this.shaderMaterial.uniforms.mouseY.value = y
         this.requestAnimationFrame()
     }
 
     private reactToTouchMove(event: TouchEvent): void {
         const rect = this.canvas.getBoundingClientRect()
-        const x = Math.max(-500, Math.min(500, event.touches[0].clientX - rect.left))
-        const y = Math.max(-500, Math.min(500, event.touches[0].clientY - rect.top))
-        this.shaderMaterial.uniforms.mouseX.value = -x / 15000
-        this.shaderMaterial.uniforms.mouseY.value = y / 15000
+        const x = (event.touches[0].clientX - rect.left) / rect.width
+        const y = (event.touches[0].clientY - rect.top) / rect.height
+        this.shaderMaterial.uniforms.mouseX.value = x
+        this.shaderMaterial.uniforms.mouseY.value = y
         this.requestAnimationFrame()
     }
 
     private reactToScroll(): void {
-        const scrollOffset = Math.min(Math.max(0.3 * (window.scrollY / window.innerHeight), 0), 0.5)
+        const scrollOffset = Math.min(Math.max(0.5 * (window.scrollY / window.innerHeight), 0), 0.1)
         this.shaderMaterial.uniforms.scrollOffset.value = scrollOffset
         this.requestAnimationFrame()
     }
