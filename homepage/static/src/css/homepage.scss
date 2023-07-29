@@ -386,22 +386,30 @@ nav.navbar.primary, nav.navbar.primary a {
 
 #profile-icon-container {
   display: inline-block;
+  position: relative;
   background-image: transparent;
   background-size: 400% 400%;
   border-radius: 50%;
   width: 16rem;
   height: 16rem;
 
-  // Add a nice shadow
-  box-shadow: 0 0 0 0.4rem #eee, 0 2rem 2rem 0.2rem rgba(0,0,0,0.1);
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0 0 0 0.4rem rgba(255,255,255,.1), 0 2rem 2rem 0.2rem rgba(255,255,255,.1);
-  }
-
   canvas, #profile-icon-preview {
     width: 16rem;
     height: 16rem;
     border-radius: 8rem;
+  }
+}
+
+#profile-icon-container::after {
+  content: "";
+  display: block;
+  top: 0.3rem; left: 0.3rem; right: 0.3rem; bottom: 0.3rem;
+  position: absolute;
+  border-radius: 50%;
+  // Add a nice shadow
+  box-shadow: 0 0 0 0.4rem #eee, 0 2rem 2rem 0.2rem rgba(0,0,0,0.1);
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0 0 0 0.4rem rgba(255,255,255,.1), 0 2rem 2rem 0.2rem rgba(255,255,255,.1);
   }
 }
 
