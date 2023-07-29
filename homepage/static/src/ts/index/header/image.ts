@@ -74,18 +74,27 @@ export class ParallaxImage {
             45, width / height, 1, 1000
         )
         camera.position.z = 200
-        const diffuseTextureLoader = await this
-            .loadTextureBehindAttribute('src')
-        const depthTextureLoader = await this
-            .loadTextureBehindAttribute('data-parallax-depth-map')
-        const cubemapTextureLoader = await this
-            .loadCubemapBehindAttribute('data-parallax-cubemap-path')
+
         const renderer = new THREE.WebGLRenderer({
             antialias: false,
             alpha: false
         })
         renderer.setSize(width, height)
         const canvas = renderer.domElement
+
+        canvas.style.opacity = '0'
+        canvas.style.background = 'transparent'
+        canvas.style.transition = 'opacity 1s'
+        canvas.style.position = 'absolute'
+        canvas.style.top = '0'
+        canvas.style.left = '0'
+
+        const diffuseTextureLoader = await this
+            .loadTextureBehindAttribute('src')
+        const depthTextureLoader = await this
+            .loadTextureBehindAttribute('data-parallax-depth-map')
+        const cubemapTextureLoader = await this
+            .loadCubemapBehindAttribute('data-parallax-cubemap-path')
 
         // Load the fragment and vertex shader
         const fragmentShader = await (await fetch('/static/src/ts/index/header/shaders/frag.glsl')).text()
@@ -120,6 +129,7 @@ export class ParallaxImage {
             geometry,
             mesh
         )
+
         return
     }
 
@@ -219,8 +229,6 @@ class ParallaxScene {
     }
 
     public show(): void {
-        this.canvas.style.display = 'inline-block'
-        this.image.style.display = 'none'
         if (this.canvas.parentNode === null) {
             this.image.parentNode.insertBefore(
                 this.canvas, this.image.nextSibling
@@ -229,6 +237,7 @@ class ParallaxScene {
                 this.canvas.clientWidth,
                 this.canvas.clientHeight
             )
+            this.canvas.style.opacity = '1'
         }
         window.addEventListener(
             'resize',
