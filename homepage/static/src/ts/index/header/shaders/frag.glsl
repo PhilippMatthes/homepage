@@ -119,7 +119,8 @@ void main() {
     finalColor.rgb *= ambient + light * diffuse * 0.4;
 
     // Darken the background
-    finalColor.rgb *= clamp(depth * 3.0, 0.0, 1.0);
+    float personMask = clamp((depth - 0.1) / (0.2 - 0.1), 0.0, 1.0);
+    finalColor.rgb *= personMask;
 
     // Add background and foreground with reflections.
     float uvDistToCenter = length(vUv - vec2(0.5, 0.5));
@@ -137,7 +138,7 @@ void main() {
 
     // Add a color halo (based on the normals of the cupola).
     float haloFade = 1.0 - (cupolaHeight * 2.0);
-    haloFade = clamp(haloFade, 0.0, 1.0) * (1.0 - clamp(depth * 3.0, 0.0, 1.0));
+    haloFade = clamp(haloFade, 0.0, 1.0) * (1.0 - personMask);
     finalColor.rgb = mix(finalColor.rgb, cupolaNormal, haloFade);
 
     gl_FragColor = finalColor;
