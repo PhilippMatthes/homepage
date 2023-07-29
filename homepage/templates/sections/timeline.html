@@ -66,12 +66,23 @@
             {% endif %}
           "></div>
           <p class="timeline-entry-date subtitle">{{ event.date|date:"F Y" }}</p>
-          <h3 class="timeline-entry-title title">{{ event.title }}</h3>
-          <div class="timeline-entry-body pb-3">
-            <p class="timeline-entry-description subtitle">{{ event.description|safe|linebreaksbr }}</p>
+          <h3 class="timeline-entry-title title">
+            {{ event.title }}
+          </h3>
+          <div class="timeline-entry-body pb-2">
+            <p class="timeline-entry-description subtitle">
+              {{ event.description|safe|linebreaksbr }}
+              {% if event.url %}
+              <a class="timeline-entry-link" href="{{ event.url }}" target="_blank" rel="noopener noreferrer"
+              >
+                <span class="icon">🔗</span>
+                <span class="timeline-entry-link-text">Read more</span>
+              </a>
+            {% endif %}
+            </p>
           </div>
           {% if event.image %}
-          <div class="timeline-entry-image-wrapper mb-6" style="
+          <div class="timeline-entry-image-wrapper mb-5" style="
             {% if event.color and event.color2 %}
             background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
             background-size: 200% 200%;

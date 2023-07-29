@@ -32,6 +32,10 @@ a {
     color: var(--lightblue);
   }
 
+  a:hover {
+    color: var(--darkblue);
+  }
+
   .notification a:not(.button):not(.dropdown-item) {
     color: var(--lightblue);
   }
@@ -72,7 +76,7 @@ hr {
 }
 
 .container {
-  max-width: 60rem !important;
+  max-width: 50rem !important;
 }
 
 .hero .title {
@@ -294,8 +298,6 @@ nav.navbar.primary, nav.navbar.primary a {
 }
 
 .navbar-menu {
-  max-width: 16rem;
-  margin-left: auto;
   padding: 0.5rem;
   border-radius: 1rem;
 
@@ -321,8 +323,7 @@ nav.navbar.primary, nav.navbar.primary a {
   }
   &:not(.is-active) {
     animation: navbar-menu-hide 0.5s ease forwards;
-    display: block !important;
-    pointer-events: none;
+    display: none;
   }
 }
 
@@ -678,8 +679,7 @@ nav .blurry-background {
 
   &:hover {
     box-shadow: 0 19px 38px rgba(0,0,0,0.15), 0 15px 12px rgba(0,0,0,0.1) !important;
-    background-color: #0072ff;
-    color: #fff;
+    background-color: #eee;
   }
 }
 

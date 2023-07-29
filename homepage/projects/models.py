@@ -36,6 +36,9 @@ class Event(models.Model):
     # The glow color in rgba() format.
     glow_color_rgba = models.TextField(null=True, blank=True)
 
+    # A link to a website with more information about the event.
+    url = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return f'{self.title} ({self.date})'
     

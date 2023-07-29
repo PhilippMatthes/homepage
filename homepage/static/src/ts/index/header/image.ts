@@ -206,6 +206,7 @@ class ParallaxScene {
 
     private reactToMouseMove(event: MouseEvent): void {
         const rect = this.canvas.getBoundingClientRect()
+        if (rect.bottom < 0) return;
         const x = (event.clientX - rect.left) / rect.width
         const y = (event.clientY - rect.top) / rect.height
         this.shaderMaterial.uniforms.mouseX.value = x
@@ -215,6 +216,7 @@ class ParallaxScene {
 
     private reactToTouchMove(event: TouchEvent): void {
         const rect = this.canvas.getBoundingClientRect()
+        if (rect.bottom < 0) return;
         const x = (event.touches[0].clientX - rect.left) / rect.width
         const y = (event.touches[0].clientY - rect.top) / rect.height
         this.shaderMaterial.uniforms.mouseX.value = x
@@ -223,6 +225,8 @@ class ParallaxScene {
     }
 
     private reactToScroll(): void {
+        const rect = this.canvas.getBoundingClientRect()
+        if (rect.bottom < 0) return;
         const scrollOffset = Math.min(Math.max(0.5 * (window.scrollY / window.innerHeight), 0), 0.1)
         this.shaderMaterial.uniforms.scrollOffset.value = scrollOffset
         this.requestAnimationFrame()
