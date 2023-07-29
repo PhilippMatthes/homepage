@@ -198,7 +198,6 @@ class ParallaxScene {
     }
 
     private reactToMouseMove(event: MouseEvent): void {
-        console.log(event)
         const rect = this.canvas.getBoundingClientRect()
         const x = Math.max(-500, Math.min(500, event.clientX - rect.left))
         const y = Math.max(-500, Math.min(500, event.clientY - rect.top))
