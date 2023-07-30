@@ -52,7 +52,6 @@
             {% if event.color and event.color2 %}
             background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
             background-size: 200% 200%;
-            animation: horizontalShine 4s linear infinite;
             {% endif %}
           "></div>
           <div class="timeline-entry-connector-dot-1" data-color="{{ event.color }}" style="
@@ -86,7 +85,6 @@
             {% if event.color and event.color2 %}
             background-image: linear-gradient(180deg, {{ event.color }} 10%, {{ event.color2 }} 50%, {{ event.color }} 90%);
             background-size: 200% 200%;
-            animation: horizontalShine 4s linear infinite;
             {% endif %}
           ">
             <img class="timeline-entry-image" src="{{ event.image.url }}" alt="{{ event.title }}">
