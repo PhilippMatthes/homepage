@@ -41,15 +41,18 @@ import { ParallaxImage } from './image'
 document.addEventListener('DOMContentLoaded', async () => {
     const threeLink = <HTMLLinkElement>document
         .querySelector('link[rel="parallax-three-js"]')
+    const animeLink = <HTMLLinkElement>document
+        .querySelector('link[rel="parallax-anime-js"]')
 
-    const threeLoader = new ThreeLoader(threeLink)
+    const threeLoader = new ThreeLoader(threeLink, animeLink)
     const parallaxImageElements = document
         .querySelectorAll<HTMLImageElement>('img.parallax')
     const parallaxImages = Array.from(parallaxImageElements)
         .map((element) => new ParallaxImage(element))
 
     const updateWindowDimensions = async () => {
-        await threeLoader.load()
+        await threeLoader.loadThree()
+        await threeLoader.loadAnime()
         for (let parallaxImage of parallaxImages) {
             await parallaxImage.load()
             parallaxImage.show()

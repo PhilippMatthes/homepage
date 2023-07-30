@@ -8,6 +8,11 @@
 declare var THREE: any
 
 /**
+ * The anime library, for smooth animations of the parallax effect.
+ */
+declare var anime: any
+
+/**
  * A parallax image, driven by THREE.js.
  */
 export class ParallaxImage {
@@ -209,9 +214,20 @@ class ParallaxScene {
         if (rect.bottom < 0) return;
         const x = (event.clientX - rect.left) / rect.width
         const y = (event.clientY - rect.top) / rect.height
-        this.shaderMaterial.uniforms.mouseX.value = x
-        this.shaderMaterial.uniforms.mouseY.value = y
-        this.requestAnimationFrame()
+        anime({
+            targets: this.shaderMaterial.uniforms.mouseX,
+            value: x,
+            duration: 1000,
+            easing: 'easeOutQuad',
+            update: () => this.requestAnimationFrame()
+        })
+        anime({
+            targets: this.shaderMaterial.uniforms.mouseY,
+            value: y,
+            duration: 1000,
+            easing: 'easeOutQuad',
+            update: () => this.requestAnimationFrame()
+        })
     }
 
     private reactToTouchMove(event: TouchEvent): void {
@@ -219,17 +235,33 @@ class ParallaxScene {
         if (rect.bottom < 0) return;
         const x = (event.touches[0].clientX - rect.left) / rect.width
         const y = (event.touches[0].clientY - rect.top) / rect.height
-        this.shaderMaterial.uniforms.mouseX.value = x
-        this.shaderMaterial.uniforms.mouseY.value = y
-        this.requestAnimationFrame()
+        anime({
+            targets: this.shaderMaterial.uniforms.mouseX,
+            value: x,
+            duration: 1000,
+            easing: 'easeOutQuad',
+            update: () => this.requestAnimationFrame()
+        })
+        anime({
+            targets: this.shaderMaterial.uniforms.mouseY,
+            value: y,
+            duration: 1000,
+            easing: 'easeOutQuad',
+            update: () => this.requestAnimationFrame()
+        })
     }
 
     private reactToScroll(): void {
         const rect = this.canvas.getBoundingClientRect()
         if (rect.bottom < 0) return;
         const scrollOffset = Math.min(Math.max(0.5 * (window.scrollY / window.innerHeight), 0), 0.1)
-        this.shaderMaterial.uniforms.scrollOffset.value = scrollOffset
-        this.requestAnimationFrame()
+        anime({
+            targets: this.shaderMaterial.uniforms.scrollOffset,
+            value: scrollOffset,
+            duration: 200,
+            easing: 'easeOutQuad',
+            update: () => this.requestAnimationFrame()
+        })
     }
 
     public show(): void {
