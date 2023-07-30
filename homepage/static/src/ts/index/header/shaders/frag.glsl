@@ -34,7 +34,7 @@ vec3 calculateNormal(vec3 position) {
 // Parallax Occlusion Mapping.
 vec2 calculateParallaxUV() {
     // The focal point.
-    vec2 pivot = vec2(0.5, 1.0);
+    vec2 pivot = vec2(0.5, 0.5);
 
     // Number of depth layers
     float minLayers = 32.0;
@@ -47,7 +47,7 @@ vec2 calculateParallaxUV() {
     vec2 vScrollOffset = vec2(0, scrollOffset);
     vec2 offset = vMouse - vScrollOffset;
 
-    float heightScale = 0.75;
+    float heightScale = 0.5;
     float numLayers = mix(
         maxLayers, minLayers, 
         abs(dot(vec3(0.0, 0.0, 1.0), vec3(offset, -1.0)))
