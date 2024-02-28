@@ -30,7 +30,7 @@
       {% for project in projects %}
       <span class="project-badge">
         <img alt="icon" src="{{ project.icon.url }}">
-        <{% if project.url %}a href="{{ project.url }}"{% else %}div{% endif %}>
+        <{% if project.url %}a target="_blank" href="{{ project.url }}"{% else %}div{% endif %}>
           <strong>{{ project.name }}</strong>
           {% if project.description %}
           <small>{{ project.description }}</small>

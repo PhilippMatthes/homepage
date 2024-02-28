@@ -36,7 +36,7 @@
 <section class="pl-4 my-6 pr-5 pb-6">
   <div class="container">
     {% for event in events %}
-      <section class="timeline-entry {% if forloop.counter > 10 %}closable is-closed{% endif %}" data-glow-id="glow-color-{{ event.pk }}">
+      <section class="timeline-entry {% if forloop.counter > 3 %}closable is-closed{% endif %}" data-glow-id="glow-color-{{ event.pk }}">
         {% comment %} Add a link symbol to the right {% endcomment %}
         <a id="blog-{{ event.pk }}" href="#blog-{{ event.pk }}" class="timeline-entry-indicator" style="background-color: {{ event.color }}">
           {% if event.icon %}
@@ -93,8 +93,8 @@
         </div>
       </section>
 
-      {% comment %} If the 10th element is reached, display an expand button. {% endcomment %}
-      {% if forloop.counter == 10 %}
+      {% comment %} If the 3rd element is reached, display an expand button. {% endcomment %}
+      {% if forloop.counter == 3 %}
         <button class="timeline-expand-button" onclick="
           document.querySelectorAll('.timeline-entry').forEach((el) => el.classList.remove('is-closed'));
           document.querySelector('.timeline-expand-button').style.display = 'none';
