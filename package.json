@@ -1,7 +1,7 @@
 {
   "name": "homepage",
   "version": "2.0.0",
-  "description": "Personal homepage of Philipp Matthes — a scroll-driven three.js experience",
+  "description": "Personal homepage of Philipp Matthes \u2014 a scroll-driven three.js experience",
   "repository": "git@github.com:PhilippMatthes/homepage.git",
   "author": "Philipp Matthes",
   "private": true,
@@ -13,7 +13,9 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "og": "node scripts/og.mjs",
+    "stats": "node scripts/fetch-stats.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.27",

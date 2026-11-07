@@ -607,6 +607,9 @@ h2 .proj {
   #loader span::after, .scroll-hint i { animation: none; }
 }
 
+/* ---------- ?og: clean frames for social preview images (scripts/og.mjs) ---------- */
+.og :is(.topbar, .rail, .scroll-hint, #debug) { display: none !important; }
+
 /* ---------- reader / CV mode (?cv) and no WebGL: plain readable page ---------- */
 /* .reader sits on <html> (set before first paint), .no-webgl on <body>. */
 .experience-link, .reader-tools { display: none; }
