@@ -56,6 +56,7 @@ const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uMorph;
   uniform float uScale;
+  uniform float uDensity;
   uniform float uFogDensity;
   uniform vec3 uPointer;
   uniform float uPointerStrength;
@@ -282,7 +283,7 @@ const vertexShader = /* glsl */ `
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     float dist = max(0.001, -mv.z);
-    float size = mix(sA, sB, e) * uScale / dist;
+    float size = mix(sA, sB, e) * uDensity * uScale / dist;
     float alpha = 1.0;
     if (size < 1.2) { alpha = size / 1.2; size = 1.2; }
     // Particles passing right in front of the lens fade out instead of blowing up.
@@ -367,6 +368,8 @@ export class MorphParticles {
         uTime: { value: 0 },
         uMorph: { value: 0 },
         uScale: { value: 1 },
+        // Point-size factor for sparser clouds (see densityComp in core/quality.ts).
+        uDensity: { value: 1 },
         uFogDensity: shared.uFogDensity,
         uPointer: { value: new Vector3(0, 0, 100) },
         uPointerStrength: { value: 0 },

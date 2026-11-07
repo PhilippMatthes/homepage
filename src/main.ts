@@ -5,7 +5,7 @@ import { Scroll } from './core/scroll'
 import { Pointer } from './core/pointer'
 import { CameraRig } from './core/cameraRig'
 import { applyMood } from './core/mood'
-import { FpsWatchdog, detectQuality, lowerTier, reducedMotion } from './core/quality'
+import { FpsWatchdog, densityComp, detectQuality, lowerTier, reducedMotion } from './core/quality'
 import { T, band, morphAt, range, smooth, SCROLL_VH } from './core/timeline'
 import { MorphParticles } from './fx/particles'
 import { Hud } from './fx/hud'
@@ -97,6 +97,9 @@ async function boot() {
     particles.points,
   )
   particles.u.uCloudGround.value = CLOUD_CENTER.y
+  // Fewer points on lean devices, drawn a little larger so density and glow stay alike.
+  particles.u.uDensity.value = densityComp(N)
+  backdrop.setDensity(densityComp(N))
 
   // The land mask is the heaviest asset; load it once the cover is on screen.
   globeTargets(N)
@@ -127,12 +130,35 @@ async function boot() {
   const root = document.documentElement
 
   const chapterNav = new ChapterNav(scroll)
-  const scrims: Array<[number, number]> = [...document.querySelectorAll<HTMLElement>('.chapter.left, .chapter.right')].map(
-    (el) => {
-      const r = el.dataset.band!.split(',').map(Number)
-      return [r[0], r[3]]
-    },
-  )
+  const bandOf = (el: HTMLElement) => el.dataset.band!.split(',').map(Number)
+  const scrims = [...document.querySelectorAll<HTMLElement>('.chapter.left, .chapter.right')].map((el) => {
+    const r = bandOf(el)
+    return [r[0], r[3]] as const
+  })
+  // Bottom-sheet framing: how strongly each chapter's copy pushes the subject up.
+  // The lift starts a little before the copy fades in and lets go a little after,
+  // so short gaps between chapters don't make the camera bob.
+  const frames = [...document.querySelectorAll<HTMLElement>('#overlay [data-band]')].map((el) => {
+    const r = bandOf(el)
+    const outro = el.classList.contains('outro')
+    // The cover camera already looks slightly below the photo; a small lift puts
+    // the portrait on the upper golden-ratio line (≈ 38% from the top) on phones.
+    const weight = el.classList.contains('hero') ? 0.1 : outro ? 0.8 : 1
+    // The outro sits bottom-center on every screen, so it lifts the globe everywhere.
+    return { r: [r[0] - 0.012, r[1], r[2], r[3] + 0.012], weight, always: outro }
+  })
+  const sheetQuery = matchMedia('(max-width: 720px), (max-aspect-ratio: 1/1)')
+  rig.sheet = sheetQuery.matches
+  sheetQuery.addEventListener('change', () => (rig.sheet = sheetQuery.matches))
+  let copy = -1
+
+  // CSS variables are only written when they change, to spare per-frame style recalcs.
+  const cssVars = new Map<string, string>()
+  const setVar = (name: string, value: string) => {
+    if (cssVars.get(name) === value) return
+    cssVars.set(name, value)
+    root.style.setProperty(name, value)
+  }
 
   let last = performance.now()
   const start = last
@@ -145,7 +171,12 @@ async function boot() {
     pointer.update(dt, now)
     const p = scroll.progress
 
-    if (rig.update(p, dt, pointer, time)) stage.updatePointScale()
+    const copyTarget = Math.max(
+      0,
+      ...frames.map(({ r, weight, always }) => (rig.sheet || always ? weight * band(p, r[0], r[1], r[2], r[3]) : 0)),
+    )
+    copy = copy < 0 ? copyTarget : copy + (copyTarget - copy) * (1 - Math.exp(-dt * 3))
+    if (rig.update(p, dt, pointer, time, copy)) stage.updatePointScale()
     stage.camera.updateMatrixWorld()
     const scale = stage.pointScale
     stage.renderer.setClearColor(applyMood(p, root), 1)
@@ -210,9 +241,9 @@ async function boot() {
       dash: dashVis,
       wave: cityVis * band(p, T.greenWave[0], T.greenWave[0] + 0.01, T.greenWave[1] - 0.01, T.greenWave[1]),
     })
-    root.style.setProperty('--hint', String(1 - range(p, 0, 0.012)))
+    setVar('--hint', (1 - range(p, 0, 0.012)).toFixed(3))
     // Small screens: darken behind the copy while a side chapter is on screen.
-    root.style.setProperty('--scrim', Math.max(0, ...scrims.map(([a, b]) => band(p, a, a + 0.015, b - 0.015, b))).toFixed(3))
+    setVar('--scrim', Math.max(0, ...scrims.map(([a, b]) => band(p, a, a + 0.012, b - 0.012, b))).toFixed(3))
     chapterNav.update(p)
     if (debugEl) debugEl.textContent = `p ${p.toFixed(3)}  morph ${morphAt(p).toFixed(2)}  ${quality.tier}`
 

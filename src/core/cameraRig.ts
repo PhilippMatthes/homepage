@@ -15,6 +15,11 @@ interface Key {
    * Portrait screens keep the subject centered and put the copy below.
    */
   shift?: number
+  /**
+   * Portrait screens only: extra zoom on top of keeping the horizontal field
+   * of view, for subjects that would otherwise look small on a narrow phone.
+   */
+  zoom?: number
 }
 
 /**
@@ -31,8 +36,8 @@ const orbit = (deg: number, r: number, y: number): [number, number, number] => [
 ]
 const KEYS: Key[] = [
   // cover: the 3D photo
-  { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36 },
-  { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36 },
+  { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36, zoom: 1.75 },
+  { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36, zoom: 1.6 },
   // it burns into a point cloud while we orbit to the side
   { p: 0.065, pos: orbit(26, 9.0, 29.9), target: [0, 29.6, 0], fov: 38, shift: 0.8 },
   { p: 0.095, pos: orbit(48, 8.8, 30.5), target: [0, 29.7, 0], fov: 40, shift: 1.4 },
@@ -52,12 +57,12 @@ const KEYS: Key[] = [
   { p: 0.435, pos: [0, 1.12, 6.9], target: [0, 1.0, 5.3], fov: 40 },
   // server slides out, top-down onto the board
   { p: 0.47, pos: [0, 1.7, 6.75], target: [0, 0.98, 5.6], fov: 40 },
-  { p: 0.505, pos: [0, 1.62, 5.8], target: [0, 0.985, 5.52], fov: 40 },
-  { p: 0.555, pos: [0.06, 1.5, 5.74], target: [0.03, 0.985, 5.5], fov: 40 },
+  { p: 0.505, pos: [0, 1.62, 5.8], target: [0, 0.985, 5.52], fov: 40, shift: -0.17 },
+  { p: 0.555, pos: [0.06, 1.5, 5.74], target: [0.03, 0.985, 5.5], fov: 40, shift: -0.15 },
   { p: 0.58, pos: [0.04, 2.0, 6.6], target: [0.02, 1.4, 5.7], fov: 42 },
   // back up to the Perses dashboards floating above the aisle
-  { p: 0.615, pos: [0, 3.8, 11.4], target: [0, 3.3, 6.25], fov: 45, shift: 1.3 },
-  { p: 0.675, pos: [0.4, 3.75, 11.1], target: [0, 3.3, 6.25], fov: 45, shift: 1.2 },
+  { p: 0.615, pos: [0, 3.8, 11.4], target: [0, 3.3, 6.25], fov: 45, shift: 1.65 },
+  { p: 0.675, pos: [0.4, 3.75, 11.1], target: [0, 3.3, 6.25], fov: 45, shift: 1.55 },
   // up and back to the point cloud hologram
   { p: 0.735, pos: [-1.5, 8.2, 16.8], target: [0, 2.5, 5.6], fov: 45, shift: -3.4 },
   { p: 0.805, pos: [1.5, 7.6, 15.8], target: [0, 2.5, 5.6], fov: 45, shift: -3.4 },
@@ -102,12 +107,22 @@ export class CameraRig {
   private up = new Vector3()
   private fwd = new Vector3()
   private initialized = false
+  private lift = -1
+  private viewW = 0
+  private viewH = 0
   baseFov = 40
+  private zoom = 1
+  /**
+   * True while the chapter copy is laid out as a bottom sheet (portrait and
+   * narrow screens, see style.css). The subject is then lifted above the
+   * sheet instead of being shifted sideways.
+   */
+  sheet = false
 
   constructor(private camera: PerspectiveCamera) {}
 
   /** Evaluate the path at progress p (no damping). */
-  sample(p: number, pos: Vector3, target: Vector3): [number, number] {
+  sample(p: number, pos: Vector3, target: Vector3): [number, number, number] {
     let i = 0
     while (i < KEYS.length - 2 && p > KEYS[i + 1].p) i++
     const a = KEYS[i]
@@ -116,12 +131,17 @@ export class CameraRig {
     const t = lerp(lt, smooth(lt), 0.65)
     catmull(POS, i, t, pos)
     catmull(TGT, i, t, target)
-    return [lerp(a.fov, b.fov, t), lerp(a.shift ?? 0, b.shift ?? 0, t)]
+    return [lerp(a.fov, b.fov, t), lerp(a.shift ?? 0, b.shift ?? 0, t), lerp(a.zoom ?? 1, b.zoom ?? 1, t)]
   }
 
-  update(p: number, dt: number, pointer: Pointer, time: number) {
-    const [baseFov, shift] = this.sample(p, this.wantPos, this.wantTarget)
+  /**
+   * `copy` (0..1) is how much copy that sits below the subject is on screen
+   * (bottom sheets, the outro); the subject is lifted above it.
+   */
+  update(p: number, dt: number, pointer: Pointer, time: number, copy = 0) {
+    const [baseFov, shift, zoom] = this.sample(p, this.wantPos, this.wantTarget)
     this.baseFov = baseFov
+    this.zoom = zoom
 
     // Pointer parallax: strong on the hero, subtle elsewhere, scaled by distance.
     const dist = this.wantPos.distanceTo(this.wantTarget)
@@ -130,7 +150,7 @@ export class CameraRig {
     this.fwd.subVectors(this.wantTarget, this.wantPos).normalize()
     this.right.crossVectors(this.fwd, this.camera.up).normalize()
     this.up.crossVectors(this.right, this.fwd).normalize()
-    if (this.camera.aspect >= 1 && shift !== 0) {
+    if (!this.sheet && this.camera.aspect >= 1 && shift !== 0) {
       this.wantPos.addScaledVector(this.right, -shift)
       this.wantTarget.addScaledVector(this.right, -shift)
     }
@@ -155,11 +175,19 @@ export class CameraRig {
 
     // Keep the horizontal field of view on portrait screens.
     const aspect = this.camera.aspect
+    const frame = copy
     let fov = this.baseFov
-    if (aspect < 1) {
-      const t = Math.tan((fov * Math.PI) / 360) / Math.max(aspect, 0.4)
-      fov = Math.min(78, (Math.atan(t) * 360) / Math.PI)
+    if (aspect < 1 || frame > 0) {
+      // Zoom out a touch while the bottom sheet covers part of the screen.
+      const zoom = aspect < 1 ? this.zoom : 1
+      // Portrait: mostly lift (copy is a bottom sheet). Landscape: little room
+      // above the subject, so mostly zoom out instead.
+      const out = aspect < 1 ? 0.12 : 0.3
+      const t = (Math.tan((fov * Math.PI) / 360) / Math.min(1, Math.max(aspect, 0.4))) * ((1 + out * frame) / zoom)
+      fov = Math.min(80, (Math.atan(t) * 360) / Math.PI)
     }
+    // Bottom sheet: move the image up so the subject sits above the copy.
+    this.setLift((aspect < 1 ? 0.21 : 0.09) * frame)
     // Depth range and fog follow the zoom level (from a 1U server to a planet).
     const d = this.pos.distanceTo(this.target)
     shared.uFogDensity.value = 0.35 / Math.max(d, 6)
@@ -173,5 +201,17 @@ export class CameraRig {
       this.camera.updateProjectionMatrix()
     }
     return changed
+  }
+
+  /** Shifts the rendered image up by `lift` × viewport height (an off-center projection). */
+  private setLift(lift: number) {
+    const w = innerWidth
+    const h = innerHeight
+    if (Math.abs(lift - this.lift) < 1e-4 && w === this.viewW && h === this.viewH) return
+    this.lift = lift
+    this.viewW = w
+    this.viewH = h
+    if (lift < 1e-4) this.camera.clearViewOffset()
+    else this.camera.setViewOffset(w, h, 0, lift * h, w, h)
   }
 }

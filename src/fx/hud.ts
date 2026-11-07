@@ -21,6 +21,8 @@ export class Hud {
   private pins: Pin[] = []
   private layer = document.getElementById('labels')!
   private tmp = new Vector3()
+  /** Animated CSS blur is costly on phones (it re-rasterizes the copy every frame). */
+  private blur = !matchMedia('(pointer: coarse)').matches
 
   constructor(objects: CloudObject[]) {
     this.sections = [...document.querySelectorAll<HTMLElement>('[data-band]')].map((el) => ({
@@ -54,7 +56,7 @@ export class Hud {
       const v = band(p, r[0], r[1], r[2], r[3])
       el.style.opacity = v.toFixed(3)
       el.style.transform = `translate3d(0, ${((1 - v) * (p < r[1] ? 24 : -24)).toFixed(1)}px, 0)`
-      el.style.filter = v < 0.999 ? `blur(${((1 - v) * 8).toFixed(1)}px)` : ''
+      if (this.blur) el.style.filter = v < 0.999 ? `blur(${((1 - v) * 8).toFixed(1)}px)` : ''
       el.style.visibility = v > 0.001 ? 'visible' : 'hidden'
     }
 

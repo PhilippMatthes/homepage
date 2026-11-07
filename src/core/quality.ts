@@ -6,13 +6,26 @@ export interface Quality {
   maxDpr: number
   bloom: boolean
   chroma: boolean
+  /** Bloom render resolution relative to the canvas. */
+  bloomScale: number
+  /** Film-grain noise pass (a full-screen pass that phones can skip). */
+  noise: boolean
 }
 
 const TIERS: Record<Quality['tier'], Quality> = {
-  high: { tier: 'high', particles: 140_000, pulses: 700, maxDpr: 2, bloom: true, chroma: true },
-  medium: { tier: 'medium', particles: 80_000, pulses: 420, maxDpr: 1.5, bloom: true, chroma: false },
-  low: { tier: 'low', particles: 40_000, pulses: 220, maxDpr: 1, bloom: true, chroma: false },
+  high: { tier: 'high', particles: 140_000, pulses: 700, maxDpr: 2, bloom: true, chroma: true, bloomScale: 1, noise: true },
+  medium: { tier: 'medium', particles: 80_000, pulses: 420, maxDpr: 1.5, bloom: true, chroma: false, bloomScale: 1, noise: true },
+  low: { tier: 'low', particles: 24_000, pulses: 220, maxDpr: 1, bloom: true, chroma: false, bloomScale: 0.5, noise: false },
 }
+
+/** Particle count the point sizes were tuned for. */
+export const REF_PARTICLES = 140_000
+
+/**
+ * Point-size factor that keeps a sparser cloud looking as dense and bright:
+ * with additive blending the covered area (and light) scales with N · size².
+ */
+export const densityComp = (n: number) => Math.min(2.3, Math.max(1, Math.sqrt(REF_PARTICLES / n)))
 
 export const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -22,7 +35,9 @@ export function detectQuality(): Quality {
   const coarse = matchMedia('(pointer: coarse)').matches
   const small = Math.min(screen.width, screen.height) < 700
   const cores = navigator.hardwareConcurrency ?? 4
-  if (coarse && small) return cores >= 8 ? TIERS.medium : TIERS.low
+  // Phones: the particle budget is fixed at boot, so start lean. Even fast phones
+  // get a reduced budget, since they throttle quickly under sustained GPU load.
+  if (coarse && small) return cores >= 8 ? { ...TIERS.medium, particles: 40_000 } : TIERS.low
   if (cores <= 4) return TIERS.medium
   return TIERS.high
 }

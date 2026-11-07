@@ -1,4 +1,5 @@
 import { HalfFloatType, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three'
+const BLOOM_LEVELS = 8
 import {
   BloomEffect,
   ChromaticAberrationEffect,
@@ -46,6 +47,7 @@ export class Stage {
       intensity: 1.0,
       radius: 0.68,
       mipmapBlur: true,
+      levels: BLOOM_LEVELS,
     })
     this.chroma = new ChromaticAberrationEffect({
       offset: new Vector2(0.0006, 0.0006),
@@ -57,7 +59,8 @@ export class Stage {
     noise.blendMode.opacity.value = 0.06
     const tone = new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL })
 
-    const effects = [this.bloom, tone, vignette, noise]
+    // Phones skip the film grain: it is a subtle overlay but a full-screen cost.
+    const effects = quality.noise ? [this.bloom, tone, vignette, noise] : [this.bloom, tone, vignette]
     this.composer.addPass(new EffectPass(this.camera, ...effects))
     // Chromatic aberration is a convolution effect and needs its own pass.
     if (quality.chroma) this.composer.addPass(new EffectPass(this.camera, this.chroma))
@@ -82,10 +85,26 @@ export class Stage {
     this.renderer.setPixelRatio(this.dpr)
     this.renderer.setSize(w, h, false)
     this.composer.setSize(w, h, false)
+    this.sizeBloom()
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
     this.updatePointScale()
     for (const fn of this.resizeListeners) fn()
+  }
+
+  /**
+   * With mipmap blur, the bloom's resolution scale is ignored, so on lean tiers
+   * the luminance and blur chain are resized by hand. One MIP level less keeps
+   * the glow radius the same on screen.
+   */
+  private sizeBloom() {
+    const s = this.quality.bloomScale
+    const size = this.renderer.getDrawingBufferSize(new Vector2())
+    const w = Math.max(1, Math.round(size.x * s))
+    const h = Math.max(1, Math.round(size.y * s))
+    this.bloom.luminancePass.setSize(w, h)
+    this.bloom.mipmapBlurPass.levels = s < 1 ? BLOOM_LEVELS - Math.round(Math.log2(1 / s)) : BLOOM_LEVELS
+    this.bloom.mipmapBlurPass.setSize(w, h)
   }
 
   /** Must be called whenever the fov changes. */

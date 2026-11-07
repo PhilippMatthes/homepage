@@ -501,43 +501,105 @@ h2 .proj {
 
 .fallback-portrait { display: none; }
 
-/* ---------- small screens ---------- */
-@media (max-width: 720px) {
-  .chapter.left, .chapter.right { left: 0; right: 0; max-width: none; top: auto; bottom: 0; translate: none; padding: 72px 16px 40px; }
+/* ---------- small and portrait screens: copy as a bottom sheet ---------- */
+/* Matches the camera rule in main.ts (sheetQuery): the subject is lifted above the sheet. */
+@media (max-width: 720px), (max-aspect-ratio: 1/1) {
+  .chapter.left, .chapter.right {
+    left: 0;
+    right: 0;
+    max-width: none;
+    top: auto;
+    bottom: 0;
+    translate: none;
+    padding: 56px max(16px, calc((100vw - 620px) / 2)) max(28px, env(safe-area-inset-bottom));
+  }
   #overlay::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 62vh;
-    background: linear-gradient(to bottom, transparent, rgba(2, 4, 10, 0.88) 45%);
+    height: 60vh;
+    background: linear-gradient(to bottom, transparent, rgba(2, 4, 10, 0.82) 38%, rgba(2, 4, 10, 0.92));
     opacity: var(--scrim, 0);
     pointer-events: none;
     z-index: -1;
   }
+  .rail { display: none; }
+  .chapter.left::before, .chapter.right::before { display: none; }
+  .eyebrow { font-size: 10px; letter-spacing: 0.18em; margin-bottom: 12px; }
+  h2 { font-size: clamp(25px, 6.6vw, 36px); }
+  .lead { font-size: 14.5px; line-height: 1.45; margin-top: 14px; }
+  .chapter.hero .lead { font-size: 17px; }
+  .bullets { margin-top: 12px; gap: 7px; }
+  .bullets li { font-size: 13.5px; }
+  .pubs { margin-top: 16px; }
+  .pubs b { font-size: 12.5px; }
+  .pubs li:nth-child(n + 3) { display: none; }
+  .cards { grid-template-columns: 1fr 1fr; margin-top: 16px; }
+  .card { padding: 11px 12px; }
+  .card span { display: none; }
+  .stats { gap: 18px; margin-top: 16px; }
+  .stats dd { font-size: 17px; }
+  .links.start { margin-top: 16px; }
+
+  /* Filters and backdrop blur over a live WebGL canvas are expensive on phones:
+     the scrim gives the contrast instead. */
+  h1, h2 { filter: none; }
+  .card, .pubs, .links a, .menu-button { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .card, .pubs { background: rgba(6, 14, 32, 0.72); }
+  .links a { background: rgba(10, 26, 63, 0.6); }
+  .menu-button { background: rgba(6, 12, 30, 0.75); }
+}
+
+/* Tablets: the centered menu pill would run into the brand. */
+@media (max-width: 1100px) {
+  .brand span { display: none; }
+  .menu-button.has-chapter .menu-title { display: none; }
+  .menu-button.has-chapter .ticker { margin-left: 0; }
+  .menu-button.has-chapter .ticker span::before { content: none; }
+}
+
+/* Phones: compact top bar. */
+@media (max-width: 720px) {
   .topbar nav { gap: 12px; }
   .topbar nav > a { display: none; }
   .menu { left: auto; right: 16px; translate: 0 -50%; }
   .menu-list { left: auto; right: 0; translate: none; }
-  .bullets li { font-size: 13.5px; }
-  /* Small screens: the pill shows only the current chapter (or "Experience" between chapters). */
+  /* The pill shows only the current chapter (or "Experience" between chapters). */
   .menu-button.has-chapter .menu-title { display: none; }
   .menu-button.has-chapter .ticker { max-width: 46vw; margin-left: 0; }
   .ticker span { overflow: hidden; text-overflow: ellipsis; }
   .ticker span::before { content: none; }
   .brand span { display: none; }
-  .rail { display: none; }
-  .chapter.left::before, .chapter.right::before { display: none; }
-  .pubs b { font-size: 12.5px; }
-  .pubs li:nth-child(n + 3) { display: none; }
-  .cards { grid-template-columns: 1fr 1fr; }
-  .card { padding: 11px 12px; }
-  .card span { display: none; }
-  .lead { font-size: 14.5px; }
-  .chapter.hero .lead { font-size: 17px; }
-  .stats { gap: 18px; margin-top: 20px; }
-  .stats dd { font-size: 17px; }
+  .lead { font-size: 14px; }
+}
+
+/* Short portrait phones: keep the sheet under half the screen. */
+@media (max-aspect-ratio: 1/1) and (max-height: 700px) {
+  .chapter .stats, .chapter .pubs { display: none; }
+  .chapter.left, .chapter.right { padding-top: 40px; }
+  .lead { font-size: 13.5px; }
+}
+
+/* Landscape phones: side copy stays (the camera shifts the subject), but compact. */
+@media (min-aspect-ratio: 1/1) and (max-height: 500px) {
+  .chapter.left, .chapter.right { max-width: min(46vw, 440px); }
+  .chapter.left { left: clamp(56px, 7vw, 96px); }
+  .eyebrow { font-size: 9px; margin-bottom: 8px; }
+  h2 { font-size: 22px; }
+  .lead { font-size: 12.5px; line-height: 1.4; margin-top: 10px; }
+  .bullets { margin-top: 8px; gap: 4px; }
+  .bullets li { font-size: 12px; }
+  .chapter .stats, .chapter .pubs, .card span { display: none; }
+  .cards { grid-template-columns: 1fr 1fr; margin-top: 12px; }
+  .card { padding: 9px 11px; }
+  .links.start { margin-top: 12px; }
+  .chapter.hero { bottom: 40px; }
+  h1 { font-size: 40px; }
+  .outro h2 { font-size: 28px; }
+  .outro .links { margin-top: 14px; }
+  .outro .imprint { margin-top: 12px; }
 }
 
 /* ---------- reduced motion ---------- */

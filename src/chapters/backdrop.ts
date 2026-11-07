@@ -26,6 +26,7 @@ export class Backdrop {
       blending: AdditiveBlending,
       uniforms: {
         uScale: { value: 1 },
+        uDensity: { value: 1 },
         uVisible: { value: 1 },
         uTime: { value: 0 },
         uFogDensity: shared.uFogDensity,
@@ -33,6 +34,7 @@ export class Backdrop {
       },
       vertexShader: /* glsl */ `
         uniform float uScale;
+        uniform float uDensity;
         uniform float uVisible;
         uniform float uTime;
         uniform float uFogDensity;
@@ -44,7 +46,7 @@ export class Backdrop {
         void main() {
           vec4 mv = modelViewMatrix * vec4(position, 1.0);
           float dist = -mv.z;
-          float size = 0.018 * uScale / dist;
+          float size = 0.018 * uDensity * uScale / dist;
           vAlpha = min(1.0, size / 1.2) * uVisible;
           gl_PointSize = clamp(size, 1.2, 8.0);
           gl_Position = projectionMatrix * mv;
@@ -107,6 +109,11 @@ export class Backdrop {
       n++
     }
     return new Backdrop(pos.subarray(0, n * 3), col.subarray(0, n * 3), seed.subarray(0, n))
+  }
+
+  /** Point-size factor for sparser clouds (see densityComp in core/quality.ts). */
+  setDensity(k: number) {
+    this.material.uniforms.uDensity.value = k
   }
 
   update(visible: number, time: number, scale: number, scanY: number) {

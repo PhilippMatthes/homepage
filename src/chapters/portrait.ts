@@ -60,7 +60,8 @@ export async function samplePortrait(count: number, photoUrl: string, depthUrl: 
   const pos = new Float32Array(count * 3)
   const col = new Float32Array(count * 3)
   const vis = new Float32Array(count)
-  const rows = Math.round(Math.sqrt(count) * 0.55)
+  // Keep enough scan rows for the LiDAR look even with a lean particle budget.
+  const rows = Math.max(90, Math.round(Math.sqrt(count) * 0.55))
   const tint = new Color()
   const dark = palette.deep.clone().multiplyScalar(0.9)
   const DEPTH_CUTOFF = 0.2
