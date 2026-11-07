@@ -9,7 +9,7 @@ import {
   MeshBasicMaterial,
   Vector3,
 } from 'three'
-import { palette } from '../core/palette'
+import { loadRamp, palette } from '../core/palette'
 import { smooth, range } from '../core/timeline'
 import { CEILING_Y, RACK, SERVER, TARGET, U, rackX, rowZ } from '../world/layout'
 
@@ -26,7 +26,7 @@ const UNIT_W = (RACK.w - 0.1) / UNITS
 const COLS = [4, 5, 6, 7, 8, 9, 10]
 const SLOTS = Array.from({ length: 14 }, (_, i) => 8 + i * HOST_U)
 const FILL = 0.72
-const HOT = new Color('#ffb35c')
+const HOT = palette.amber
 
 interface Host {
   col: number
@@ -69,6 +69,14 @@ export class Cortex {
   private a = new Vector3()
   private b = new Vector3()
   private c = new Color()
+  /** Front-face centers of the hosts that run hot (for the rack LEDs). */
+  readonly hotSpots: Vector3[] = []
+  /** x range and front-face z of the racks Cortex schedules onto. */
+  readonly region = {
+    x0: rackX(COLS[0]) - RACK.w / 2,
+    x1: rackX(COLS[COLS.length - 1]) + RACK.w / 2,
+    z: rowZ(TARGET.row) + RACK.d / 2,
+  }
 
   constructor() {
     const rand = rng(7)
@@ -97,7 +105,8 @@ export class Cortex {
       })
       if (best < 0) break
       const h = this.hosts[best]
-      const tint = palette.cyan.clone().lerp(palette.ice, rand() * 0.7)
+      // Seated VMs sit in the calm middle of the load ramp (cyan → ice).
+      const tint = loadRamp(0.42 + rand() * 0.28)
       this.vms.push({ host: best, unit: h.used, units, start: 0, tint })
       h.used += units
       placed += units
@@ -128,6 +137,8 @@ export class Cortex {
       hot.used -= vm.units
     }
 
+    this.hosts.forEach((h, i) => h.hot && this.hotSpots.push(this.seat(i, 0, UNITS, new Vector3())))
+
     this.mesh = new InstancedMesh(new BoxGeometry(1, 1, 1), this.material, this.vms.length)
     this.mesh.instanceMatrix.setUsage(DynamicDrawUsage)
     this.mesh.frustumCulled = false
@@ -150,12 +161,16 @@ export class Cortex {
    * @param visible 0..1 overall fade
    * @param place 0..1 progress of the initial placement wave
    * @param rebalance 0..1 progress of the rebalancing moves
+   * @returns how hot the overloaded hosts run, and how busy the scheduler is
+   *   (both 0..1), so the rack LEDs can follow along
    */
   update(o: { visible: number; place: number; rebalance: number; time: number }) {
-    this.group.visible = o.visible > 0.001
-    if (!this.group.visible) return
     // Heat builds while the racks fill up and drains as Cortex rebalances.
     const heat = smooth(range(o.place, 0.7, 1)) * (1 - smooth(range(o.rebalance, 0.35, 1)))
+    const activity = Math.max(Math.sin(Math.PI * o.place), Math.sin(Math.PI * range(o.rebalance, 0.05, 0.75)))
+    const state = { heat: heat * o.visible, activity: activity * o.visible }
+    this.group.visible = o.visible > 0.001
+    if (!this.group.visible) return state
 
     this.vms.forEach((vm, i) => {
       const t = smooth(range(o.place, vm.start, vm.start + 0.22))
@@ -191,5 +206,6 @@ export class Cortex {
     })
     this.mesh.instanceMatrix.needsUpdate = true
     if (this.mesh.instanceColor) this.mesh.instanceColor.needsUpdate = true
+    return state
   }
 }

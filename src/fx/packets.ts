@@ -1,14 +1,16 @@
 /**
- * Shared color variation for data packets (hall streams, fibre routes, board traces):
- * mostly ice-white, some cyan, violet and mint, and a rare warm accent.
+ * Data packets carry meaning in their color (hall streams, fibre routes, board traces):
+ *   dir > 0  → ingress, ice-white
+ *   dir < 0  → egress, cyan
+ *   r > 0.95 → a rare amber "hot" packet (see palette.ts: amber means activity)
  * `r` is a per-packet random value in [0, 1).
  */
 export const packetGlsl = /* glsl */ `
-  vec3 packetColor(float r) {
-    if (r < 0.5) return vec3(0.85, 0.95, 1.0);   // ice-white
-    if (r < 0.7) return vec3(0.35, 0.78, 1.0);   // cyan
-    if (r < 0.84) return vec3(0.68, 0.62, 1.0);  // violet
-    if (r < 0.95) return vec3(0.45, 1.0, 0.8);   // mint
-    return vec3(1.0, 0.72, 0.42);                // amber, rare
+  const vec3 PKT_IN = vec3(0.85, 0.95, 1.0);
+  const vec3 PKT_OUT = vec3(0.3, 0.72, 1.0);
+  const vec3 PKT_HOT = vec3(1.0, 0.7, 0.36);
+  vec3 packetColor(float dir, float r) {
+    if (r > 0.95) return PKT_HOT;
+    return dir >= 0.0 ? PKT_IN : PKT_OUT;
   }
 `

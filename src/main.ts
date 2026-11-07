@@ -4,7 +4,7 @@ import { Stage } from './core/stage'
 import { Scroll } from './core/scroll'
 import { Pointer } from './core/pointer'
 import { CameraRig } from './core/cameraRig'
-import { applyMood } from './core/mood'
+import { applyMood, bloomAt } from './core/mood'
 import { FpsWatchdog, densityComp, detectQuality, lowerTier, reducedMotion } from './core/quality'
 import { T, band, morphAt, range, smooth, SCROLL_VH } from './core/timeline'
 import { MorphParticles } from './fx/particles'
@@ -105,6 +105,10 @@ async function boot() {
     particles.points,
   )
   particles.u.uCloudGround.value = CLOUD_CENTER.y
+  // Rack LEDs follow Cortex: where it schedules, and which hosts run hot.
+  particles.u.uCortexArea.value.set(cortex.region.x0, cortex.region.x1, cortex.region.z)
+  cortex.hotSpots.slice(0, 4).forEach((h, i) => particles.u.uHot.value[i].copy(h))
+  particles.u.uHotCount.value = Math.min(4, cortex.hotSpots.length)
   // Fewer points on lean devices, drawn a little larger so density and glow stay alike.
   particles.u.uDensity.value = densityComp(N)
   backdrop.setDensity(densityComp(N))
@@ -202,7 +206,7 @@ async function boot() {
     // Fast scrolling warps the scene; quick to build up, slower to settle.
     const warpTarget = reducedMotion ? 0 : smooth(Math.min(1, Math.max(0, (Math.abs(scroll.velocity) - 0.015) * 14)))
     warp += (warpTarget - warp) * (1 - Math.exp(-dt * (warpTarget > warp ? 6 : 2.5)))
-    stage.setWarp(warp)
+    stage.setWarp(warp, bloomAt(p))
     if (rig.update(p, dt, pointer, time, copy)) stage.updatePointScale()
     stage.camera.updateMatrixWorld()
     const scale = stage.pointScale
@@ -237,7 +241,7 @@ async function boot() {
     backdrop.update(1 - smooth(range(p, 0.115, 0.15)), time, scale, scanY)
     datacenter.update(hallVis, shell, time)
     network.update(networkVis, time, scale)
-    cortex.update({
+    const cortexState = cortex.update({
       visible: band(p, T.cortexVisible[0], T.cortexVisible[1], T.cortexVisible[2], T.cortexVisible[3]),
       place: range(p, T.place[0], T.place[1]),
       rebalance: range(p, T.rebalance[0], T.rebalance[1]),
@@ -274,6 +278,7 @@ async function boot() {
     u.uScanY.value = scanY
     u.uPointerStrength.value = touch
     u.uWarp.value = warp
+    u.uCortex.value.set(cortexState.heat, cortexState.activity)
 
     hud.update(p, stage.camera, reveal, {
       globe: smooth(range(p, 0.975, 0.99)),

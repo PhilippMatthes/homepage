@@ -13,7 +13,7 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import { palette } from '../core/palette'
+import { loadRamp, palette } from '../core/palette'
 import { holoMaterial } from '../fx/holoMaterial'
 import { packetGlsl } from '../fx/packets'
 import { SERVER, SERVER_HOME, SERVER_SLIDE } from '../world/layout'
@@ -21,6 +21,8 @@ import { SERVER, SERVER_HOME, SERVER_SLIDE } from '../world/layout'
 type V2 = [number, number]
 /** A trace on the board: 4 points in board space (x, z). */
 type Trace = [V2, V2, V2, V2]
+/** What a trace carries, which sets its packet color. */
+const KIND = { memory: 0, cpuToGpu: 1, netToGpu: 2, interconnect: 3 } as const
 
 const BOARD_Y = -SERVER.h / 2 + 0.003
 /**
@@ -35,8 +37,9 @@ const CPUS: V2[] = [
 ]
 const CPU_SIZE = 0.068
 
-function buildTraces(): Trace[] {
+function buildTraces() {
   const traces: Trace[] = []
+  const kinds: number[] = []
   const jitter = () => (Math.random() - 0.5) * 0.006
   // Memory → CPU: 16 DIMMs in a bank behind the CPUs.
   for (let i = 0; i < 16; i++) {
@@ -45,6 +48,7 @@ function buildTraces(): Trace[] {
     const zA = -0.135 + (i % 4) * 0.005 + jitter()
     const xc = c[0] + ((i % 8) - 3.5) * 0.007
     traces.push([[x, -0.165], [x, zA], [xc, zA], [xc, c[1] - CPU_SIZE / 2]])
+    kinds.push(KIND.memory)
   }
   // CPU → GPU: wide parallel buses.
   for (const c of CPUS) {
@@ -54,6 +58,7 @@ function buildTraces(): Trace[] {
       const zB = 0.0 + l * 0.0022 * Math.sign(c[0])
       const xg = GPU.x + Math.sign(c[0]) * 0.035 + off * 0.8
       traces.push([[x0, c[1] + CPU_SIZE / 2], [x0, zB + 0.01], [xg, zB + 0.01], [xg, GPU.z - GPU.d / 2]])
+      kinds.push(KIND.cpuToGpu)
     }
   }
   // Network → GPU: from the front I/O ports.
@@ -62,13 +67,15 @@ function buildTraces(): Trace[] {
     const zC = 0.255 - (i % 3) * 0.006
     const xg = GPU.x + (i - 5.5) * 0.016
     traces.push([[x, 0.31], [x, zC], [xg, zC], [xg, GPU.z + GPU.d / 2]])
+    kinds.push(KIND.netToGpu)
   }
   // CPU ↔ CPU interconnect.
   for (let l = 0; l < 6; l++) {
     const z = CPUS[0][1] + (l - 2.5) * 0.006
     traces.push([[CPUS[0][0] + CPU_SIZE / 2, z], [-0.02, z], [0.02, z], [CPUS[1][0] - CPU_SIZE / 2, z]])
+    kinds.push(KIND.interconnect)
   }
-  return traces
+  return { traces, kinds }
 }
 
 const pulseVertex = /* glsl */ `
@@ -77,18 +84,24 @@ const pulseVertex = /* glsl */ `
   uniform float uSize;
   uniform float uVisible;
   uniform float uSpeed;
+  uniform float uHeat;
   attribute vec3 aP0;
   attribute vec3 aP1;
   attribute vec3 aP2;
   attribute vec3 aP3;
   attribute vec3 aSeed; // phase, speed, brightness
   attribute float aLag;
+  attribute float aKind;
   varying float vAlpha;
   varying vec3 vColor;
   ${packetGlsl}
 
   void main() {
-    vColor = packetColor(fract(aSeed.y * 7.31 + aSeed.x * 3.7));
+    // Network ingress is ice, CPU traffic cyan; everything bound for the GPU
+    // warms towards amber as the GPU heats up.
+    float r = fract(aSeed.y * 7.31 + aSeed.x * 3.7);
+    vColor = packetColor(aKind == 2.0 ? 1.0 : -1.0, aKind == 0.0 ? r * 0.94 : r);
+    if (aKind == 1.0 || aKind == 2.0) vColor = mix(vColor, PKT_HOT, uHeat * 0.85);
     float l1 = length(aP1 - aP0);
     float l2 = length(aP2 - aP1);
     float l3 = length(aP3 - aP2);
@@ -195,7 +208,7 @@ export class Server {
     for (let i = 0; i < 12; i++) box(0.018, 0.012, 0.02, -0.17 + (i * 0.34) / 11, 0.325)
 
     // Traces + pulses
-    const traces = buildTraces()
+    const { traces, kinds } = buildTraces()
     const y = BOARD_Y + 0.0006
     const seg: number[] = []
     for (const t of traces) {
@@ -210,8 +223,10 @@ export class Server {
     const attrs = ['aP0', 'aP1', 'aP2', 'aP3'].map(() => new Float32Array(n * 3))
     const seed = new Float32Array(n * 3)
     const lag = new Float32Array(n)
+    const kind = new Float32Array(n)
     for (let i = 0; i < pulseCount; i++) {
-      const t = traces[Math.floor(Math.random() * traces.length)]
+      const ti = Math.floor(Math.random() * traces.length)
+      const t = traces[ti]
       const sx = Math.random()
       const sy = Math.random()
       const sz = Math.random()
@@ -226,6 +241,7 @@ export class Server {
         seed[k * 3 + 1] = sy
         seed[k * 3 + 2] = sz
         lag[k] = j
+        kind[k] = kinds[ti]
       }
     }
     const pg = new BufferGeometry()
@@ -233,6 +249,7 @@ export class Server {
     attrs.forEach((a, q) => pg.setAttribute(`aP${q}`, new BufferAttribute(a, 3)))
     pg.setAttribute('aSeed', new BufferAttribute(seed, 3))
     pg.setAttribute('aLag', new BufferAttribute(lag, 1))
+    pg.setAttribute('aKind', new BufferAttribute(kind, 1))
     this.pulseMat = new ShaderMaterial({
       vertexShader: pulseVertex,
       fragmentShader: pulseFragment,
@@ -245,6 +262,7 @@ export class Server {
         uSize: { value: 0.0032 },
         uVisible: { value: 0 },
         uSpeed: { value: 2.2 },
+        uHeat: { value: 0 },
       },
     })
     const pulses = new Points(pg, this.pulseMat)
@@ -285,7 +303,9 @@ export class Server {
     this.componentMat.uniforms.uVisible.value = o.lid * v * keep
     this.gpuMat.uniforms.uVisible.value = o.lid * v
     this.gpuMat.uniforms.uGlow.value = 1.2 + o.heat * 3
-    this.gpuMat.uniforms.uFill.value.setRGB(0.04 + o.heat * 0.5, 0.16 + o.heat * 0.6, 0.36 + o.heat * 0.7)
+    // The die runs up the shared load ramp: deep blue idle, amber at peak.
+    loadRamp(0.15 + o.heat * 0.85, this.gpuMat.uniforms.uFill.value).multiplyScalar(0.55 + 0.55 * o.heat)
+    this.pulseMat.uniforms.uHeat.value = o.heat
     this.traceMat.opacity = 0.35 * o.lid * v * (0.6 + 0.4 * o.flows) * keep * keep
     this.pulseMat.uniforms.uVisible.value = o.flows * v
     this.pulseMat.uniforms.uTime.value = o.time

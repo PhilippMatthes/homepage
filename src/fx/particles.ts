@@ -8,7 +8,7 @@ import {
   Vector3,
   Vector4,
 } from 'three'
-import { classes, palette } from '../core/palette'
+import { classes, loadRampGlsl, palette } from '../core/palette'
 import { shared } from '../core/shared'
 import { packetGlsl } from './packets'
 import { DASH } from '../chapters/dashboard'
@@ -82,6 +82,10 @@ const vertexShader = /* glsl */ `
   uniform float uFocusAmount;
   uniform float uWarp;
   uniform vec3 uSunDir;
+  uniform vec2 uCortex;      // x heat of the overloaded hosts, y scheduler activity
+  uniform vec3 uCortexArea;  // x0, x1, front z of the scheduled racks
+  uniform vec3 uHot[4];      // hot host centers
+  uniform float uHotCount;
 
   attribute vec3 aColor;
   attribute vec3 aHall;
@@ -106,6 +110,7 @@ const vertexShader = /* glsl */ `
 
   ${burnGlsl}
   ${packetGlsl}
+  ${loadRampGlsl}
 
   // ---------- 0 portrait ----------
   vec3 portraitPos() {
@@ -140,9 +145,23 @@ const vertexShader = /* glsl */ `
     float blink = step(0.5, fract(uTime * (0.4 + aSeed.z) + aSeed.w * 7.0));
     tw = mix(tw, 0.2 + 0.8 * blink, step(0.86, aSeed.w));
     vec3 led = aSeed.w > 0.95 ? vec3(1.0) : mix(uCyan, uIce, aSeed.z);
-    led *= tw;
+    // Racks Cortex schedules onto: their LEDs blink busily while VMs land and move,
+    // and the overloaded hosts glow amber until the rebalance cools them down.
+    float inArea = step(abs(aHall.z - uCortexArea.z), 0.05) * step(uCortexArea.x, aHall.x) * step(aHall.x, uCortexArea.y);
+    float hot = 0.0;
+    for (int k = 0; k < 4; k++) {
+      if (float(k) >= uHotCount) break;
+      vec2 d = abs(aHall.xy - uHot[k].xy) / vec2(0.34, 0.075);
+      hot = max(hot, 1.0 - smoothstep(0.7, 1.0, max(d.x, d.y)));
+    }
+    hot *= uCortex.x * inArea;
+    float busy = max(uCortex.y * inArea, hot);
+    float fast = step(0.45, fract(uTime * (2.5 + aSeed.z * 5.0) + aSeed.w * 7.0));
+    tw = mix(tw, 0.25 + 0.75 * fast, busy);
+    led = mix(led, PKT_HOT * 1.4, hot);
+    led *= tw * (1.0 + 0.6 * busy);
     float ph = flowPhase((0.035 + 0.07 * aSeed.y) * uHallFlow);
-    vec3 stream = packetColor(fract(aSeed.w * 7.31 + aSeed.y * 3.17)) * 0.8 * smoothstep(0.0, 0.12, ph) * smoothstep(1.0, 0.85, ph);
+    vec3 stream = packetColor(aFlow.x, fract(aSeed.w * 7.31 + aSeed.y * 3.17)) * 0.8 * smoothstep(0.0, 0.12, ph) * smoothstep(1.0, 0.85, ph);
     // Same center focus as the racks: LEDs and streams fade towards the sides of the hall.
     vec3 hp = hallPos();
     float focus = mix(1.0, 1.0 - smoothstep(0.38, 1.0, length(hp.xz / uFocusExtent)), uFocusAmount);
@@ -212,15 +231,21 @@ const vertexShader = /* glsl */ `
       float cy = floor(v * 8.0);
       q = vec2((cx + 0.12 + 0.76 * fract(u * 24.0)) / 24.0, (cy + 0.12 + 0.76 * fract(v * 8.0)) / 8.0);
       float I = 0.5 + 0.5 * sin(cx * 0.45 - uTime * 1.2 + cy * 1.1 + ps * 10.0) * sin(cy * 0.7 + uTime * 0.4 + cx * 0.13);
-      col = mix(uDeep * 2.5, uCyan, I) + vec3(1.0) * pow(I, 6.0) * 0.8;
+      col = loadRamp(I) * mix(0.55, 1.15, I);
     }
     return vec3(aDash.xy + q * W, aDash.z);
   }
 
   // ---------- 4 point cloud ----------
   vec3 cloudColor() {
+    // Before the sweep: raw LiDAR returns in near-grey, brightness = reflectivity.
+    // Cars and facades reflect strongly, foliage and asphalt weakly, plus speckle.
+    // The sweep then paints the semantic classes on top, as a perception model would.
     float h = clamp((aCloud.y - uCloudGround) / 1.1, 0.0, 1.0);
-    vec3 raw = mix(uDeep * 2.2, uIce, 0.25 + 0.75 * h) * 0.75;
+    int k = int(aClass + 0.5);
+    float refl = k == 1 ? 0.95 : k == 4 ? 0.75 : k == 2 ? 0.6 : k == 3 ? 0.4 : 0.32;
+    float intensity = refl * (0.55 + 0.45 * aSeed.z) * (0.8 + 0.2 * h);
+    vec3 raw = vec3(0.78, 0.85, 0.95) * intensity * 0.75;
     float swept = smoothstep(0.0, 0.08, uSweep - aCloud.x) * uSweepOn;
     vec3 cls = uClassColors[int(aClass + 0.5)] * 1.35;
     float front = exp(-pow((aCloud.x - uSweep) / 0.09, 2.0)) * uSweepOn;
@@ -250,7 +275,9 @@ const vertexShader = /* glsl */ `
     float day = smoothstep(-0.15, 0.15, dot(n, uSunDir));
     float lights = (1.0 - day) * step(0.9, aSeed.w) * (0.7 + 0.3 * sin(uTime * (1.5 + aSeed.x * 3.0) + aSeed.y * 50.0));
     vec3 land = mix(world, near, aGlobe.w) * tw * mix(0.4, 1.0, day);
-    return (land + vec3(1.0, 0.72, 0.4) * lights * 0.55) * facing;
+    // A thin warm line where the land crosses the terminator, live with the real sun.
+    float term = exp(-pow(dot(n, uSunDir) / 0.035, 2.0));
+    return (land + vec3(1.0, 0.72, 0.4) * (lights * 0.55 + term * 0.3)) * facing;
   }
 
   void stage(int i, out vec3 p, out vec3 c, out float s) {
@@ -294,7 +321,12 @@ const vertexShader = /* glsl */ `
     mv.z += wj * uWarp * max(0.001, -mv.z) * 0.18;
     mv.xy *= 1.0 + uWarp * 0.05 * aSeed.w;
     float dist = max(0.001, -mv.z);
-    float size = mix(sA, sB, e) * uDensity * uScale / dist * (1.0 + 0.45 * uWarp);
+    // Depth cue for the dense scenes (hall, point cloud): points behind the camera's
+    // focus get smaller and lose saturation, like aerial perspective. The fog density
+    // is 0.35 / focus distance (cameraRig), so this ratio is depth relative to focus.
+    float cue = clamp(1.0 - abs(m - 1.0), 0.0, 1.0) + clamp(1.0 - abs(m - 4.0), 0.0, 1.0);
+    float far = smoothstep(1.0, 2.6, uFogDensity * dist / 0.35) * cue;
+    float size = mix(sA, sB, e) * uDensity * uScale / dist * (1.0 + 0.45 * uWarp) * (1.0 - 0.35 * far);
     float alpha = 1.0;
     if (size < 1.2) { alpha = size / 1.2; size = 1.2; }
     // Particles passing right in front of the lens fade out instead of blowing up.
@@ -307,6 +339,8 @@ const vertexShader = /* glsl */ `
 
     float fog = exp(-pow(uFogDensity * dist, 2.0));
     vec3 c = mix(cA, cB, e) * (1.0 + arc * 0.3) * (1.0 - 0.45 * arc * step(1.0, m) * step(m, 3.0));
+    float lum = dot(c, vec3(0.299, 0.587, 0.114));
+    c = mix(c, vec3(lum) * vec3(0.78, 0.86, 1.0), 0.7 * far);
     vColor = c * fog * vis * (1.0 + 0.35 * uWarp);
     vAlpha = alpha;
   }
@@ -406,6 +440,10 @@ export class MorphParticles {
         uFocusAmount: shared.uFocusAmount,
         uWarp: { value: 0 },
         uSunDir: { value: new Vector3(0, 1, 0) },
+        uCortex: { value: new Vector2() },
+        uCortexArea: { value: new Vector3(0, 0, -1000) },
+        uHot: { value: [0, 1, 2, 3].map(() => new Vector3(0, -1000, 0)) },
+        uHotCount: { value: 0 },
       },
     })
 

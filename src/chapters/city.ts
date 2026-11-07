@@ -16,6 +16,8 @@ const riverZ = (x: number) => 40 + 9 * Math.sin(x / 38) + 4 * Math.sin(x / 13 + 
 const inRiver = (p: Vector2) => Math.abs(p.y - riverZ(p.x)) < 7
 
 const RINGS = [18, 42, 76, 112]
+/** Length of the green window ahead of the rider, as a fraction of the route. */
+const WINDOW = 0.16
 const RADIALS = 11
 
 function ringPoint(r: number, a: number, i: number) {
@@ -166,17 +168,48 @@ const lightVertex = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(position, 1.0);
     float dist = -mv.z;
     float green;
+    float amber;
     if (aInfo.y < 0.0) {
-      green = step(0.5, fract(uTime * 0.12 + aInfo.x));
+      float ph = fract(uTime * 0.12 + aInfo.x);
+      green = step(0.5, ph);
+      amber = step(0.44, ph) * (1.0 - green);
     } else {
+      // The wave window: lights from just behind the rider to WINDOW ahead are green,
+      // the next ones show red-amber, about to switch.
       float d = aInfo.y - uWave;
-      green = step(-0.03, d) * step(d, 0.16);
+      green = step(-0.03, d) * step(d, ${WINDOW.toFixed(3)});
+      amber = step(${WINDOW.toFixed(3)}, d) * step(d, ${(WINDOW + 0.05).toFixed(3)});
     }
     vec3 red = vec3(1.0, 0.25, 0.3);
     vec3 grn = vec3(0.3, 1.0, 0.55);
+    vec3 amb = vec3(1.0, 0.7, 0.36);
     float onRoute = step(0.0, aInfo.y);
-    vColor = mix(red, grn, green) * mix(0.55, 1.4, onRoute) * uVisible * exp(-pow(uFogDensity * dist, 2.0));
+    vec3 c = mix(mix(red, amb, amber), grn, green);
+    vColor = c * mix(0.55, 1.4, onRoute) * uVisible * exp(-pow(uFogDensity * dist, 2.0));
     gl_PointSize = clamp(mix(1.3, 2.2, onRoute) * uScale / dist, 1.5, 12.0);
+    gl_Position = projectionMatrix * mv;
+  }
+`
+/**
+ * A soft corridor of light over the green window of the route, moving with the
+ * wave, with a brighter leading edge where the next light is about to turn.
+ */
+const haloVertex = /* glsl */ `
+  uniform float uScale;
+  uniform float uVisible;
+  uniform float uWave;
+  uniform float uFogDensity;
+  attribute float aS;
+  varying vec3 vColor;
+  void main() {
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    float dist = -mv.z;
+    float d = aS - uWave;
+    float inside = smoothstep(-0.04, -0.01, d) * (1.0 - smoothstep(${WINDOW.toFixed(3)} - 0.02, ${WINDOW.toFixed(3)}, d));
+    float edge = exp(-pow((d - ${WINDOW.toFixed(3)}) / 0.008, 2.0));
+    vec3 c = vec3(0.3, 1.0, 0.55) * inside * 0.12 + vec3(0.75, 1.0, 0.85) * edge * 0.5;
+    vColor = c * uVisible * exp(-pow(uFogDensity * dist, 2.0));
+    gl_PointSize = clamp(7.0 * uScale / dist, 2.0, 90.0);
     gl_Position = projectionMatrix * mv;
   }
 `
@@ -214,6 +247,7 @@ export class City {
   readonly group = new Group()
   private lightMat: ShaderMaterial
   private routeMat: ShaderMaterial
+  private haloMat: ShaderMaterial
   private route: Vector2[] = []
   private routeS: number[] = []
   /** World position of the green-wave head (for the HUD label). */
@@ -305,13 +339,40 @@ export class City {
     routePoints.frustumCulled = false
     routePoints.position.copy(lightPoints.position)
 
-    this.group.add(lightPoints, routePoints)
+    // Corridor halo: every fourth route dot, drawn wide and faint.
+    const hp: number[] = []
+    const hs: number[] = []
+    for (let j = 0; j < rs.length; j += 4) {
+      hp.push(rp[j * 3], rp[j * 3 + 1] - 0.05, rp[j * 3 + 2])
+      hs.push(rs[j])
+    }
+    const hg = new BufferGeometry()
+    hg.setAttribute('position', new BufferAttribute(new Float32Array(hp), 3))
+    hg.setAttribute('aS', new BufferAttribute(new Float32Array(hs), 1))
+    this.haloMat = new ShaderMaterial({
+      vertexShader: haloVertex,
+      fragmentShader: dotFragment,
+      transparent: true,
+      depthWrite: false,
+      blending: AdditiveBlending,
+      uniforms: {
+        uScale: { value: 1 },
+        uVisible: { value: 0 },
+        uWave: { value: 0 },
+        uFogDensity: shared.uFogDensity,
+      },
+    })
+    const haloPoints = new Points(hg, this.haloMat)
+    haloPoints.frustumCulled = false
+    haloPoints.position.copy(lightPoints.position)
+
+    this.group.add(haloPoints, lightPoints, routePoints)
   }
 
   /** @param wave 0..1 position of the green wave along the route */
   update(visible: number, wave: number, time: number, scale: number) {
     this.group.visible = visible > 0.001
-    for (const m of [this.lightMat, this.routeMat]) {
+    for (const m of [this.lightMat, this.routeMat, this.haloMat]) {
       m.uniforms.uVisible.value = visible
       m.uniforms.uWave.value = wave
       m.uniforms.uScale.value = scale

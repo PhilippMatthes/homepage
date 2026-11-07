@@ -17,6 +17,7 @@ import type { Topology, GeometryCollection } from 'topojson-specification'
 import type { MultiPolygon, Polygon } from 'geojson'
 import landUrl from 'world-atlas/land-50m.json?url'
 import { palette } from '../core/palette'
+import { moodAccent } from '../core/mood'
 import { GLOBE_CENTER, GLOBE_RADIUS, latLonToWorld } from '../world/layout'
 import { sunDirection } from '../world/sun'
 
@@ -135,7 +136,7 @@ const atmosphereShader = {
         // the previous chapter's mood dissolves into the globe instead of cutting.
         vec3 base = uBg * mix(0.55, 1.0, day) + uColor * 0.05 * day;
         vec3 rim = uColor * pow(1.0 - f, 3.0) * mix(0.22, 0.5, day);
-        gl_FragColor = vec4(base + rim + DUSK * dusk * 0.045, uVisible);
+        gl_FragColor = vec4(base + rim + DUSK * dusk * 0.07, uVisible);
       } else {
         vec3 c = mix(uColor, DUSK, 0.45 * dusk) * mix(0.45, 1.0, day);
         gl_FragColor = vec4(c * pow(f, 4.0) * 0.9 * uVisible, 1.0);
@@ -159,6 +160,8 @@ export class Globe {
   /** World-space direction to the sun; shared with the particles' globe dots. */
   readonly sunDir = { value: sunDirection() }
   private sunCheckedAt = -Infinity
+  /** Atmosphere rim: cyan, leaning towards the current chapter accent. */
+  private rim = palette.cyan.clone()
 
   constructor() {
     const R = GLOBE_RADIUS
@@ -174,7 +177,7 @@ export class Globe {
     this.ocean.renderOrder = -5
     this.atmoMat = new ShaderMaterial({
       ...atmosphereShader,
-      uniforms: { uColor: { value: palette.cyan }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 0 }, uSunDir: this.sunDir },
+      uniforms: { uColor: { value: this.rim }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 0 }, uSunDir: this.sunDir },
       side: BackSide,
       transparent: true,
       blending: AdditiveBlending,
@@ -216,6 +219,8 @@ export class Globe {
     const fade = new Float32Array(this.arcs.length * TAIL)
     for (let i = 0; i < fade.length; i++) fade[i] = 1 - (i % TAIL) / TAIL
     this.pulseGeo.setAttribute('aFade', new BufferAttribute(fade, 1))
+    // 0 while a packet is in flight, then a short amber flash when it lands.
+    this.pulseGeo.setAttribute('aArrive', new BufferAttribute(new Float32Array(fade.length), 1))
     this.pulseMat = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
@@ -223,18 +228,21 @@ export class Globe {
       uniforms: { uVisible: { value: 0 }, uScale: { value: 1 } },
       vertexShader: /* glsl */ `
         uniform float uVisible; uniform float uScale;
-        attribute float aFade; varying float vA;
+        attribute float aFade; attribute float aArrive; varying float vA; varying float vArrive;
         void main() {
           vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = clamp(9.0 * uScale / -mv.z * aFade, 1.0, 10.0);
-          vA = aFade * uVisible;
+          float flash = aArrive * (1.0 - aArrive) * 4.0;
+          gl_PointSize = clamp(9.0 * uScale / -mv.z * aFade * (1.0 + 1.5 * flash), 1.0, 18.0);
+          vA = aFade * uVisible * (1.0 - smoothstep(0.6, 1.0, aArrive));
+          vArrive = flash;
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
-        varying float vA;
+        varying float vA; varying float vArrive;
         void main() {
           vec2 c = gl_PointCoord - 0.5; float r = dot(c, c) * 4.0; if (r > 1.0) discard;
-          gl_FragColor = vec4(vec3(0.85, 0.95, 1.0) * exp(-r * 2.5) * vA * 1.6, 1.0);
+          vec3 col = mix(vec3(0.85, 0.95, 1.0), vec3(1.0, 0.7, 0.36), vArrive);
+          gl_FragColor = vec4(col * exp(-r * 2.5) * vA * 1.6, 1.0);
         }`,
     })
     const pulses = new Points(this.pulseGeo, this.pulseMat)
@@ -291,6 +299,7 @@ export class Globe {
     }
     this.oceanMat.uniforms.uVisible.value = visible
     this.atmoMat.uniforms.uVisible.value = visible
+    this.rim.copy(palette.cyan).lerp(moodAccent, 0.6)
     this.arcMat.opacity = 0.32 * visible
     this.pulseMat.uniforms.uVisible.value = visible
     this.pulseMat.uniforms.uScale.value = scale
@@ -299,17 +308,22 @@ export class Globe {
     this.beaconMat.uniforms.uTime.value = time
 
     const pos = this.pulseGeo.attributes.position as BufferAttribute
+    const arrive = this.pulseGeo.attributes.aArrive as BufferAttribute
     const TAIL = 8
     this.arcs.forEach((pts, i) => {
       const head = (time * 0.35 + i * 0.37) % 1.4
+      // The tail piles up on the target after t = 1; that pause is the landing.
+      const landed = Math.min(1, Math.max(0, (head - 1 - TAIL * 0.012) / (0.4 - TAIL * 0.012)))
       for (let j = 0; j < TAIL; j++) {
         const t = Math.min(1, Math.max(0, head - j * 0.012))
         const f = t * (pts.length - 1)
         const k = Math.min(pts.length - 2, Math.floor(f))
         const p = pts[k].clone().lerp(pts[k + 1], f - k)
         pos.setXYZ(i * TAIL + j, p.x, p.y, p.z)
+        arrive.setX(i * TAIL + j, landed)
       }
     })
     pos.needsUpdate = true
+    arrive.needsUpdate = true
   }
 }

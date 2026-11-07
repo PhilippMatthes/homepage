@@ -77,10 +77,17 @@ export class Network {
     const fade = new Float32Array(this.curves.length * 2 * T)
     for (let i = 0; i < fade.length; i++) fade[i] = 1 - (i % T) / T
     this.pulseGeo.setAttribute('aFade', new BufferAttribute(fade, 1))
-    // One random hue per packet (shared by its whole tail).
+    // Per packet (shared by its whole tail): a random value for the rare hot packet,
+    // and its direction. Packets alternate direction (see update), so color says
+    // which way they run: outbound from the hub vs. back in.
     const tint = new Float32Array(fade.length)
-    for (let i = 0; i < tint.length; i += T) tint.fill(Math.random(), i, i + T)
+    const dir = new Float32Array(fade.length)
+    for (let q = 0; q < tint.length / T; q++) {
+      tint.fill(Math.random(), q * T, q * T + T)
+      dir.fill(q % 2 === Math.floor(q / 2) % 2 ? -1 : 1, q * T, q * T + T)
+    }
     this.pulseGeo.setAttribute('aTint', new BufferAttribute(tint, 1))
+    this.pulseGeo.setAttribute('aDir', new BufferAttribute(dir, 1))
     this.pulseMat = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
@@ -88,13 +95,13 @@ export class Network {
       uniforms: { uVisible: { value: 0 }, uScale: { value: 1 } },
       vertexShader: /* glsl */ `
         uniform float uVisible; uniform float uScale;
-        attribute float aFade; attribute float aTint; varying float vA; varying vec3 vColor;
+        attribute float aFade; attribute float aTint; attribute float aDir; varying float vA; varying vec3 vColor;
         ${packetGlsl}
         void main() {
           vec4 mv = modelViewMatrix * vec4(position, 1.0);
           gl_PointSize = clamp(0.9 * uScale / -mv.z * aFade, 1.0, 10.0);
           vA = aFade * uVisible;
-          vColor = packetColor(aTint);
+          vColor = packetColor(aDir, aTint);
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `

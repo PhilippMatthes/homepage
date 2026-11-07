@@ -110,11 +110,13 @@ export class Stage {
   /**
    * Fast-scroll "warp": 0 at rest, 1 at full speed. Widens the chromatic
    * aberration and lifts the bloom a little; both settle back when scrolling stops.
+   * `bloom` is the chapter's base glow (see bloomAt in mood.ts).
    */
-  setWarp(w: number) {
+  setWarp(w: number, bloom = { intensity: 1, threshold: 0.22 }) {
     const o = 0.0006 + 0.0034 * w
     this.chroma.offset.set(o, o)
-    this.bloom.intensity = 1 + 0.35 * w
+    this.bloom.intensity = bloom.intensity * (1 + 0.35 * w)
+    this.bloom.luminanceMaterial.threshold = bloom.threshold
   }
 
   /** Must be called whenever the fov changes. */
