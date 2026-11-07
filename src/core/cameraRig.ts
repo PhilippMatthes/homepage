@@ -1,7 +1,10 @@
 import { PerspectiveCamera, Vector3 } from 'three'
 import { range, smooth, lerp } from './timeline'
 import type { Pointer } from './pointer'
-import { GLOBE_CENTER, GLOBE_RADIUS } from '../world/layout'
+import { GLOBE_CENTER, GLOBE_RADIUS, PORTRAIT_CENTER } from '../world/layout'
+
+/** Visible bust (hair to the shoulder fade), in meters relative to PORTRAIT_CENTER.y. */
+const BUST = { top: 1.9, bottom: -1.9 }
 import { shared } from './shared'
 
 interface Key {
@@ -118,6 +121,12 @@ export class CameraRig {
    * sheet instead of being shifted sideways.
    */
   sheet = false
+  /**
+   * Bottom-sheet screens: the free band between the top bar and the cover
+   * headline, as fractions of the viewport height. The bust is fitted into it.
+   */
+  heroBand = { top: 0.06, bottom: 0.8 }
+  private base = new Vector3()
 
   constructor(private camera: PerspectiveCamera) {}
 
@@ -150,6 +159,8 @@ export class CameraRig {
     this.fwd.subVectors(this.wantTarget, this.wantPos).normalize()
     this.right.crossVectors(this.fwd, this.camera.up).normalize()
     this.up.crossVectors(this.right, this.fwd).normalize()
+    // Unperturbed eye, so the cover framing ignores parallax and drift.
+    this.base.copy(this.wantPos)
     if (!this.sheet && this.camera.aspect >= 1 && shift !== 0) {
       this.wantPos.addScaledVector(this.right, -shift)
       this.wantTarget.addScaledVector(this.right, -shift)
@@ -187,7 +198,13 @@ export class CameraRig {
       fov = Math.min(80, (Math.atan(t) * 360) / Math.PI)
     }
     // Bottom sheet: move the image up so the subject sits above the copy.
-    this.setLift((aspect < 1 ? 0.21 : 0.09) * frame)
+    let lift = (aspect < 1 ? 0.21 : 0.09) * frame
+    if (this.sheet && hero > 0) {
+      const f = this.frameBust(fov)
+      fov = lerp(fov, f.fov, hero)
+      lift += f.lift * hero
+    }
+    this.setLift(lift)
     // Depth range and fog follow the zoom level (from a 1U server to a planet).
     const d = this.pos.distanceTo(this.target)
     shared.uFogDensity.value = 0.35 / Math.max(d, 6)
@@ -203,6 +220,29 @@ export class CameraRig {
     return changed
   }
 
+  /**
+   * Fits the bust (head to the shoulder fade) into `heroBand`: zooms so it
+   * fills most of the band, then lifts (or drops) the image to center it there.
+   */
+  private frameBust(fov: number) {
+    const { top, bottom } = this.heroBand
+    const band = Math.max(0.2, bottom - top)
+    // Where the eye sits relative to the portrait plane, along the camera's up axis.
+    const dist = Math.max(1, this.base.z - PORTRAIT_CENTER.z)
+    const eyeY = this.base.y
+    const tan0 = Math.tan((fov * Math.PI) / 360)
+    // Bust height on screen (fraction of the viewport) at the current fov.
+    const h0 = (BUST.top - BUST.bottom) / (2 * dist * tan0)
+    // Fill ~78% of the band, but never zoom far from the tuned framing.
+    const z = Math.min(1.3, Math.max(0.85, (band * 0.78) / h0))
+    const tan = tan0 / z
+    const ndcMid = (PORTRAIT_CENTER.y + (BUST.top + BUST.bottom) / 2 - eyeY) / (dist * tan)
+    const screenMid = (1 - ndcMid) / 2
+    // Optical center: a touch above the geometric middle of the band.
+    const want = top + band * 0.47
+    return { fov: (Math.atan(tan) * 360) / Math.PI, lift: screenMid - want }
+  }
+
   /** Shifts the rendered image up by `lift` × viewport height (an off-center projection). */
   private setLift(lift: number) {
     const w = innerWidth
@@ -211,7 +251,7 @@ export class CameraRig {
     this.lift = lift
     this.viewW = w
     this.viewH = h
-    if (lift < 1e-4) this.camera.clearViewOffset()
+    if (Math.abs(lift) < 1e-4) this.camera.clearViewOffset()
     else this.camera.setViewOffset(w, h, 0, lift * h, w, h)
   }
 }

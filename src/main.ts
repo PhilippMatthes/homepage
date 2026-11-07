@@ -167,15 +167,27 @@ async function boot() {
   const frames = [...document.querySelectorAll<HTMLElement>('#overlay [data-band]')].map((el) => {
     const r = bandOf(el)
     const outro = el.classList.contains('outro')
-    // The cover camera already looks slightly below the photo; a small lift puts
-    // the portrait on the upper golden-ratio line (≈ 38% from the top) on phones.
-    const weight = el.classList.contains('hero') ? 0.1 : outro ? 0.8 : 1
+    // The cover frames itself (rig.heroBand), so it adds no lift here.
+    const weight = el.classList.contains('hero') ? 0 : outro ? 0.8 : 1
     // The outro sits bottom-center on every screen, so it lifts the globe everywhere.
     return { r: [r[0] - 0.012, r[1], r[2], r[3] + 0.012], weight, always: outro }
   })
   const sheetQuery = matchMedia('(max-width: 720px), (max-aspect-ratio: 1/1)')
   rig.sheet = sheetQuery.matches
   sheetQuery.addEventListener('change', () => (rig.sheet = sheetQuery.matches))
+  // The band the cover bust is fitted into on phones: below the top bar, above the headline.
+  // offsetTop ignores the fade-in translate, so this is stable while the copy animates.
+  const topbar = document.querySelector<HTMLElement>('.topbar')!
+  const heroEl = document.querySelector<HTMLElement>('.chapter.hero')!
+  const heroTitle = heroEl.querySelector<HTMLElement>('h1')!
+  const measureHero = () => {
+    const h = innerHeight
+    rig.heroBand.top = topbar.getBoundingClientRect().bottom / h
+    rig.heroBand.bottom = (heroEl.offsetTop + heroTitle.offsetTop) / h
+  }
+  measureHero()
+  addEventListener('resize', measureHero)
+  document.fonts?.ready.then(measureHero)
   let copy = -1
   let warp = 0
 
@@ -229,7 +241,8 @@ async function boot() {
     const cityVis = band(p, T.cityVisible[0], T.cityVisible[1], T.cityVisible[2], T.cityVisible[3])
     const wave = range(p, T.greenWave[0], T.greenWave[1])
     const globeVis = band(p, T.globeVisible[0], T.globeVisible[1], T.globeVisible[2], T.globeVisible[3])
-    const touch = reducedMotion ? 0 : pointer.presence * (1 - range(p, 0.02, 0.05))
+    // Only a real mouse or finger ripples the face; phone tilt just steers parallax and light.
+    const touch = reducedMotion ? 0 : pointer.contact * (1 - range(p, 0.02, 0.05))
 
     ndc.set(pointer.x, pointer.y)
     raycaster.setFromCamera(ndc, stage.camera)
