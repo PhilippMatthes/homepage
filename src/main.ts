@@ -10,6 +10,7 @@ import { T, band, morphAt, range, smooth, SCROLL_VH } from './core/timeline'
 import { MorphParticles } from './fx/particles'
 import { Hud } from './fx/hud'
 import { ChapterNav } from './fx/chapterNav'
+import { Loader } from './fx/loader'
 import { samplePortrait } from './chapters/portrait'
 import { PortraitMesh } from './chapters/portraitMesh'
 import { Backdrop } from './chapters/backdrop'
@@ -44,6 +45,7 @@ async function boot() {
     return
   }
 
+  const loader = new Loader(`${BASE}assets/selfie.webp`, `${BASE}assets/selfie-depth.webp`)
   let quality = detectQuality()
   const canvas = document.getElementById('gl') as HTMLCanvasElement
   const stage = new Stage(canvas, quality)
@@ -55,9 +57,9 @@ async function boot() {
   const depthUrl = `${BASE}assets/selfie-depth.webp`
   const N = quality.particles
   const [portrait, photoMesh, backdrop] = await Promise.all([
-    samplePortrait(N, photoUrl, depthUrl),
-    PortraitMesh.load(photoUrl, depthUrl),
-    Backdrop.load(Math.round(N * 0.35), photoUrl, depthUrl, `${BASE}assets/selfie-scene-depth.webp`),
+    loader.track(samplePortrait(N, photoUrl, depthUrl)),
+    loader.track(PortraitMesh.load(photoUrl, depthUrl)),
+    loader.track(Backdrop.load(Math.round(N * 0.35), photoUrl, depthUrl, `${BASE}assets/selfie-scene-depth.webp`)),
   ])
   const hall = hallTargets(N)
   const dash = dashTargets(N)
@@ -290,10 +292,19 @@ async function boot() {
     requestAnimationFrame(frame)
   }
   document.addEventListener('visibilitychange', () => watchdog.reset())
+  // Where the portrait plane lands on screen, so the loader's dot grid can glide onto it.
+  const portraitRect = () => {
+    const h = PORTRAIT_SIZE / 2
+    const a = new Vector3(PORTRAIT_CENTER.x - h, PORTRAIT_CENTER.y + h, PORTRAIT_CENTER.z).project(stage.camera)
+    const b = new Vector3(PORTRAIT_CENTER.x + h, PORTRAIT_CENTER.y - h, PORTRAIT_CENTER.z).project(stage.camera)
+    const x = ((a.x + 1) / 2) * innerWidth
+    const y = ((1 - a.y) / 2) * innerHeight
+    return { x, y, size: ((b.x - a.x) / 2) * innerWidth }
+  }
   requestAnimationFrame((t) => {
     last = t
     frame(t)
-    document.body.classList.add('ready')
+    loader.finish(portraitRect()).then(() => document.body.classList.add('ready'))
   })
 }
 

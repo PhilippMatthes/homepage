@@ -50,6 +50,8 @@ body {
   color: var(--muted);
   transition: opacity 1.2s ease, visibility 1.2s;
 }
+#loader canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#loader span { position: absolute; left: 50%; bottom: 14vh; translate: -50% 0; }
 #loader span::after {
   content: '';
   display: block;
