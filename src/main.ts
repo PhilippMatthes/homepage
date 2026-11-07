@@ -16,6 +16,7 @@ import { Backdrop } from './chapters/backdrop'
 import { Datacenter, hallTargets } from './chapters/datacenter'
 import { Network } from './chapters/network'
 import { Server } from './chapters/server'
+import { Cortex } from './chapters/cortex'
 import { Dashboard, PANELS, dashTargets } from './chapters/dashboard'
 import { Insight, buildCloud } from './chapters/insight'
 import { City, cityTargets } from './chapters/city'
@@ -80,6 +81,7 @@ async function boot() {
   const datacenter = new Datacenter()
   const network = new Network()
   const server = new Server(quality.pulses)
+  const cortex = new Cortex()
   const dashboard = new Dashboard()
   const insight = new Insight(cloud.objects)
   const cityOverlay = new City()
@@ -90,6 +92,7 @@ async function boot() {
     datacenter.group,
     network.group,
     server.group,
+    cortex.group,
     dashboard.group,
     insight.group,
     cityOverlay.group,
@@ -111,7 +114,7 @@ async function boot() {
   // Local time in Dresden next to the beacon, matching the live day/night on the globe.
   const dresdenClock = dresdenPin.querySelector('b')!
   const clockFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' })
-  const tickClock = () => (dresdenClock.textContent = clockFmt.format(new Date()))
+  const tickClock = () => (dresdenClock.textContent = `· ${clockFmt.format(new Date())}`)
   tickClock()
   setInterval(tickClock, 15_000)
   // Same Vector3 instance, so the land dots follow every sun update.
@@ -138,6 +141,10 @@ async function boot() {
   const root = document.documentElement
 
   const chapterNav = new ChapterNav(scroll)
+  // ?p=0.42 jumps straight to a scroll position (debugging, screenshots).
+  const params = new URLSearchParams(location.search)
+  const jump = params.get('p')
+  if (jump !== null && Number.isFinite(+jump)) scroll.jumpTo(Math.min(1, Math.max(0, +jump)))
   const bandOf = (el: HTMLElement) => el.dataset.band!.split(',').map(Number)
   const scrims = [...document.querySelectorAll<HTMLElement>('.chapter.left, .chapter.right')].map((el) => {
     const r = bandOf(el)
@@ -223,6 +230,12 @@ async function boot() {
     backdrop.update(1 - smooth(range(p, 0.115, 0.15)), time, scale, scanY)
     datacenter.update(hallVis, shell, time)
     network.update(networkVis, time, scale)
+    cortex.update({
+      visible: band(p, T.cortexVisible[0], T.cortexVisible[1], T.cortexVisible[2], T.cortexVisible[3]),
+      place: range(p, T.place[0], T.place[1]),
+      rebalance: range(p, T.rebalance[0], T.rebalance[1]),
+      time,
+    })
     server.update({
       visible: p > 0.38 ? 1 - smooth(range(p, T.hallOut[0], T.hallOut[1])) : 0,
       slide,

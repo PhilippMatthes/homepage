@@ -26,6 +26,10 @@ export const T = {
   hallIn: [0.12, 0.19],
   network: [0.15, 0.2, 0.29, 0.33],
   roof: [0.29, 0.34],
+  // Cortex: VMs drop into the racks along the aisle, then hot hosts get rebalanced
+  cortexVisible: [0.385, 0.4, 0.47, 0.495],
+  place: [0.395, 0.44],
+  rebalance: [0.44, 0.47],
   // descend to the target rack, then pull a server out
   slide: [0.42, 0.46],
   lid: [0.45, 0.49],
