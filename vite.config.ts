@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 
-// Served from the custom domain root (see public/CNAME), so base is '/'.
+// Relative base: the same build works at the custom domain root (philippmatth.es/)
+// and under the project path (philippmatthes.github.io/homepage/).
 export default defineConfig({
-  base: '/',
+  base: './',
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 900,
