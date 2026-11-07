@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Philipp Matthes</title>
+    <meta name="description" content="Philipp Matthes — software engineer eager to build cool stuff: cloud infrastructure at SAP, machine learning for smart cities, 3D and shaders." />
+    <meta name="author" content="Philipp Matthes" />
+    <meta name="theme-color" content="#02040a" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Critical styles inline: dark from the very first paint, loader visible before any JS/CSS loads. -->
+    <style>
+      html, body { margin: 0; background: #02040a; color: #e8f2ff; color-scheme: dark; }
+      #loader {
+        position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+        background: #02040a; color: #8aa4c8;
+        font: 500 11px/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: 0.3em; text-transform: uppercase;
+      }
+    </style>
+    <meta property="og:title" content="Philipp Matthes" />
+    <meta property="og:description" content="Cloud infrastructure, machine learning and smart mobility — from Dresden." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://philippmatth.es/" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-icon-180x180.png" />
+    <link rel="preload" as="image" href="/assets/selfie.webp" />
+    <link rel="preload" as="image" href="/assets/selfie-depth.webp" />
+    <link rel="preload" as="image" href="/assets/selfie-scene-depth.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+
+    <div id="loader" aria-hidden="true"><span>initializing sensor</span></div>
+
+    <header class="topbar">
+      <a href="#" class="brand"><span>Dr.-Ing.</span> Philipp Matthes</a>
+      <div class="menu">
+        <button type="button" class="menu-button" aria-expanded="false" aria-controls="experience">
+          <span class="menu-title">Experience</span><span id="current-chapter" class="ticker" aria-live="polite"></span>
+        </button>
+        <ol id="experience" class="menu-list" hidden>
+          <li><a href="#threedify" data-goto="0.1">3D-Everything</a></li>
+          <li><a href="#sci" data-goto="0.268">SCI: Global Cloud Platform Development</a></li>
+          <li><a href="#cortex" data-goto="0.45">Cortex: Intelligent Workload Placement</a></li>
+          <li><a href="#agentic" data-goto="0.535">Agentic Pipelines and Operations</a></li>
+          <li><a href="#perses" data-goto="0.645">Open Source</a></li>
+          <li><a href="#research" data-goto="0.78">Data Science and Machine Learning</a></li>
+          <li><a href="#priobike" data-goto="0.895">Smart City and Navigation Systems</a></li>
+          <li><a href="#contact" data-goto="1">Contact &amp; imprint</a></li>
+        </ol>
+      </div>
+      <nav>
+        <a href="https://github.com/PhilippMatthes" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/pmatthes" target="_blank" rel="noreferrer">LinkedIn</a>
+      </nav>
+    </header>
+
+    <!-- Chapter rail: built from the menu entries by src/fx/chapterNav.ts -->
+    <nav class="rail" id="rail" aria-label="Chapters"></nav>
+
+    <main id="overlay">
+      <!-- data-band: fade in a→b, hold, fade out c→d (scroll progress 0..1) -->
+      <section class="chapter hero" data-band="-1,-1,0.025,0.042">
+        <h1>Hey, I'm Philipp.</h1>
+        <p class="lead">Software engineer eager to build cool stuff.</p>
+        <img class="fallback-portrait" src="/assets/selfie.webp" alt="Portrait of Philipp Matthes" width="256" height="256" />
+      </section>
+
+      <section class="chapter left" id="threedify" data-band="0.06,0.075,0.115,0.13">
+        <p class="eyebrow">// 01 · iOS · Metal · CoreML · Cinema 4D</p>
+        <h2><span class="proj">3D Rendering &amp; Design</span>turning flat photos into 3D.</h2>
+        <p class="lead">3D has been my thing since school: modeling and animation, then half a year in Cinema 4D at a 3D agency before university. Later I started writing my own rendering pipelines, like 3Dify: it estimates depth for any photo with a blend of three CoreML models and renders it with Metal parallax occlusion mapping. This cover is a nod to it.</p>
+        <div class="cards">
+          <a class="card" href="https://github.com/PhilippMatthes/3dify-ios" target="_blank" rel="noreferrer">
+            <b>3Dify</b>
+            <span>Monocular depth estimation + Metal parallax occlusion mapping on iOS.</span>
+          </a>
+          <a class="card" href="https://github.com/PhilippMatthes/neural-greenscreen" target="_blank" rel="noreferrer">
+            <b>Neural Greenscreen</b>
+            <span>Real-time background removal as a macOS virtual camera (DeepLabV3, CoreMediaIO).</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="chapter right" id="sci" data-band="0.225,0.245,0.29,0.315">
+        <p class="eyebrow">// 02 · SAP · Senior Platform Engineering Specialist</p>
+        <h2><span class="proj">SAP Cloud Infrastructure</span>building the next generation cloud for Europe.</h2>
+        <p class="lead">I work on CobaltCore, the new KVM stack behind SAP's global cloud of 20+ datacenters and 100,000+ virtual machines, and the reference implementation of ApeiroRA, the Apeiro Reference Architecture for Europe under the governance of Linux Foundation Europe. My focus is scheduling and inventory: deciding where every workload runs.</p>
+        <dl class="stats">
+          <div><dt>datacenters</dt><dd>20+</dd></div>
+          <div><dt>virtual machines</dt><dd>100,000+</dd></div>
+        </dl>
+      </section>
+
+      <section class="chapter left" id="cortex" data-band="0.415,0.43,0.47,0.485">
+        <p class="eyebrow">// 03 · Go · Kubernetes · OpenStack</p>
+        <h2><span class="proj">Cortex</span>smart placement for every VM.</h2>
+        <p class="lead">Cortex is the scheduler of SAP Cloud Infrastructure, and I'm its leading contributor, having built it from the ground up. It places every new KVM virtual machine and continuously rebalances the inventory, driven by real virtual machine data, bridging OpenStack scheduling and a cloud-native Kubernetes world.</p>
+        <div class="links start"><a href="https://github.com/cobaltcore-dev/cortex" target="_blank" rel="noreferrer">cobaltcore-dev/cortex</a></div>
+      </section>
+
+      <section class="chapter right" id="agentic" data-band="0.5,0.515,0.555,0.57">
+        <p class="eyebrow">// 04 · CobaltCore · AI agents</p>
+        <h2><span class="proj">Agentic Development &amp; Operations</span>AI that helps build and run the cloud.</h2>
+        <p class="lead">Around CobaltCore I build AI systems that take work off engineers and operators:</p>
+        <ul class="bullets">
+          <li><b>Host outage prediction</b> prototype using SAP-RPT-1 <em>2nd place, international SAP hackathon</em></li>
+          <li><b>Agentic release &amp; review pipeline</b>, fully integrated for CobaltCore</li>
+          <li><b>Knowledge graph</b> matching issues to commits</li>
+          <li><b>Agent network sandboxing</b> with an Envoy proxy</li>
+        </ul>
+      </section>
+
+      <section class="chapter left" id="perses" data-band="0.605,0.62,0.67,0.69">
+        <p class="eyebrow">// 05 · CNCF · Go · TypeScript</p>
+        <h2><span class="proj">Open Source Contributions</span>observability with Perses.</h2>
+        <p class="lead">I love contributing code to cool open-source projects. A leading example is Perses, the CNCF sandbox project for dashboards over Prometheus, Tempo, Loki and more, where I contributed a canvas panel that generates graphs straight from query data, like the topology panel floating here.</p>
+        <div class="links start"><a href="https://github.com/perses/perses" target="_blank" rel="noreferrer">perses/perses</a></div>
+      </section>
+
+      <section class="chapter right" id="research" data-band="0.745,0.76,0.8,0.82">
+        <p class="eyebrow">// 06 · TU Dresden · Dr.-Ing. 2024</p>
+        <h2><span class="proj">PhD research</span>machine learning for smart cities.</h2>
+        <p class="lead">For my PhD I developed machine-learning models for smart-city use cases and evaluated them on real-world data: matching traffic lights and lanes to bike routes, measuring how predictable 18,009 traffic lights are, and detecting transport modes on phones.</p>
+        <ul class="pubs">
+          <li><b>Cloudy with a Chance of Green: Measuring the Predictability of 18,009 Traffic Lights in Hamburg</b><span>IEEE IV 2024</span></li>
+          <li><b>GeoAI-Powered Lane Matching for Bike Routes in GLOSA Apps</b><span>ACM SIGSPATIAL 2023</span></li>
+          <li><b>Matching Traffic Lights to Routes for Real-World Deployments of Mobile GLOSA Apps</b><span>IEEE ISC2 2022</span></li>
+          <li><b>Selecting Resource-Efficient ML Models for Transport Mode Detection on Mobile Devices</b><span>IEEE IoTaIS 2022</span></li>
+        </ul>
+      </section>
+
+      <section class="chapter left" id="priobike" data-band="0.862,0.875,0.915,0.93">
+        <p class="eyebrow">// 07 · lead engineer · Flutter · Go · Python</p>
+        <h2><span class="proj">PrioBike</span>a green wave for cyclists.</h2>
+        <p class="lead">As lead engineer and PhD student I built PrioBike end to end and field-tested it in Hamburg: the app gives cyclists speed advice to catch the green wave from live data of 10,000+ traffic lights. I wrote the probabilistic traffic-light prediction in Go, the ML traffic-light matching in Python, and a GraphHopper-based bike routing more accurate than Google Maps and OSM.</p>
+        <dl class="stats">
+          <div><dt>traffic lights</dt><dd>10,000+</dd></div>
+          <div><dt>deutscher fahrradpreis</dt><dd>3rd place</dd></div>
+        </dl>
+      </section>
+
+      <section class="chapter outro" id="contact" data-band="0.972,0.99,2,2">
+        <h2>Let's build something together.</h2>
+        <p class="lead">I'm based in Dresden and love collaborating with people all over the world.</p>
+        <div class="links">
+          <a href="mailto:hi@philippmatth.es">hi@philippmatth.es</a>
+          <a href="https://github.com/PhilippMatthes" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/pmatthes" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+        <address class="imprint">
+          <b>Imprint</b>
+          <span>Dr.-Ing. Philipp Matthes</span>
+          <span>Clara-Viebig-Str. 9, 01159 Dresden</span>
+          <a href="mailto:hi@philippmatth.es">hi@philippmatth.es</a>
+        </address>
+      </section>
+    </main>
+
+    <div id="labels" aria-hidden="true"></div>
+    <div class="scroll-hint" aria-hidden="true"><span>scroll</span><i></i></div>
+    <div id="debug" hidden></div>
+
+    <div id="scroll-space"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
