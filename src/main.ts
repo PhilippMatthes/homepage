@@ -37,9 +37,6 @@ function supportsWebGL2() {
 
 async function boot() {
   document.documentElement.style.setProperty('--scroll-vh', String(SCROLL_VH))
-  document.querySelector('.print-cv')?.addEventListener('click', () => print())
-  // Reader / CV mode: text only, no GPU work at all.
-  if (document.documentElement.classList.contains('reader')) return
   if (!supportsWebGL2()) {
     document.body.classList.add('no-webgl')
     return

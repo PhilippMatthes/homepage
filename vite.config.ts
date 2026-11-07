@@ -4,7 +4,7 @@ import { defineConfig, type Plugin } from 'vite'
 /**
  * Replaces {{stat:path.to.value}} in index.html with numbers from
  * src/generated/stats.json (refreshed by scripts/fetch-stats.mjs in CI),
- * so live GitHub numbers are in the static HTML for crawlers and reader mode too.
+ * so live GitHub numbers are in the static HTML for crawlers too.
  */
 function stats(): Plugin {
   const file = new URL('./src/generated/stats.json', import.meta.url)
@@ -48,7 +48,7 @@ function chapterPages(): Plugin {
         const h2 = body.match(/<h2>([\s\S]*?)<\/h2>/)
         const proj = h2?.[1].match(/<span class="proj">([\s\S]*?)<\/span>/)
         const tagline = h2 ? text(h2[1].replace(/<span class="proj">[\s\S]*?<\/span>/, '')).replace(/\.$/, '') : ''
-        const lead = text(body.match(/<p class="lead">([\s\S]*?)<\/p>/)?.[1].replace(/<span class="web-only">[\s\S]*?<\/span>/g, '') ?? '')
+        const lead = text(body.match(/<p class="lead">([\s\S]*?)<\/p>/)?.[1] ?? '')
         const title = `${proj ? text(proj[1]) : name}: ${tagline || name} · Philipp Matthes`
         const description = lead.length > 200 ? lead.slice(0, lead.lastIndexOf(' ', 197)) + '…' : lead
         const source = `<!doctype html>
