@@ -17,6 +17,7 @@ import { Datacenter, hallTargets } from './chapters/datacenter'
 import { Network } from './chapters/network'
 import { Server } from './chapters/server'
 import { Cortex } from './chapters/cortex'
+import { Agents, STATIONS } from './chapters/agents'
 import { Dashboard, PANELS, dashTargets } from './chapters/dashboard'
 import { Insight, buildCloud } from './chapters/insight'
 import { City, cityTargets } from './chapters/city'
@@ -82,6 +83,7 @@ async function boot() {
   const network = new Network()
   const server = new Server(quality.pulses)
   const cortex = new Cortex()
+  const agents = new Agents()
   const dashboard = new Dashboard()
   const insight = new Insight(cloud.objects)
   const cityOverlay = new City()
@@ -93,6 +95,7 @@ async function boot() {
     network.group,
     server.group,
     cortex.group,
+    agents.group,
     dashboard.group,
     insight.group,
     cityOverlay.group,
@@ -120,6 +123,8 @@ async function boot() {
   // Same Vector3 instance, so the land dots follow every sun update.
   particles.u.uSunDir.value = globe.sunDir.value
   PANELS.forEach((panel, i) => hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left'))
+  STATIONS.forEach((st, i) => hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title'))
+  hud.add(agents.sandboxAnchor, 'agents', 'envoy sandbox', '#3fa9ff', 'panel-title')
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 
   const debugEl = new URLSearchParams(location.search).has('debug') ? document.getElementById('debug') : null
@@ -245,6 +250,8 @@ async function boot() {
       time,
       scale,
     })
+    const agentsVis = band(p, T.agents[0], T.agents[1], T.agents[2], T.agents[3])
+    agents.update({ visible: agentsVis, time, scale, origin: server.group.position })
     dashboard.update(dashVis)
     const reveal = insight.update({ visible: insightVis, sweepX, sweepOn, time })
     cityOverlay.update(cityVis, wave, time, scale)
@@ -266,6 +273,7 @@ async function boot() {
     hud.update(p, stage.camera, reveal, {
       globe: smooth(range(p, 0.975, 0.99)),
       dash: dashVis,
+      agents: agentsVis,
       wave: cityVis * band(p, T.greenWave[0], T.greenWave[0] + 0.01, T.greenWave[1] - 0.01, T.greenWave[1]),
     })
     setVar('--hint', (1 - range(p, 0, 0.012)).toFixed(3))

@@ -35,6 +35,8 @@ export const T = {
   lid: [0.45, 0.49],
   flows: [0.45, 0.48, 0.58, 0.62],
   heat: [0.52, 0.56, 0.6, 0.64],
+  // agents spawn from the GPU and work through the sandboxed pipeline
+  agents: [0.5, 0.515, 0.565, 0.58],
   // data streams into the GPU, then up into the Perses dashboards
   ingest: [0.53, 0.57],
   dash: [0.57, 0.62],
