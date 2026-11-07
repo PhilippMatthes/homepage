@@ -107,7 +107,15 @@ async function boot() {
     .catch((e) => console.warn('globe data unavailable', e))
 
   const hud = new Hud(cloud.objects)
-  hud.add(globe.anchors.dresden, 'globe', `<i></i>${PLACES.dresden.label}`, '#ffffff', 'place')
+  const dresdenPin = hud.add(globe.anchors.dresden, 'globe', `<i></i>${PLACES.dresden.label}<b></b>`, '#ffffff', 'place')
+  // Local time in Dresden next to the beacon, matching the live day/night on the globe.
+  const dresdenClock = dresdenPin.querySelector('b')!
+  const clockFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' })
+  const tickClock = () => (dresdenClock.textContent = clockFmt.format(new Date()))
+  tickClock()
+  setInterval(tickClock, 15_000)
+  // Same Vector3 instance, so the land dots follow every sun update.
+  particles.u.uSunDir.value = globe.sunDir.value
   PANELS.forEach((panel, i) => hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left'))
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 
@@ -151,6 +159,7 @@ async function boot() {
   rig.sheet = sheetQuery.matches
   sheetQuery.addEventListener('change', () => (rig.sheet = sheetQuery.matches))
   let copy = -1
+  let warp = 0
 
   // CSS variables are only written when they change, to spare per-frame style recalcs.
   const cssVars = new Map<string, string>()
@@ -176,6 +185,10 @@ async function boot() {
       ...frames.map(({ r, weight, always }) => (rig.sheet || always ? weight * band(p, r[0], r[1], r[2], r[3]) : 0)),
     )
     copy = copy < 0 ? copyTarget : copy + (copyTarget - copy) * (1 - Math.exp(-dt * 3))
+    // Fast scrolling warps the scene; quick to build up, slower to settle.
+    const warpTarget = reducedMotion ? 0 : smooth(Math.min(1, Math.max(0, (Math.abs(scroll.velocity) - 0.015) * 14)))
+    warp += (warpTarget - warp) * (1 - Math.exp(-dt * (warpTarget > warp ? 6 : 2.5)))
+    stage.setWarp(warp)
     if (rig.update(p, dt, pointer, time, copy)) stage.updatePointScale()
     stage.camera.updateMatrixWorld()
     const scale = stage.pointScale
@@ -235,6 +248,7 @@ async function boot() {
     u.uEye.value.copy(stage.camera.position)
     u.uScanY.value = scanY
     u.uPointerStrength.value = touch
+    u.uWarp.value = warp
 
     hud.update(p, stage.camera, reveal, {
       globe: smooth(range(p, 0.975, 0.99)),
@@ -245,7 +259,7 @@ async function boot() {
     // Small screens: darken behind the copy while a side chapter is on screen.
     setVar('--scrim', Math.max(0, ...scrims.map(([a, b]) => band(p, a, a + 0.012, b - 0.012, b))).toFixed(3))
     chapterNav.update(p)
-    if (debugEl) debugEl.textContent = `p ${p.toFixed(3)}  morph ${morphAt(p).toFixed(2)}  ${quality.tier}`
+    if (debugEl) debugEl.textContent = `p ${p.toFixed(3)}  morph ${morphAt(p).toFixed(2)}  warp ${warp.toFixed(2)}  ${quality.tier}`
 
     stage.render(dt)
     watchdog.tick(now)

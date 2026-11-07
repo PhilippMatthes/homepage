@@ -80,6 +80,8 @@ const vertexShader = /* glsl */ `
   uniform vec3 uEye;
   uniform vec2 uFocusExtent;
   uniform float uFocusAmount;
+  uniform float uWarp;
+  uniform vec3 uSunDir;
 
   attribute vec3 aColor;
   attribute vec3 aHall;
@@ -244,7 +246,11 @@ const vertexShader = /* glsl */ `
     vec3 n = normalize(aGlobe.xyz - uGlobeCenter);
     vec3 v = normalize(uEye - aGlobe.xyz);
     float facing = smoothstep(-0.05, 0.35, dot(n, v));
-    return mix(world, near, aGlobe.w) * tw * facing;
+    // Night side: land dims and a sparse set of warm city lights comes on.
+    float day = smoothstep(-0.15, 0.15, dot(n, uSunDir));
+    float lights = (1.0 - day) * step(0.9, aSeed.w) * (0.7 + 0.3 * sin(uTime * (1.5 + aSeed.x * 3.0) + aSeed.y * 50.0));
+    vec3 land = mix(world, near, aGlobe.w) * tw * mix(0.4, 1.0, day);
+    return (land + vec3(1.0, 0.72, 0.4) * lights * 0.55) * facing;
   }
 
   void stage(int i, out vec3 p, out vec3 c, out float s) {
@@ -282,8 +288,13 @@ const vertexShader = /* glsl */ `
     p.y += arc * travel * (i == 0 ? 0.0 : 0.12);
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    // Scroll-velocity warp: points scatter along the view axis and drift away
+    // from the screen center, like light streaks during a fast flight.
+    float wj = aSeed.y - 0.5;
+    mv.z += wj * uWarp * max(0.001, -mv.z) * 0.18;
+    mv.xy *= 1.0 + uWarp * 0.05 * aSeed.w;
     float dist = max(0.001, -mv.z);
-    float size = mix(sA, sB, e) * uDensity * uScale / dist;
+    float size = mix(sA, sB, e) * uDensity * uScale / dist * (1.0 + 0.45 * uWarp);
     float alpha = 1.0;
     if (size < 1.2) { alpha = size / 1.2; size = 1.2; }
     // Particles passing right in front of the lens fade out instead of blowing up.
@@ -296,7 +307,7 @@ const vertexShader = /* glsl */ `
 
     float fog = exp(-pow(uFogDensity * dist, 2.0));
     vec3 c = mix(cA, cB, e) * (1.0 + arc * 0.3) * (1.0 - 0.45 * arc * step(1.0, m) * step(m, 3.0));
-    vColor = c * fog * vis;
+    vColor = c * fog * vis * (1.0 + 0.35 * uWarp);
     vAlpha = alpha;
   }
 `
@@ -393,6 +404,8 @@ export class MorphParticles {
         uEye: { value: new Vector3() },
         uFocusExtent: shared.uFocusExtent,
         uFocusAmount: shared.uFocusAmount,
+        uWarp: { value: 0 },
+        uSunDir: { value: new Vector3(0, 1, 0) },
       },
     })
 

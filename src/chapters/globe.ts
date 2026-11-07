@@ -18,6 +18,7 @@ import type { MultiPolygon, Polygon } from 'geojson'
 import landUrl from 'world-atlas/land-50m.json?url'
 import { palette } from '../core/palette'
 import { GLOBE_CENTER, GLOBE_RADIUS, latLonToWorld } from '../world/layout'
+import { sunDirection } from '../world/sun'
 
 /** Rasterizes the land outline to an equirectangular mask. */
 async function landMask(w = 2048, h = 1024) {
@@ -118,17 +119,26 @@ const atmosphereShader = {
     uniform vec3 uBg;
     uniform float uVisible;
     uniform float uInner;
+    uniform vec3 uSunDir;
     varying vec3 vN;
     varying vec3 vW;
+    const vec3 DUSK = vec3(1.0, 0.58, 0.32);
     void main() {
       vec3 v = normalize(cameraPosition - vW);
       float f = abs(dot(v, vN));
+      // The real sun right now: day side, night side and a warm dusk band between.
+      float s = dot(vN, uSunDir);
+      float day = smoothstep(-0.12, 0.2, s);
+      float dusk = exp(-pow(s / 0.09, 2.0));
       if (uInner > 0.5) {
         // Ocean: the live background color plus a rim glow, faded in with alpha so
         // the previous chapter's mood dissolves into the globe instead of cutting.
-        gl_FragColor = vec4(uBg + uColor * pow(1.0 - f, 3.0) * 0.5, uVisible);
+        vec3 base = uBg * mix(0.55, 1.0, day) + uColor * 0.05 * day;
+        vec3 rim = uColor * pow(1.0 - f, 3.0) * mix(0.22, 0.5, day);
+        gl_FragColor = vec4(base + rim + DUSK * dusk * 0.045, uVisible);
       } else {
-        gl_FragColor = vec4(uColor * pow(f, 4.0) * 0.9 * uVisible, 1.0);
+        vec3 c = mix(uColor, DUSK, 0.45 * dusk) * mix(0.45, 1.0, day);
+        gl_FragColor = vec4(c * pow(f, 4.0) * 0.9 * uVisible, 1.0);
       }
     }
   `,
@@ -146,12 +156,15 @@ export class Globe {
   private arcs: Vector3[][] = []
   private beaconMat: ShaderMaterial
   readonly anchors: Record<keyof typeof PLACES, Vector3>
+  /** World-space direction to the sun; shared with the particles' globe dots. */
+  readonly sunDir = { value: sunDirection() }
+  private sunCheckedAt = -Infinity
 
   constructor() {
     const R = GLOBE_RADIUS
     this.oceanMat = new ShaderMaterial({
       ...atmosphereShader,
-      uniforms: { uColor: { value: palette.blue }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 1 } },
+      uniforms: { uColor: { value: palette.blue }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 1 }, uSunDir: this.sunDir },
       transparent: true,
       // Still writes depth so the far side's land dots stay hidden.
       depthWrite: true,
@@ -161,7 +174,7 @@ export class Globe {
     this.ocean.renderOrder = -5
     this.atmoMat = new ShaderMaterial({
       ...atmosphereShader,
-      uniforms: { uColor: { value: palette.cyan }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 0 } },
+      uniforms: { uColor: { value: palette.cyan }, uBg: { value: palette.bg }, uVisible: { value: 0 }, uInner: { value: 0 }, uSunDir: this.sunDir },
       side: BackSide,
       transparent: true,
       blending: AdditiveBlending,
@@ -271,6 +284,11 @@ export class Globe {
   update(visible: number, time: number, scale: number) {
     this.group.visible = visible > 0.001
     if (!this.group.visible) return
+    // The terminator moves 0.25° a minute; re-aim the sun every few seconds.
+    if (time - this.sunCheckedAt > 5) {
+      this.sunCheckedAt = time
+      sunDirection(new Date(), this.sunDir.value)
+    }
     this.oceanMat.uniforms.uVisible.value = visible
     this.atmoMat.uniforms.uVisible.value = visible
     this.arcMat.opacity = 0.32 * visible

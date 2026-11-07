@@ -49,6 +49,7 @@ export class Hud {
     el.innerHTML = html
     this.layer.appendChild(el)
     this.pins.push({ el, pos, key, offset: align === 'left' ? 'translate(0, -50%)' : 'translate(-50%, -100%)' })
+    return el
   }
 
   update(p: number, camera: PerspectiveCamera, reveal: number[], groups: Record<string, number>) {

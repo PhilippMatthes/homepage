@@ -107,6 +107,16 @@ export class Stage {
     this.bloom.mipmapBlurPass.setSize(w, h)
   }
 
+  /**
+   * Fast-scroll "warp": 0 at rest, 1 at full speed. Widens the chromatic
+   * aberration and lifts the bloom a little; both settle back when scrolling stops.
+   */
+  setWarp(w: number) {
+    const o = 0.0006 + 0.0034 * w
+    this.chroma.offset.set(o, o)
+    this.bloom.intensity = 1 + 0.35 * w
+  }
+
   /** Must be called whenever the fov changes. */
   updatePointScale() {
     const fov = (this.camera.fov * Math.PI) / 180
