@@ -47,7 +47,7 @@ export const STATIONS = [
 const ENTRY = { x: 0.002, z: SANDBOX.z1 }
 const PROXY = { x: 0.126, z: SANDBOX.z0 }
 
-const AGENTS = 18
+const AGENTS = 10
 const CYCLE = 9 // seconds per round trip
 const DWELL = 0.11 // share of the cycle spent at each card
 
@@ -112,7 +112,7 @@ export class Agents {
 
   constructor() {
     // Dark glass under the sandbox: separates the pipeline from the busy board below.
-    const glass = new Mesh(new PlaneGeometry(SANDBOX.x1 - SANDBOX.x0 + 0.03, SANDBOX.z1 - SANDBOX.z0 + 0.03), this.glassMat)
+    const glass = new Mesh(new PlaneGeometry(SANDBOX.x1 - SANDBOX.x0 + 0.05, SANDBOX.z1 - SANDBOX.z0 + 0.05), this.glassMat)
     glass.rotation.x = -Math.PI / 2
     glass.position.set((SANDBOX.x0 + SANDBOX.x1) / 2, -0.001, (SANDBOX.z0 + SANDBOX.z1) / 2)
     glass.renderOrder = 10
@@ -242,7 +242,7 @@ export class Agents {
     if (!this.group.visible) return
 
     const v = o.visible
-    this.glassMat.opacity = 0.72 * v
+    this.glassMat.opacity = 0.9 * v
     this.outlineMat.opacity = 0.75 * v
     this.wireMat.opacity = 0.35 * v
     this.riseMat.opacity = 0.3 * v

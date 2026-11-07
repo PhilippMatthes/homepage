@@ -259,6 +259,7 @@ export class Server {
    * @param lid 0..1 how transparent the chassis lid is
    * @param flows 0..1 visibility of data pulses
    * @param heat 0..1 GPU glow
+   * @param dim 0..1 how far the board steps back (while the agent pipeline floats above it)
    */
   update(o: {
     visible: number
@@ -266,6 +267,7 @@ export class Server {
     lid: number
     flows: number
     heat: number
+    dim?: number
     time: number
     scale: number
   }) {
@@ -278,12 +280,13 @@ export class Server {
     this.chassisMat.uniforms.uVisible.value = v
     this.chassisMat.depthWrite = fill > 0.9 && v > 0.98
     this.internals.visible = o.lid > 0.01
-    this.boardMat.uniforms.uVisible.value = o.lid * v
-    this.componentMat.uniforms.uVisible.value = o.lid * v
+    const keep = 1 - 0.75 * (o.dim ?? 0)
+    this.boardMat.uniforms.uVisible.value = o.lid * v * keep
+    this.componentMat.uniforms.uVisible.value = o.lid * v * keep
     this.gpuMat.uniforms.uVisible.value = o.lid * v
     this.gpuMat.uniforms.uGlow.value = 1.2 + o.heat * 3
     this.gpuMat.uniforms.uFill.value.setRGB(0.04 + o.heat * 0.5, 0.16 + o.heat * 0.6, 0.36 + o.heat * 0.7)
-    this.traceMat.opacity = 0.35 * o.lid * v * (0.6 + 0.4 * o.flows)
+    this.traceMat.opacity = 0.35 * o.lid * v * (0.6 + 0.4 * o.flows) * keep * keep
     this.pulseMat.uniforms.uVisible.value = o.flows * v
     this.pulseMat.uniforms.uTime.value = o.time
     this.pulseMat.uniforms.uScale.value = o.scale

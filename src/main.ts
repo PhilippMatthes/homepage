@@ -251,8 +251,9 @@ async function boot() {
       visible: p > 0.38 ? 1 - smooth(range(p, T.hallOut[0], T.hallOut[1])) : 0,
       slide,
       lid,
-      // The board's data pulses step back while the agent pipeline is on screen.
-      flows: flows * (1 - 0.8 * agentsVis),
+      // The board steps back while the agent pipeline is on screen.
+      flows: flows * (1 - agentsVis),
+      dim: agentsVis,
       heat,
       time,
       scale,
