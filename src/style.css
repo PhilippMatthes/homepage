@@ -360,15 +360,6 @@ h2 .proj {
 .menu-list a { display: block; padding: 9px 12px; border-radius: 8px; opacity: 1; }
 .menu-list a:hover, .menu-list a[aria-current='true'] { background: rgba(63, 169, 255, 0.12); color: #fff; }
 
-.stats {
-  display: flex;
-  gap: 28px;
-  margin: 28px 0 0;
-  flex-wrap: wrap;
-}
-.stats dt { font: 500 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-.stats dd { margin: 8px 0 0; font: 500 20px/1 var(--mono); color: #fff; font-variant-numeric: tabular-nums; }
-
 .cards { display: grid; gap: 10px; margin-top: 24px; }
 .card {
   display: grid;
@@ -389,7 +380,9 @@ h2 .proj {
 .card b::after { content: ' ↗'; color: var(--accent); font-weight: 400; }
 .card span { font-size: 13px; line-height: 1.45; color: var(--muted); }
 .chapter a { pointer-events: auto; }
-.links.start { justify-content: flex-start; margin-top: 22px; }
+.links.start { justify-content: flex-start; gap: 10px; margin-top: 24px; }
+.links.start a { padding: 10px 15px; font-size: 12.5px; }
+.links.start a::after { content: ' ↗'; color: var(--accent); }
 
 .pubs {
   list-style: none;
@@ -466,6 +459,10 @@ h2 .proj {
   text-transform: uppercase;
   color: var(--ice);
   opacity: 0.8;
+  /* Clipped to its panel (max-width is set by the HUD from the projected panel width). */
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .label.agent-title { font-size: 10px; letter-spacing: 0.14em; opacity: 0.95; }
 .label.place { font-size: 11px; padding: 5px 9px; margin-top: -18px; }
@@ -542,10 +539,10 @@ h2 .proj {
   .cards { grid-template-columns: 1fr 1fr; margin-top: 16px; }
   .card { padding: 11px 12px; }
   .card span { display: none; }
-  .label.agent-title { font-size: 8px; letter-spacing: 0.06em; }
-  .stats { gap: 18px; margin-top: 16px; }
-  .stats dd { font-size: 17px; }
-  .links.start { margin-top: 16px; }
+  .label.panel-title { font-size: 8px; letter-spacing: 0.08em; }
+  .label.agent-title { font-size: 7px; letter-spacing: 0.02em; }
+  .links.start { gap: 8px; margin-top: 16px; }
+  .links.start a { padding: 9px 13px; font-size: 12px; }
 
   /* Filters and backdrop blur over a live WebGL canvas are expensive on phones:
      the scrim gives the contrast instead. */
@@ -581,7 +578,7 @@ h2 .proj {
 
 /* Short portrait phones: keep the sheet under half the screen. */
 @media (max-aspect-ratio: 1/1) and (max-height: 700px) {
-  .chapter .stats, .chapter .pubs { display: none; }
+  .chapter .pubs { display: none; }
   .chapter.left, .chapter.right { padding-top: 40px; }
   .lead { font-size: 13.5px; }
 }
@@ -595,10 +592,11 @@ h2 .proj {
   .lead { font-size: 12.5px; line-height: 1.4; margin-top: 10px; }
   .bullets { margin-top: 8px; gap: 4px; }
   .bullets li { font-size: 12px; }
-  .chapter .stats, .chapter .pubs, .card span { display: none; }
+  .chapter .pubs, .card span { display: none; }
   .cards { grid-template-columns: 1fr 1fr; margin-top: 12px; }
   .card { padding: 9px 11px; }
   .links.start { margin-top: 12px; }
+  .links.start a { padding: 7px 11px; font-size: 11px; }
   .chapter.hero { bottom: 40px; }
   h1 { font-size: 40px; }
   .outro h2 { font-size: 28px; }

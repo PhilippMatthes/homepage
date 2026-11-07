@@ -35,7 +35,7 @@ export const T = {
   lid: [0.45, 0.49],
   flows: [0.45, 0.48, 0.58, 0.62],
   heat: [0.52, 0.56, 0.6, 0.64],
-  // agents spawn from the GPU and work through the sandboxed pipeline
+  // jobs run through the agent pipeline, which calls inference on the GPU
   agents: [0.5, 0.515, 0.56, 0.575],
   // data streams into the GPU, then up into the Perses dashboards
   // (starts as the agent pipeline fades, so the two don't compete)

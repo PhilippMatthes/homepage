@@ -10,6 +10,9 @@ interface Pin {
   key: number | string
   /** CSS translate that places the label relative to its anchor. */
   offset: string
+  /** World-space width (along +x) the label may span; its pixel max-width follows the projection. */
+  width?: number
+  maxW?: number
 }
 
 /**
@@ -21,6 +24,7 @@ export class Hud {
   private pins: Pin[] = []
   private layer = document.getElementById('labels')!
   private tmp = new Vector3()
+  private tmp2 = new Vector3()
   /** Animated CSS blur is costly on phones (it re-rasterizes the copy every frame). */
   private blur = !matchMedia('(pointer: coarse)').matches
 
@@ -42,13 +46,21 @@ export class Hud {
   }
 
   /** Adds a label pinned to a world position, shown with the reveal value of `key`. */
-  add(pos: Vector3, key: number | string, html: string, color = '#9fd8ff', className = '', align: 'above' | 'left' = 'above') {
+  add(
+    pos: Vector3,
+    key: number | string,
+    html: string,
+    color = '#9fd8ff',
+    className = '',
+    align: 'above' | 'left' = 'above',
+    width?: number,
+  ) {
     const el = document.createElement('div')
     el.className = `label ${className}`.trim()
     el.style.setProperty('--c', color)
     el.innerHTML = html
     this.layer.appendChild(el)
-    this.pins.push({ el, pos, key, offset: align === 'left' ? 'translate(0, -50%)' : 'translate(-50%, -100%)' })
+    this.pins.push({ el, pos, key, offset: align === 'left' ? 'translate(0, -50%)' : 'translate(-50%, -100%)', width })
     return el
   }
 
@@ -63,7 +75,8 @@ export class Hud {
 
     const w = innerWidth
     const h = innerHeight
-    for (const { el, pos, key, offset } of this.pins) {
+    for (const pin of this.pins) {
+      const { el, pos, key, offset, width } = pin
       const v = typeof key === 'number' ? reveal[key] ?? 0 : groups[key] ?? 0
       if (v < 0.01) {
         el.style.opacity = '0'
@@ -76,6 +89,14 @@ export class Hud {
       }
       const x = ((this.tmp.x + 1) / 2) * w
       const y = ((1 - this.tmp.y) / 2) * h
+      if (width) {
+        this.tmp2.copy(pos).setX(pos.x + width).project(camera)
+        const maxW = Math.max(0, Math.round(((this.tmp2.x - this.tmp.x) / 2) * w))
+        if (maxW !== pin.maxW) {
+          pin.maxW = maxW
+          el.style.maxWidth = `${maxW}px`
+        }
+      }
       el.style.opacity = v.toFixed(3)
       el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) ${offset}`
     }

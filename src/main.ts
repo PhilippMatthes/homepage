@@ -18,8 +18,8 @@ import { Datacenter, hallTargets } from './chapters/datacenter'
 import { Network } from './chapters/network'
 import { Server } from './chapters/server'
 import { Cortex } from './chapters/cortex'
-import { Agents, STATIONS } from './chapters/agents'
-import { Dashboard, PANELS, dashTargets } from './chapters/dashboard'
+import { Agents, CARD_TITLE_W, STATIONS } from './chapters/agents'
+import { DASH, Dashboard, PANELS, dashTargets } from './chapters/dashboard'
 import { Insight, buildCloud } from './chapters/insight'
 import { City, cityTargets } from './chapters/city'
 import { Globe, PLACES, globeTargets } from './chapters/globe'
@@ -128,9 +128,13 @@ async function boot() {
   setInterval(tickClock, 15_000)
   // Same Vector3 instance, so the land dots follow every sun update.
   particles.u.uSunDir.value = globe.sunDir.value
-  PANELS.forEach((panel, i) => hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left'))
-  STATIONS.forEach((st, i) => hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title agent-title', 'left'))
-  hud.add(agents.sandboxAnchor, 'agents', 'envoy sandbox', '#3fa9ff', 'panel-title agent-title', 'left')
+  // Titles are clipped to their panel / card so they never run into the neighbor on narrow screens.
+  PANELS.forEach((panel, i) =>
+    hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left', DASH.w - 0.12),
+  )
+  STATIONS.forEach((st, i) =>
+    hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title agent-title', 'left', CARD_TITLE_W),
+  )
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 
   const debugEl = new URLSearchParams(location.search).has('debug') ? document.getElementById('debug') : null

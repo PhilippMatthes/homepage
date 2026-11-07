@@ -23,8 +23,8 @@ export const DASH = {
 export const PANELS: Array<{ type: number; title: string }> = [
   { type: 0, title: 'vm placements / s' },
   { type: 2, title: 'cluster topology' },
-  { type: 1, title: 'hypervisor utilization' },
-  { type: 3, title: 'scheduler latency · heatmap' },
+  { type: 1, title: 'hypervisor util' },
+  { type: 3, title: 'scheduler latency' },
   { type: 0, title: 'memory committed' },
   { type: 1, title: 'reservations by az' },
 ]
