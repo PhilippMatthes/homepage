@@ -23,6 +23,11 @@ interface Key {
    * of view, for subjects that would otherwise look small on a narrow phone.
    */
   zoom?: number
+  /**
+   * Bottom-sheet screens only: a different eye position. Without the sideways
+   * shift, a wide orbit turns the subject edge-on, so these keys orbit less.
+   */
+  sheetPos?: [number, number, number]
 }
 
 /**
@@ -42,9 +47,10 @@ const KEYS: Key[] = [
   { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36, zoom: 1.75 },
   { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36, zoom: 1.6 },
   // it burns into a point cloud while we orbit to the side
-  { p: 0.065, pos: orbit(26, 9.0, 29.9), target: [0, 29.6, 0], fov: 38, shift: 0.8 },
-  { p: 0.095, pos: orbit(48, 8.8, 30.5), target: [0, 29.7, 0], fov: 40, shift: 1.4 },
-  { p: 0.125, pos: orbit(60, 8.6, 30.9), target: [0, 29.7, 0], fov: 40, shift: 1.4 },
+  // (phones stay at a three-quarter view, so the face keeps reading as a face)
+  { p: 0.065, pos: orbit(26, 9.0, 29.9), sheetPos: orbit(16, 9.4, 29.9), target: [0, 29.6, 0], fov: 38, shift: 0.8, zoom: 1.15 },
+  { p: 0.095, pos: orbit(48, 8.8, 30.5), sheetPos: orbit(22, 9.4, 30.0), target: [0, 29.7, 0], fov: 40, shift: 1.4, zoom: 1.1 },
+  { p: 0.125, pos: orbit(60, 8.6, 30.9), sheetPos: orbit(26, 9.4, 30.1), target: [0, 29.7, 0], fov: 40, shift: 1.4, zoom: 1.1 },
   // the points rain down onto the datacenter
   { p: 0.165, pos: [4, 34, 14], target: [0, 16, 0], fov: 42 },
   { p: 0.21, pos: [0, 42, 30], target: [0, 0, 0], fov: 45 },
@@ -81,6 +87,7 @@ const KEYS: Key[] = [
 
 const v = (a: [number, number, number]) => new Vector3(...a)
 const POS = KEYS.map((k) => v(k.pos))
+const SHEET_POS = KEYS.map((k) => v(k.sheetPos ?? k.pos))
 const TGT = KEYS.map((k) => v(k.target))
 
 function catmull(pts: Vector3[], i: number, t: number, out: Vector3) {
@@ -138,7 +145,7 @@ export class CameraRig {
     const b = KEYS[i + 1]
     const lt = range(p, a.p, b.p)
     const t = lerp(lt, smooth(lt), 0.65)
-    catmull(POS, i, t, pos)
+    catmull(this.sheet ? SHEET_POS : POS, i, t, pos)
     catmull(TGT, i, t, target)
     return [lerp(a.fov, b.fov, t), lerp(a.shift ?? 0, b.shift ?? 0, t), lerp(a.zoom ?? 1, b.zoom ?? 1, t)]
   }

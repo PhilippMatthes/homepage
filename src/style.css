@@ -152,19 +152,7 @@ h1, h2 {
   margin-bottom: -0.14em;
 }
 h1 { font-size: clamp(44px, 8vw, 104px); }
-h2 { font-size: clamp(30px, 3.6vw, 54px); line-height: 1.04; }
-h2 .proj {
-  display: block;
-  margin-bottom: 0.12em;
-  font-size: 0.62em;
-  letter-spacing: -0.02em;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.04em;
-  background: linear-gradient(90deg, var(--accent), #ffffff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+h2 { font-size: clamp(28px, 3vw, 46px); line-height: 1.06; text-wrap: balance; }
 .outro h2 { font-size: clamp(34px, 4.4vw, 62px); line-height: 0.98; }
 .lead {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 18px rgba(0, 0, 0, 0.6);
@@ -177,35 +165,6 @@ h2 .proj {
   text-wrap: pretty;
 }
 
-.bullets { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; }
-.bullets li {
-  position: relative;
-  padding-left: 18px;
-  font-size: clamp(14px, 1.2vw, 16px);
-  line-height: 1.45;
-  color: #a3b8d6;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 18px rgba(0, 0, 0, 0.6);
-}
-.bullets li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-.bullets b { color: var(--ink); font-weight: 600; }
-.bullets em {
-  display: inline-block;
-  margin-left: 6px;
-  font: normal 500 10px/1.6 var(--mono);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
 
 .imprint {
   display: flex;
@@ -478,8 +437,11 @@ h2 .proj {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font: 500 9px/1 var(--mono);
-  letter-spacing: 0.3em;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  font: 500 9px/1.5 var(--mono);
+  letter-spacing: 0.22em;
+  text-align: center;
   text-transform: uppercase;
   color: var(--muted);
   opacity: var(--hint);
@@ -528,11 +490,9 @@ h2 .proj {
   .rail { display: none; }
   .chapter.left::before, .chapter.right::before { display: none; }
   .eyebrow { font-size: 10px; letter-spacing: 0.18em; margin-bottom: 12px; }
-  h2 { font-size: clamp(25px, 6.6vw, 36px); }
+  h2 { font-size: clamp(23px, 5.8vw, 32px); }
   .lead { font-size: 14.5px; line-height: 1.45; margin-top: 14px; }
   .chapter.hero .lead { font-size: 17px; }
-  .bullets { margin-top: 12px; gap: 7px; }
-  .bullets li { font-size: 13.5px; }
   .pubs { margin-top: 16px; }
   .pubs b { font-size: 12.5px; }
   .pubs li:nth-child(n + 3) { display: none; }
@@ -588,11 +548,11 @@ h2 .proj {
   .chapter.left, .chapter.right { max-width: min(46vw, 440px); }
   .chapter.left { left: clamp(56px, 7vw, 96px); }
   .eyebrow { font-size: 9px; margin-bottom: 8px; }
-  h2 { font-size: 22px; }
+  h2 { font-size: 20px; }
   .lead { font-size: 12.5px; line-height: 1.4; margin-top: 10px; }
-  .bullets { margin-top: 8px; gap: 4px; }
-  .bullets li { font-size: 12px; }
   .chapter .pubs, .card span { display: none; }
+  .label.panel-title { font-size: 8px; letter-spacing: 0.08em; }
+  .label.agent-title { font-size: 7px; letter-spacing: 0.02em; }
   .cards { grid-template-columns: 1fr 1fr; margin-top: 12px; }
   .card { padding: 9px 11px; }
   .links.start { margin-top: 12px; }

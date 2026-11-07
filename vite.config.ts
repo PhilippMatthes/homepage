@@ -21,12 +21,12 @@ function chapterPages(): Plugin {
       const menu = new Map([...html.matchAll(/<a href="#([\w-]+)" data-goto="[\d.]+">([^<]+)<\/a>/g)].map((m) => [m[1], text(m[2])]))
       for (const [, id, body] of html.matchAll(/<section class="chapter[^"]*" id="([\w-]+)"[^>]*>([\s\S]*?)<\/section>/g)) {
         const name = menu.get(id) ?? id
-        const h2 = body.match(/<h2>([\s\S]*?)<\/h2>/)
-        const proj = h2?.[1].match(/<span class="proj">([\s\S]*?)<\/span>/)
-        const tagline = h2 ? text(h2[1].replace(/<span class="proj">[\s\S]*?<\/span>/, '')).replace(/\.$/, '') : ''
+        const h2 = text(body.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '')
         const lead = text(body.match(/<p class="lead">([\s\S]*?)<\/p>/)?.[1] ?? '')
-        const title = `${proj ? text(proj[1]) : name}: ${tagline || name} · Philipp Matthes`
-        const description = lead.length > 200 ? lead.slice(0, lead.lastIndexOf(' ', 197)) + '…' : lead
+        const title = `${name} · Philipp Matthes`
+        // The headline is a full sentence; it leads the description.
+        const summary = [h2, lead].filter(Boolean).join(' ')
+        const description = summary.length > 200 ? summary.slice(0, summary.lastIndexOf(' ', 197)) + '…' : summary
         const source = `<!doctype html>
 <html lang="en">
 <head>

@@ -51,7 +51,7 @@ export const STATIONS = [
   { name: 'knowledge graph', x: 0.134 },
 ] as const
 /** World-space width a card's title may take. */
-export const CARD_TITLE_W = CARD.w - 0.008
+export const CARD_TITLE_W = CARD.w - 0.006
 
 const JOBS = 2
 const CYCLE = 10 // seconds per job
