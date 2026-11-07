@@ -467,6 +467,7 @@ h2 .proj {
   color: var(--ice);
   opacity: 0.8;
 }
+.label.agent-title { font-size: 10px; letter-spacing: 0.14em; opacity: 0.95; }
 .label.place { font-size: 11px; padding: 5px 9px; margin-top: -18px; }
 
 /* ---------- scroll hint ---------- */
@@ -541,6 +542,7 @@ h2 .proj {
   .cards { grid-template-columns: 1fr 1fr; margin-top: 16px; }
   .card { padding: 11px 12px; }
   .card span { display: none; }
+  .label.agent-title { font-size: 8px; letter-spacing: 0.06em; }
   .stats { gap: 18px; margin-top: 16px; }
   .stats dd { font-size: 17px; }
   .links.start { margin-top: 16px; }

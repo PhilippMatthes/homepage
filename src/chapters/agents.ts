@@ -1,216 +1,286 @@
 import {
   AdditiveBlending,
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  Color,
   Group,
+  Line,
+  LineBasicMaterial,
+  LineSegments,
   Mesh,
+  MeshBasicMaterial,
+  PlaneGeometry,
   Points,
   ShaderMaterial,
-  SphereGeometry,
   Vector3,
 } from 'three'
 import { palette } from '../core/palette'
-import { packetGlsl } from '../fx/packets'
+import { holoMaterial } from '../fx/holoMaterial'
+import { smooth } from '../core/timeline'
 
 /**
- * Agentic development & operations, above the open server board:
- * agents spawn from the GPU (inference), cross into an Envoy sandbox,
- * work through a review → release → knowledge-graph pipeline and leave
- * through the proxy. Everything is in server-local meters (+z = rack front,
- * which is screen-down in the top-down camera), and the group follows the server.
+ * Agentic development & operations: a clean pipeline on a dark glass layer
+ * that lifts off the open server board. Agents rise from the GPU, enter the
+ * Envoy sandbox through a gate, stop at review → release → knowledge graph
+ * (each card lights up while it works) and leave through the proxy.
+ *
+ * Server-local meters; the layer is horizontal, and +z (rack front) is
+ * screen-down in the top-down camera.
  */
 
-const GPU = new Vector3(0, 0.01, 0.11)
-export const STATIONS = [
-  { name: 'review', pos: new Vector3(-0.028, 0.07, -0.035), color: [0.68, 0.62, 1.0] },
-  { name: 'release', pos: new Vector3(0.064, 0.085, -0.115), color: [0.45, 1.0, 0.8] },
-  { name: 'knowledge graph', pos: new Vector3(0.15, 0.07, -0.035), color: [1.0, 0.72, 0.42] },
-] as const
-/** Outside the sandbox: where traffic leaves through the proxy. */
-const EGRESS = new Vector3(0.064, 0.16, -0.24)
-const SANDBOX = { center: new Vector3(0.062, 0.07, -0.065), radii: new Vector3(0.155, 0.03, 0.1) }
-const PATH = [GPU, STATIONS[0].pos, STATIONS[1].pos, STATIONS[2].pos, EGRESS]
-const LABEL_LIFT = new Vector3(0, 0, -0.022)
-/** Label spot on the sandbox's near (screen-bottom) rim. */
-const SANDBOX_LABEL = SANDBOX.center.clone().add(new Vector3(-SANDBOX.radii.x * 0.35, 0, SANDBOX.radii.z * 0.98))
+/** Height of the glass layer above the server center when fully lifted. */
+const LAYER_Y = 0.12
+const BOARD_Y = 0.006
+// Centered a little right of the GPU, where the top-down camera frames the board.
+const SANDBOX = { x0: -0.036, x1: 0.164, z0: -0.1, z1: 0.02 }
+const CARD = { w: 0.05, d: 0.03, h: 0.003 }
+const ROW_Z = -0.04
 
-const AGENTS = 90
-const TAIL = 6
+export const STATIONS = [
+  { name: 'review', x: 0.002 },
+  { name: 'release', x: 0.064 },
+  { name: 'knowledge graph', x: 0.126 },
+] as const
+
+/** Gates in the sandbox outline: where agents enter and where the proxy lets them out. */
+const ENTRY = { x: 0.002, z: SANDBOX.z1 }
+const PROXY = { x: 0.126, z: SANDBOX.z0 }
+
+const AGENTS = 18
+const CYCLE = 9 // seconds per round trip
+const DWELL = 0.11 // share of the cycle spent at each card
 
 const agentVertex = /* glsl */ `
-  uniform float uTime;
-  uniform float uScale;
-  uniform vec3 uPath[5];
-  uniform vec3 uCenter;
-  uniform vec3 uRadii;
-  attribute vec4 aSeed;   // phase, jitter x, jitter z, color pick
-  attribute float aTail;  // 0 head … 1 end of tail
+  uniform float uSize;
+  attribute float aGlow;
+  attribute vec3 aColor;
+  varying float vGlow;
   varying vec3 vColor;
-  varying float vA;
-  ${packetGlsl}
-
-  vec3 pathAt(float t) {
-    float f = t * 4.0;
-    int i = int(min(floor(f), 3.0));
-    float u = f - float(i);
-    // Ease in and out of every station, so agents visibly "work" there.
-    float e = u * u * (3.0 - 2.0 * u);
-    vec3 a = uPath[0]; vec3 b = uPath[1];
-    if (i == 1) { a = uPath[1]; b = uPath[2]; }
-    else if (i == 2) { a = uPath[2]; b = uPath[3]; }
-    else if (i == 3) { a = uPath[3]; b = uPath[4]; }
-    vec3 p = mix(a, b, e);
-    p.y += sin(3.14159 * e) * 0.025;
-    return p;
-  }
-
   void main() {
-    float speed = 0.07 + 0.03 * aSeed.y;
-    float t = fract(aSeed.x + uTime * speed - aTail * 0.012);
-    vec3 p = pathAt(t);
-    p.xz += (aSeed.yz - 0.5) * 0.03 * sin(3.14159 * fract(t * 4.0));
-    // Flash where the agent crosses the sandbox membrane (the Envoy proxy).
-    float q = length((p - uCenter) / uRadii);
-    float flash = exp(-pow((q - 1.0) / 0.12, 2.0));
-    vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    float head = 1.0 - aTail;
-    gl_PointSize = clamp(0.006 * uScale / -mv.z * (0.5 + 0.5 * head) * (1.0 + flash), 1.0, 12.0);
-    gl_Position = projectionMatrix * mv;
-    vColor = packetColor(aSeed.w) * (0.8 + 2.2 * flash);
-    vA = head * head;
+    vGlow = aGlow;
+    vColor = aColor;
+    gl_PointSize = uSize * (1.0 + 0.8 * aGlow);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `
-
 const agentFragment = /* glsl */ `
   uniform float uVisible;
+  varying float vGlow;
   varying vec3 vColor;
-  varying float vA;
   void main() {
-    vec2 c = gl_PointCoord - 0.5; float r = dot(c, c) * 4.0; if (r > 1.0) discard;
-    gl_FragColor = vec4(vColor * exp(-r * 2.5) * vA * uVisible, 1.0);
+    float r = length(gl_PointCoord - 0.5) * 2.0;
+    if (r > 1.0) discard;
+    // A crisp core with a thin halo: reads as a distinct agent, not a blob.
+    float core = smoothstep(0.55, 0.4, r);
+    float halo = (1.0 - r) * 0.35;
+    gl_FragColor = vec4(vColor * (core + halo) * (1.0 + vGlow) * uVisible, 1.0);
   }
 `
+
+type Waypoint = { p: Vector3; dwell: number }
+/** Waypoint index of the first card in the route. */
+const FIRST_CARD = 3
 
 export class Agents {
   readonly group = new Group()
-  /** World positions of the station labels (updated every frame). */
+  /** Label anchors (world space, updated every frame): top-left corner of each card, then the sandbox. */
   readonly anchors = STATIONS.map(() => new Vector3())
   readonly sandboxAnchor = new Vector3()
+
+  private layer = new Group()
+  private glassMat = new MeshBasicMaterial({ color: palette.bg, transparent: true, opacity: 0, depthWrite: false })
+  private outlineMat = this.lineMat(palette.cyan)
+  private gateMat = this.lineMat(new Color('#ffd08a'))
+  private wireMat = this.lineMat(palette.ice)
+  private riseMat = this.lineMat(palette.ice)
+  private cardMats = STATIONS.map(() =>
+    holoMaterial({ transparent: true, fill: new Color('#071633'), edge: palette.ice, edgeWidth: 1.4, glow: 1 }),
+  )
   private agentMat: ShaderMaterial
-  private stationMat: ShaderMaterial
-  private membraneMat: ShaderMaterial
+  private agentGeo = new BufferGeometry()
+  private rise: Line
+  private path: Waypoint[] = []
+  private lengths: number[] = []
+  private tmp = new Vector3()
+  /** Sideways shift of the pipeline (phones center it over the GPU); the GPU end stays put. */
+  private shift = 0
+
+  private lineMat(color: Color) {
+    return new LineBasicMaterial({ color, transparent: true, opacity: 0, blending: AdditiveBlending, depthWrite: false })
+  }
 
   constructor() {
-    // Agents with short tails.
-    const g = new BufferGeometry()
-    const n = AGENTS * TAIL
-    g.setAttribute('position', new BufferAttribute(new Float32Array(n * 3), 3))
-    const seed = new Float32Array(n * 4)
-    const tail = new Float32Array(n)
-    for (let a = 0; a < AGENTS; a++) {
-      const s = [Math.random(), Math.random(), Math.random(), Math.random()]
-      for (let j = 0; j < TAIL; j++) {
-        seed.set(s, (a * TAIL + j) * 4)
-        tail[a * TAIL + j] = j / TAIL
-      }
+    // Dark glass under the sandbox: separates the pipeline from the busy board below.
+    const glass = new Mesh(new PlaneGeometry(SANDBOX.x1 - SANDBOX.x0 + 0.03, SANDBOX.z1 - SANDBOX.z0 + 0.03), this.glassMat)
+    glass.rotation.x = -Math.PI / 2
+    glass.position.set((SANDBOX.x0 + SANDBOX.x1) / 2, -0.001, (SANDBOX.z0 + SANDBOX.z1) / 2)
+    glass.renderOrder = 10
+
+    // Sandbox outline with gaps for the two gates; the gates themselves are drawn warm.
+    const { x0, x1, z0, z1 } = SANDBOX
+    const gap = 0.012
+    const seg: number[] = []
+    const push = (ax: number, az: number, bx: number, bz: number) => seg.push(ax, 0, az, bx, 0, bz)
+    push(x0, z0, PROXY.x - gap, z0)
+    push(PROXY.x + gap, z0, x1, z0)
+    push(x1, z0, x1, z1)
+    push(x1, z1, ENTRY.x + gap, z1)
+    push(ENTRY.x - gap, z1, x0, z1)
+    push(x0, z1, x0, z0)
+    const outline = new LineSegments(
+      new BufferGeometry().setAttribute('position', new BufferAttribute(new Float32Array(seg), 3)),
+      this.outlineMat,
+    )
+    const gates: number[] = []
+    for (const g of [ENTRY, PROXY]) {
+      gates.push(g.x - gap, 0, g.z - 0.004, g.x - gap, 0, g.z + 0.004, g.x + gap, 0, g.z - 0.004, g.x + gap, 0, g.z + 0.004)
     }
-    g.setAttribute('aSeed', new BufferAttribute(seed, 4))
-    g.setAttribute('aTail', new BufferAttribute(tail, 1))
+    const gateLines = new LineSegments(
+      new BufferGeometry().setAttribute('position', new BufferAttribute(new Float32Array(gates), 3)),
+      this.gateMat,
+    )
+
+    // Station cards.
+    const cards = STATIONS.map((s, i) => {
+      const m = new Mesh(new BoxGeometry(CARD.w, CARD.h, CARD.d), this.cardMats[i])
+      m.position.set(s.x, CARD.h / 2, ROW_Z)
+      m.renderOrder = 11
+      return m
+    })
+
+    // The route on the layer: gate → cards → proxy → out.
+    const wire = new Line(
+      new BufferGeometry().setFromPoints([
+        new Vector3(ENTRY.x, 0, ENTRY.z),
+        ...STATIONS.map((s) => new Vector3(s.x, 0, ROW_Z)),
+        new Vector3(PROXY.x, 0, PROXY.z),
+        new Vector3(PROXY.x, 0, SANDBOX.z0 - 0.06),
+      ]),
+      this.wireMat,
+    )
+
+    // The rise from the GPU up to the entry gate, updated as the layer lifts.
+    this.rise = new Line(new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]), this.riseMat)
+    this.rise.frustumCulled = false
+
+    for (const o of [outline, gateLines, wire, this.rise]) o.renderOrder = 11
+    this.layer.add(glass, outline, gateLines, wire, ...cards)
+
+    // Agents: positions are computed on the CPU (there are only a few).
+    this.agentGeo.setAttribute('position', new BufferAttribute(new Float32Array(AGENTS * 3), 3))
+    this.agentGeo.setAttribute('aGlow', new BufferAttribute(new Float32Array(AGENTS), 1))
+    const colors = new Float32Array(AGENTS * 3)
+    const tints = [palette.ice, palette.ice, palette.cyan, new Color('#b4a6ff'), new Color('#7cf5cf')]
+    for (let i = 0; i < AGENTS; i++) tints[i % tints.length].toArray(colors, i * 3)
+    this.agentGeo.setAttribute('aColor', new BufferAttribute(colors, 3))
     this.agentMat = new ShaderMaterial({
       vertexShader: agentVertex,
       fragmentShader: agentFragment,
       transparent: true,
       depthWrite: false,
+      depthTest: false,
       blending: AdditiveBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uScale: { value: 1 },
-        uVisible: { value: 0 },
-        uPath: { value: PATH },
-        uCenter: { value: SANDBOX.center },
-        uRadii: { value: SANDBOX.radii },
-      },
+      uniforms: { uVisible: { value: 0 }, uSize: { value: 6 } },
     })
-    const agents = new Points(g, this.agentMat)
+    const agents = new Points(this.agentGeo, this.agentMat)
     agents.frustumCulled = false
+    agents.renderOrder = 12
 
-    // Stations: a soft core and a slowly breathing ring each.
-    const sg = new BufferGeometry()
-    sg.setAttribute('position', new BufferAttribute(new Float32Array(STATIONS.flatMap((s) => s.pos.toArray())), 3))
-    sg.setAttribute('aColor', new BufferAttribute(new Float32Array(STATIONS.flatMap((s) => [...s.color])), 3))
-    this.stationMat = new ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uScale: { value: 1 }, uTime: { value: 0 } },
-      vertexShader: /* glsl */ `
-        uniform float uScale; attribute vec3 aColor; varying vec3 vColor;
-        void main() {
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = clamp(0.05 * uScale / -mv.z, 4.0, 90.0);
-          vColor = aColor;
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: /* glsl */ `
-        uniform float uVisible; uniform float uTime; varying vec3 vColor;
-        void main() {
-          float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard;
-          float ring = smoothstep(0.06, 0.0, abs(r - (0.78 + 0.06 * sin(uTime * 2.0))));
-          float core = exp(-r * r * 30.0);
-          gl_FragColor = vec4(vColor * (ring * 0.9 + core * 1.4) * uVisible, 1.0);
-        }`,
-    })
-    const stations = new Points(sg, this.stationMat)
-    stations.frustumCulled = false
-
-    // The sandbox: a flat glass ellipsoid with a fresnel rim.
-    this.membraneMat = new ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uColor: { value: palette.cyan }, uTime: { value: 0 } },
-      vertexShader: /* glsl */ `
-        varying vec3 vN; varying vec3 vV; varying vec3 vL;
-        void main() {
-          vL = position;
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          vV = -mv.xyz;
-          // normalMatrix handles the ellipsoid's non-uniform scale.
-          vN = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: /* glsl */ `
-        uniform float uVisible; uniform vec3 uColor; uniform float uTime;
-        varying vec3 vN; varying vec3 vV; varying vec3 vL;
-        void main() {
-          float f = 1.0 - abs(dot(normalize(vV), normalize(vN)));
-          // Faint hex-ish lattice drifting over the surface.
-          vec2 g = vec2(atan(vL.z, vL.x) * 9.0, vL.y * 14.0 + uTime * 0.3);
-          float lat = smoothstep(0.92, 1.0, max(abs(sin(g.x * 3.14159)), abs(sin(g.y * 3.14159))));
-          float a = pow(f, 3.0) * 0.4 + lat * 0.05;
-          gl_FragColor = vec4(uColor * a * uVisible, 1.0);
-        }`,
-    })
-    const membrane = new Mesh(new SphereGeometry(1, 48, 24), this.membraneMat)
-    membrane.scale.copy(SANDBOX.radii)
-    membrane.position.copy(SANDBOX.center)
-    membrane.renderOrder = 3
-
-    this.group.add(membrane, stations, agents)
+    this.group.add(this.layer, this.rise, agents)
   }
 
-  update(o: { visible: number; time: number; scale: number; origin: Vector3 }) {
-    this.group.visible = o.visible > 0.001
-    this.group.position.copy(o.origin)
-    // Labels sit just above each ring on screen (-z is up in the top-down view).
-    STATIONS.forEach((s, i) => this.anchors[i].copy(s.pos).add(o.origin).add(LABEL_LIFT))
-    this.sandboxAnchor.copy(SANDBOX_LABEL).add(o.origin)
-    if (!this.group.visible) return
-    for (const m of [this.agentMat, this.stationMat, this.membraneMat]) {
-      m.uniforms.uVisible.value = o.visible
-      m.uniforms.uTime.value = o.time
+  private buildPath(y: number) {
+    const at = (x: number, z: number, yy = y) => new Vector3(x, yy, z)
+    this.path = [
+      { p: at(-this.shift, 0.11, BOARD_Y), dwell: 0 }, // GPU
+      { p: at(ENTRY.x, ENTRY.z + 0.03, y * 0.6), dwell: 0 },
+      { p: at(ENTRY.x, ENTRY.z), dwell: 0 },
+      ...STATIONS.map((s) => ({ p: at(s.x, ROW_Z), dwell: DWELL })),
+      { p: at(PROXY.x, PROXY.z), dwell: 0 },
+      { p: at(PROXY.x, SANDBOX.z0 - 0.06), dwell: 0 },
+    ]
+    this.lengths = this.path.slice(1).map((w, i) => w.p.distanceTo(this.path[i].p))
+  }
+
+  /** Position along the route for cycle phase t ∈ [0, 1); returns the card it works at, or -1. */
+  private sample(t: number, out: Vector3) {
+    const travel = 1 - DWELL * STATIONS.length
+    const total = this.lengths.reduce((a, b) => a + b, 0)
+    let rest = t
+    for (let i = 0; i < this.lengths.length; i++) {
+      const segT = (this.lengths[i] / total) * travel
+      if (rest < segT) {
+        out.lerpVectors(this.path[i].p, this.path[i + 1].p, smooth(rest / segT))
+        return -1
+      }
+      rest -= segT
+      const dwell = this.path[i + 1].dwell
+      if (rest < dwell) {
+        out.copy(this.path[i + 1].p)
+        return i + 1 - FIRST_CARD
+      }
+      rest -= dwell
     }
-    this.agentMat.uniforms.uScale.value = o.scale
-    this.stationMat.uniforms.uScale.value = o.scale
+    out.copy(this.path[this.path.length - 1].p)
+    return -1
+  }
+
+  update(o: { visible: number; time: number; origin: Vector3; dpr: number; shift: number }) {
+    this.group.visible = o.visible > 0.001
+    this.shift = o.shift
+    this.group.position.copy(o.origin)
+    this.group.position.x += o.shift
+    // The layer lifts off the board as the chapter fades in.
+    const y = LAYER_Y * (0.35 + 0.65 * smooth(o.visible))
+    this.layer.position.y = y
+    STATIONS.forEach((s, i) =>
+      this.anchors[i].set(s.x - CARD.w / 2 + 0.005, y + CARD.h, ROW_Z - CARD.d / 2 + 0.008).add(this.group.position),
+    )
+    // Inside the bottom-right corner, clear of the screen edge and the chapter rail.
+    this.sandboxAnchor.set(SANDBOX.x1 - 0.05, y, SANDBOX.z1 - 0.009).add(this.group.position)
+    if (!this.group.visible) return
+
+    const v = o.visible
+    this.glassMat.opacity = 0.72 * v
+    this.outlineMat.opacity = 0.75 * v
+    this.wireMat.opacity = 0.35 * v
+    this.riseMat.opacity = 0.3 * v
+
+    this.buildPath(y)
+    const rise = this.rise.geometry.attributes.position as BufferAttribute
+    rise.setXYZ(0, -this.shift, BOARD_Y, 0.11)
+    rise.setXYZ(1, ENTRY.x, y, ENTRY.z)
+    rise.needsUpdate = true
+
+    const pos = this.agentGeo.attributes.position as BufferAttribute
+    const glow = this.agentGeo.attributes.aGlow as BufferAttribute
+    const busy = STATIONS.map(() => 0)
+    let gates = 0
+    for (let i = 0; i < AGENTS; i++) {
+      const card = this.sample((o.time / CYCLE + i / AGENTS) % 1, this.tmp)
+      pos.setXYZ(i, this.tmp.x, this.tmp.y, this.tmp.z)
+      if (card >= 0) busy[card]++
+      // Flash when passing a gate.
+      const dGate = Math.min(
+        Math.hypot(this.tmp.x - ENTRY.x, this.tmp.z - ENTRY.z),
+        Math.hypot(this.tmp.x - PROXY.x, this.tmp.z - PROXY.z),
+      )
+      const g = Math.exp(-((dGate / 0.012) ** 2))
+      gates = Math.max(gates, g)
+      glow.setX(i, g + (card >= 0 ? 0.4 : 0))
+    }
+    pos.needsUpdate = true
+    glow.needsUpdate = true
+    this.gateMat.opacity = (0.45 + 0.55 * gates) * v
+
+    this.cardMats.forEach((m, i) => {
+      m.uniforms.uVisible.value = v
+      m.uniforms.uTime.value = o.time
+      // Cards light up while agents work on them.
+      m.uniforms.uGlow.value = 0.9 + Math.min(1, busy[i]) * 1.6
+    })
+    this.agentMat.uniforms.uVisible.value = v
+    this.agentMat.uniforms.uSize.value = 7 * o.dpr
   }
 }

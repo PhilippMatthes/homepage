@@ -128,8 +128,8 @@ async function boot() {
   // Same Vector3 instance, so the land dots follow every sun update.
   particles.u.uSunDir.value = globe.sunDir.value
   PANELS.forEach((panel, i) => hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left'))
-  STATIONS.forEach((st, i) => hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title'))
-  hud.add(agents.sandboxAnchor, 'agents', 'envoy sandbox', '#3fa9ff', 'panel-title')
+  STATIONS.forEach((st, i) => hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title agent-title', 'left'))
+  hud.add(agents.sandboxAnchor, 'agents', 'envoy sandbox', '#3fa9ff', 'panel-title agent-title', 'left')
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 
   const debugEl = new URLSearchParams(location.search).has('debug') ? document.getElementById('debug') : null
@@ -246,17 +246,19 @@ async function boot() {
       rebalance: range(p, T.rebalance[0], T.rebalance[1]),
       time,
     })
+    const agentsVis = band(p, T.agents[0], T.agents[1], T.agents[2], T.agents[3])
     server.update({
       visible: p > 0.38 ? 1 - smooth(range(p, T.hallOut[0], T.hallOut[1])) : 0,
       slide,
       lid,
-      flows,
+      // The board's data pulses step back while the agent pipeline is on screen.
+      flows: flows * (1 - 0.8 * agentsVis),
       heat,
       time,
       scale,
     })
-    const agentsVis = band(p, T.agents[0], T.agents[1], T.agents[2], T.agents[3])
-    agents.update({ visible: agentsVis, time, scale, origin: server.group.position })
+    // Phones frame the board centered, so the pipeline moves over the GPU there.
+    agents.update({ visible: agentsVis, time, origin: server.group.position, dpr: stage.dpr, shift: rig.sheet ? -0.042 : 0 })
     dashboard.update(dashVis)
     const reveal = insight.update({ visible: insightVis, sweepX, sweepOn, time })
     cityOverlay.update(cityVis, wave, time, scale)
