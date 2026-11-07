@@ -1,6 +1,11 @@
-.DS_STORE
-*/db.sqlite3
+.DS_Store
 node_modules/
-homepage/media/
-homepage/collected/
+dist/
+*.local
 __pycache__/
+tools/depth/.venv/
+
+# Private source material, not part of the site
+Profile.pdf
+# Original photos (may contain location/camera metadata); only the derived .webp files ship
+public/assets/*.heic
