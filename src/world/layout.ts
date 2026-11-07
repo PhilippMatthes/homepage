@@ -15,6 +15,8 @@ import { Vector3 } from 'three'
 export const PORTRAIT_CENTER = new Vector3(0, 30, 0)
 export const PORTRAIT_SIZE = 4.4
 export const PORTRAIT_DEPTH = 2.8
+/** Chapter 01: center of the MacBook + iPhone the portrait's points rebuild into. */
+export const DEVICES = new Vector3(PORTRAIT_CENTER.x + 0.3, PORTRAIT_CENTER.y - 0.3, PORTRAIT_CENTER.z)
 
 export const RACK = { w: 0.6, h: 2.0, d: 1.0, gap: 0.02, wall: 0.03 }
 export const RACKS_PER_ROW = 15

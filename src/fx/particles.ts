@@ -20,6 +20,11 @@ export interface MorphTargets {
   portrait: Float32Array
   portraitColor: Float32Array
   portraitVis: Float32Array
+  /**
+   * Chapter 01: positions on the MacBook and iPhone the portrait rebuilds into
+   * (xyz), with kind + brightness / 2 packed into w (one attribute slot; WebGL has 16).
+   */
+  device: Float32Array
   /** Datacenter LED / data-stream positions; `flow` is a travel vector (0 = static LED). */
   hall: Float32Array
   flow: Float32Array
@@ -64,6 +69,8 @@ const vertexShader = /* glsl */ `
   uniform float uBurn;
   uniform vec3 uPortraitCenter;
   uniform float uPortraitSize;
+  uniform float uDeviceMix;  // 0 face, 1 the face's points rebuilt as MacBook + iPhone
+  uniform vec3 uAmber;
   uniform float uHallFlow;
   uniform vec3 uGpu;
   uniform vec2 uDashSize;
@@ -98,6 +105,7 @@ const vertexShader = /* glsl */ `
   attribute vec3 aCityFlow;
   attribute vec4 aGlobe;    // xyz world position, w = closeness to Dresden
   attribute vec2 aMisc;     // x portrait visibility, y city road weight
+  attribute vec4 aDevice;   // xyz position, w = kind (0 outline, 1 screen UI, 2 keys, 3 accent, 4 glass) + brightness / 2
   attribute vec4 aSeed;
 
   varying vec3 vColor;
@@ -107,6 +115,7 @@ const vertexShader = /* glsl */ `
   float gTouch = 0.0;
   float gBurnEdge = 0.0;
   float gBurnVis = 1.0;
+  float gDevice = 0.0;
 
   ${burnGlsl}
   ${packetGlsl}
@@ -127,13 +136,35 @@ const vertexShader = /* glsl */ `
     p.xy += normalize(dp.xy + 1e-5) * f * 0.06;
     p.z += f * (0.18 + 0.06 * ripple) + gBurnEdge * 0.25;
     p.z += sin(uTime * 1.3 + aSeed.x * 40.0) * 0.008;
+    if (uDeviceMix > 0.0) {
+      // Right after the cover, the face's points rebuild into the devices in staggered waves.
+      float lt = clamp((uDeviceMix - aSeed.z * 0.45) / 0.55, 0.0, 1.0);
+      gDevice = lt * lt * (3.0 - 2.0 * lt);
+      vec3 swirl = (aSeed.xyw - 0.5) * 2.0;
+      vec3 d = aDevice.xyz;
+      // A faint shimmer on the screens once they're lit.
+      d += vec3(0.0, 0.0, sin(uTime * 2.0 + aSeed.y * 30.0) * 0.004);
+      p = mix(p, d, gDevice) + swirl * sin(PI * gDevice) * 0.3;
+    }
     return p;
+  }
+  vec3 deviceColor() {
+    float k = floor(aDevice.w);
+    float twinkle = 0.8 + 0.2 * sin(uTime * 3.0 + aSeed.x * 60.0);
+    vec3 c;
+    if (k < 0.5) c = mix(uCyan, uIce, 0.35) * 1.1;
+    else if (k < 1.5) c = uIce * twinkle;
+    else if (k < 2.5) c = uCyan * 0.75;
+    else if (k < 3.5) c = uAmber * (0.9 + 0.35 * sin(uTime * 2.4));
+    else c = uDeep * 1.4 + uCyan * 0.12;
+    return c * fract(aDevice.w) * 2.0;
   }
   vec3 portraitColor() {
     float band = exp(-pow((position.y - uScanY) / 0.05, 2.0));
     float trail = exp(-max(0.0, position.y - uScanY) * 3.0) * step(uScanY, position.y) * 0.25;
     vec3 c = aColor * (1.0 + trail + gTouch * 0.9) + vec3(0.85, 0.95, 1.0) * band * 1.4 * aMisc.x;
-    return c * gBurnVis + vec3(0.9, 0.95, 1.0) * gBurnEdge * 1.2;
+    c = c * gBurnVis + vec3(0.9, 0.95, 1.0) * gBurnEdge * 1.2;
+    return gDevice > 0.0 ? mix(c, deviceColor() * gBurnVis, gDevice) : c;
   }
 
   // ---------- 1 hall ----------
@@ -335,7 +366,9 @@ const vertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mv;
 
     // Portrait thinning: hidden portrait points fade in as they fly away.
-    float vis = i == 0 ? mix(aMisc.x, 1.0, e) : 1.0;
+    // On the devices, the visible share draws at full strength (no portrait vignette).
+    float pv = mix(aMisc.x, step(0.001, aMisc.x), gDevice);
+    float vis = i == 0 ? mix(pv, 1.0, e) : 1.0;
 
     float fog = exp(-pow(uFogDensity * dist, 2.0));
     vec3 c = mix(cA, cB, e) * (1.0 + arc * 0.3) * (1.0 - 0.45 * arc * step(1.0, m) * step(m, 3.0));
@@ -375,6 +408,7 @@ export class MorphParticles {
     const n = t.count
     g.setAttribute('position', new BufferAttribute(t.portrait, 3))
     g.setAttribute('aColor', new BufferAttribute(t.portraitColor, 3))
+    g.setAttribute('aDevice', new BufferAttribute(t.device, 4))
     g.setAttribute('aHall', new BufferAttribute(t.hall, 3))
     g.setAttribute('aFlow', new BufferAttribute(t.flow, 3))
     g.setAttribute('aDash', new BufferAttribute(t.dash, 3))
@@ -422,6 +456,8 @@ export class MorphParticles {
         uBurn: { value: 0 },
         uPortraitCenter: { value: PORTRAIT_CENTER.clone() },
         uPortraitSize: { value: PORTRAIT_SIZE },
+        uDeviceMix: { value: 0 },
+        uAmber: { value: palette.amber },
         uHallFlow: { value: 1 },
         uGpu: { value: new Vector3() },
         uDashSize: { value: new Vector2(DASH.inner.w, DASH.inner.h) },

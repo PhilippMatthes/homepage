@@ -14,6 +14,7 @@ import { Loader } from './fx/loader'
 import { samplePortrait } from './chapters/portrait'
 import { PortraitMesh } from './chapters/portraitMesh'
 import { Backdrop } from './chapters/backdrop'
+import { deviceTargets } from './chapters/devices'
 import { Datacenter, hallTargets } from './chapters/datacenter'
 import { Network } from './chapters/network'
 import { Server } from './chapters/server'
@@ -58,6 +59,7 @@ async function boot() {
     loader.track(PortraitMesh.load(photoUrl, depthUrl)),
     loader.track(Backdrop.load(Math.round(N * 0.35), photoUrl, depthUrl, `${BASE}assets/selfie-scene-depth.webp`)),
   ])
+  const devices = deviceTargets(N)
   const hall = hallTargets(N)
   const dash = dashTargets(N)
   const cloud = buildCloud(N)
@@ -69,6 +71,7 @@ async function boot() {
       portrait: portrait.pos,
       portraitColor: portrait.col,
       portraitVis: portrait.vis,
+      device: devices.target,
       hall: hall.pos,
       flow: hall.flow,
       dash: dash.base,
@@ -253,9 +256,9 @@ async function boot() {
     if (raycaster.ray.intersectPlane(plane, hit)) particles.u.uPointer.value.copy(hit)
 
     photoMesh.update(burn, time, hit, touch, pointer)
-    // The room stays through the 3D chapter's orbit and fades before the points rain down.
+    // The room only belongs behind the face, so it fades as the face turns into the devices.
     const scanY = PORTRAIT_CENTER.y + PORTRAIT_SIZE * 0.6 - ((time * 0.22) % 1.6) * PORTRAIT_SIZE * 0.75
-    backdrop.update(1 - smooth(range(p, 0.115, 0.15)), time, scale, scanY)
+    backdrop.update(1 - smooth(range(p, T.devices[0], T.devices[1] - 0.005)), time, scale, scanY)
     datacenter.update(hallVis, shell, time)
     network.update(networkVis, time, scale)
     const cortexState = cortex.update({
@@ -288,6 +291,7 @@ async function boot() {
     u.uMorph.value = morphAt(p)
     u.uScale.value = scale
     u.uBurn.value = burn
+    u.uDeviceMix.value = range(p, T.devices[0], T.devices[1])
     u.uGpu.value.copy(server.gpuWorld)
     u.uSweep.value = sweepX
     u.uSweepOn.value = sweepOn

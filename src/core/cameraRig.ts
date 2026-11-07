@@ -46,11 +46,11 @@ const KEYS: Key[] = [
   // cover: the 3D photo
   { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36, zoom: 1.75 },
   { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36, zoom: 1.6 },
-  // it burns into a point cloud while we orbit to the side
-  // (phones stay at a three-quarter view, so the face keeps reading as a face)
-  { p: 0.065, pos: orbit(26, 9.0, 29.9), sheetPos: orbit(16, 9.4, 29.9), target: [0, 29.6, 0], fov: 38, shift: 0.8, zoom: 1.15 },
-  { p: 0.095, pos: orbit(48, 8.8, 30.5), sheetPos: orbit(22, 9.4, 30.0), target: [0, 29.7, 0], fov: 40, shift: 1.4, zoom: 1.1 },
-  { p: 0.125, pos: orbit(60, 8.6, 30.9), sheetPos: orbit(26, 9.4, 30.1), target: [0, 29.7, 0], fov: 40, shift: 1.4, zoom: 1.1 },
+  // it burns into points that rebuild into a MacBook and an iPhone, while we
+  // orbit gently to a three-quarter view from slightly above (keyboard and screens both read)
+  { p: 0.065, pos: orbit(18, 9.6, 31.0), sheetPos: orbit(12, 10.2, 31.0), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.3, zoom: 1.1 },
+  { p: 0.095, pos: orbit(28, 9.4, 31.4), sheetPos: orbit(18, 10.2, 31.3), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
+  { p: 0.125, pos: orbit(36, 9.2, 31.7), sheetPos: orbit(24, 10.2, 31.5), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
   // the points rain down onto the datacenter
   { p: 0.165, pos: [4, 34, 14], target: [0, 16, 0], fov: 42 },
   { p: 0.21, pos: [0, 42, 30], target: [0, 0, 0], fov: 45 },

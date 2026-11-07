@@ -19,9 +19,11 @@ export const band = (p: number, a: number, b: number, c: number, d: number) =>
 export const SCROLL_VH = 2000
 
 export const T = {
-  // 3D photo burns away into the LiDAR point cloud
-  burn: [0.035, 0.085],
-  // portrait points rain onto the datacenter
+  // 3D photo burns away into the LiDAR point cloud...
+  burn: [0.03, 0.06],
+  // ...whose points rebuild right away into a MacBook and an iPhone (chapter 01)
+  devices: [0.035, 0.075],
+  // the devices' points rain onto the datacenter
   dissolve: [0.13, 0.22],
   hallIn: [0.12, 0.19],
   network: [0.15, 0.2, 0.29, 0.33],

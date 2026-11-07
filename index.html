@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Philipp Matthes</title>
-    <meta name="description" content="Philipp Matthes — software engineer eager to build cool stuff: cloud infrastructure at SAP, machine learning for smart cities, 3D and shaders." />
+    <meta name="description" content="Philipp Matthes builds cloud infrastructure at SAP. Before that, he did a PhD in machine learning for smart cities. On the side, he works on 3D, shaders and apps." />
     <meta name="author" content="Philipp Matthes" />
     <meta name="theme-color" content="#02040a" />
     <meta name="color-scheme" content="dark" />
@@ -50,13 +50,13 @@
           <span class="menu-title">Experience</span><span id="current-chapter" class="ticker" aria-live="polite"></span>
         </button>
         <ol id="experience" class="menu-list" hidden>
-          <li><a href="#threedify" data-goto="0.1">iOS Engineering &amp; 3D Design</a></li>
-          <li><a href="#sci" data-goto="0.268">Cloud Infrastructure Engineering</a></li>
-          <li><a href="#cortex" data-goto="0.45">Cortex: Smart Workload Scheduling</a></li>
-          <li><a href="#agentic" data-goto="0.535">Agentic Development &amp; Operations</a></li>
-          <li><a href="#perses" data-goto="0.645">Data Analysis &amp; Monitoring</a></li>
-          <li><a href="#research" data-goto="0.78">PhD Research: Machine Learning</a></li>
-          <li><a href="#priobike" data-goto="0.895">PrioBike: Smart City Navigation</a></li>
+          <li><a href="#threedify" data-goto="0.1">iOS &amp; Mac</a></li>
+          <li><a href="#sci" data-goto="0.268">Cloud Infrastructure</a></li>
+          <li><a href="#cortex" data-goto="0.45">Cortex Scheduler</a></li>
+          <li><a href="#agentic" data-goto="0.535">Agentic Engineering</a></li>
+          <li><a href="#perses" data-goto="0.645">Data &amp; Monitoring</a></li>
+          <li><a href="#research" data-goto="0.78">PhD Research</a></li>
+          <li><a href="#priobike" data-goto="0.895">PrioBike</a></li>
           <li><a href="#contact" data-goto="1">Contact &amp; imprint</a></li>
         </ol>
       </div>
@@ -73,14 +73,14 @@
       <!-- data-band: fade in a→b, hold, fade out c→d (scroll progress 0..1) -->
       <section class="chapter hero" data-band="-1,-1,0.03,0.046">
         <h1>Hey, I'm Philipp!</h1>
-        <p class="lead">Software engineer eager to build cool stuff.</p>
+        <p class="lead">I build cloud infrastructure at SAP. Before that, I did my PhD in machine learning for smart cities. On the side: 3D, shaders and apps.</p>
         <img class="fallback-portrait" src="./assets/selfie.webp" alt="Portrait of Philipp Matthes" width="256" height="256" />
       </section>
 
       <section class="chapter left" id="threedify" data-band="0.054,0.066,0.136,0.148">
-        <p class="eyebrow">// 01 · iOS engineering · 3D design and shading</p>
-        <h2>I love developing iOS and Mac apps that bring photos into 3D.</h2>
-        <p class="lead">I've built iOS apps for years, and 3D has been my thing since school: half a year in Cinema 4D at a media agency, then computer graphics at university. 3Dify brings both together. It estimates depth from a single photo with on-device CoreML models and renders it with Metal shaders, much like this portrait turning into a 3D point cloud. Neural Greenscreen removes backgrounds in real time as a macOS virtual camera.</p>
+        <p class="eyebrow">// 01 · iOS &amp; Mac · Swift · CoreML · Metal</p>
+        <h2>I build apps for iPhone and Mac, with a soft spot for 3D.</h2>
+        <p class="lead">I've built iOS and macOS apps for years, and I like them best where on-device machine learning meets 3D graphics: depth from a single photo, real-time background removal as a virtual camera, custom Metal shaders. 3D has been my thing since school, from half a year in Cinema 4D at a media agency to computer graphics at university.</p>
         <div class="cards">
           <a class="card" href="https://github.com/PhilippMatthes/3dify-ios" target="_blank" rel="noreferrer">
             <b>3Dify</b>
@@ -94,30 +94,30 @@
       </section>
 
       <section class="chapter right" id="sci" data-band="0.212,0.226,0.308,0.322">
-        <p class="eyebrow">// 02 · Cloud infrastructure engineering</p>
-        <h2>At SAP, I helped build the next generation cloud for Europe.</h2>
-        <p class="lead">I worked on CobaltCore, the new KVM stack behind SAP's global cloud of 20+ datacenters and 100,000+ virtual machines, and the reference implementation of ApeiroRA, the Apeiro Reference Architecture for Europe under the governance of Linux Foundation Europe. My focus was scheduling and inventory: deciding where every workload runs.</p>
+        <p class="eyebrow">// 02 · Cloud infrastructure · KVM</p>
+        <h2>At SAP, I help build the next-generation sovereign cloud for Europe.</h2>
+        <p class="lead">CobaltCore is the new KVM stack behind SAP's cloud: 20+ datacenters running 100,000+ virtual machines. It is also the reference implementation of ApeiroRA, the Apeiro Reference Architecture for Europe, governed by Linux Foundation Europe. I help develop its central Kubernetes components, like the VM operator and the KVM node agent, and my focus is scheduling: deciding where every workload runs.</p>
         <div class="links start">
           <a href="https://apeirora.eu/" target="_blank" rel="noreferrer">apeirora.eu</a>
           <a href="https://cobaltcore.dev/" target="_blank" rel="noreferrer">cobaltcore.dev</a>
-        </div>
-      </section>
-
-      <section class="chapter left" id="cortex" data-band="0.404,0.416,0.482,0.493">
-        <p class="eyebrow">// 03 · Go · Kubernetes · OpenStack</p>
-        <h2>I am the lead contributor of Cortex, a smart cloud workload scheduler.</h2>
-        <p class="lead">I built it from the ground up for SAP Cloud Infrastructure: it places every new KVM virtual machine and continuously rebalances the inventory based on real utilization data, bridging OpenStack scheduling and a cloud-native Kubernetes world. I also helped develop central Kubernetes components, like the VM operator and the KVM node agent, that drive thousands of customer-critical workloads today.</p>
-        <div class="links start">
-          <a href="https://github.com/cobaltcore-dev/cortex" target="_blank" rel="noreferrer">cortex</a>
           <a href="https://github.com/cobaltcore-dev/vm-operator" target="_blank" rel="noreferrer">vm-operator</a>
           <a href="https://github.com/cobaltcore-dev/kvm-node-agent" target="_blank" rel="noreferrer">kvm-node-agent</a>
         </div>
       </section>
 
+      <section class="chapter left" id="cortex" data-band="0.404,0.416,0.482,0.493">
+        <p class="eyebrow">// 03 · Scheduling · Go · Kubernetes</p>
+        <h2>I'm the lead contributor of Cortex, the scheduler that decides where SAP's VMs run.</h2>
+        <p class="lead">I built Cortex from the ground up for SAP Cloud Infrastructure. It places every new KVM virtual machine and continuously rebalances the fleet based on real utilization data, bridging OpenStack scheduling and the cloud-native Kubernetes world.</p>
+        <div class="links start">
+          <a href="https://github.com/cobaltcore-dev/cortex" target="_blank" rel="noreferrer">cortex</a>
+        </div>
+      </section>
+
       <section class="chapter right" id="agentic" data-band="0.503,0.515,0.566,0.578">
-        <p class="eyebrow">// 04 · Agentic development and operations</p>
-        <h2>I built agentic systems that developers use today to move faster.</h2>
-        <p class="lead">Around CobaltCore, AI agents take routine work off engineers and operators. An agentic review and release pipeline checks pull requests and prepares releases, fully integrated into the project's workflow, while a knowledge graph links issues to the commits that resolved them. The agents get their inference from Thalamus and reach the network only through an Envoy proxy that sandboxes them. My prototype for predicting host outages with SAP-RPT-1 won 2nd place at an international SAP hackathon.</p>
+        <p class="eyebrow">// 04 · Agentic engineering</p>
+        <h2>I build AI agents that take routine work off our engineers and operators.</h2>
+        <p class="lead">Around CobaltCore, my agents review pull requests and prepare releases, fully integrated into the project's workflow, while a knowledge graph links issues to the commits that resolved them. To keep this safe, the agents get their inference from Thalamus and reach the network only through an Envoy proxy that sandboxes them.</p>
         <div class="links start">
           <a href="https://github.com/cobaltcore-dev/thalamus" target="_blank" rel="noreferrer">thalamus · inference</a>
           <a href="https://github.com/cobaltcore-dev/cortex/tree/main/.agents" target="_blank" rel="noreferrer">cortex agents</a>
@@ -126,9 +126,9 @@
       </section>
 
       <section class="chapter left" id="perses" data-band="0.59,0.602,0.69,0.703">
-        <p class="eyebrow">// 05 · Data analysis and monitoring</p>
-        <h2>Data analysis is a key part of my work, and I contribute to open source monitoring frameworks.</h2>
-        <p class="lead">To run a cloud, you have to see it. I contribute to Perses, the CNCF sandbox project for dashboards over Prometheus, Tempo, Loki and more, where I built the canvas panel that draws graphs straight from query data, like the topology panel floating here. Off the clock, the same tools power a Grafana dashboard for analyzing my personal finances.</p>
+        <p class="eyebrow">// 05 · Data &amp; monitoring · Perses</p>
+        <h2>To run a cloud, you have to see it. I build the tools for that.</h2>
+        <p class="lead">I contribute to Perses, the CNCF sandbox project for dashboards over Prometheus, Tempo, Loki and more, where I built the canvas panel that draws graphs straight from query data, like the topology panel floating here. The data can also look ahead: my prototype for predicting host outages with SAP-RPT-1 won 2nd place at an international SAP hackathon. Off the clock, the same tools power a Grafana dashboard for my personal finances.</p>
         <div class="links start">
           <a href="https://github.com/perses/perses" target="_blank" rel="noreferrer">perses/perses</a>
           <a href="https://github.com/perses/plugins/tree/main/canvas" target="_blank" rel="noreferrer">perses canvas</a>
@@ -137,9 +137,9 @@
       </section>
 
       <section class="chapter right" id="research" data-band="0.735,0.747,0.82,0.832">
-        <p class="eyebrow">// 06 · TU Dresden · PhD research</p>
-        <h2>I know how to build strong data-driven solutions, like machine learning models.</h2>
-        <p class="lead">For my PhD at TU Dresden (Dr.-Ing., 2024), I developed machine-learning models for smart-city use cases and evaluated them on real-world data: matching traffic lights and lanes to bike routes, measuring how predictable 18,009 traffic lights in Hamburg are, and detecting transport modes on phones.</p>
+        <p class="eyebrow">// 06 · PhD research · TU Dresden</p>
+        <h2>For my PhD, I put machine learning on real streets.</h2>
+        <p class="lead">At TU Dresden (Dr.-Ing., 2024), I developed machine learning models for smart cities and evaluated them on real-world data. How predictable are traffic lights? How do you match them, lane by lane, to a bike route? Which models detect your transport mode on a phone without wasting its resources? Most of the answers went straight into PrioBike.</p>
         <ul class="pubs">
           <li><b>Cloudy with a Chance of Green: Measuring the Predictability of 18,009 Traffic Lights in Hamburg</b><span>IEEE IV 2024</span></li>
           <li><b>GeoAI-Powered Lane Matching for Bike Routes in GLOSA Apps</b><span>ACM SIGSPATIAL 2023</span></li>
@@ -149,9 +149,9 @@
       </section>
 
       <section class="chapter left" id="priobike" data-band="0.848,0.86,0.928,0.94">
-        <p class="eyebrow">// 07 · Lead engineer · Flutter · Go · Python</p>
+        <p class="eyebrow">// 07 · PrioBike · Flutter · Go · Python</p>
         <h2>I built PrioBike, a green wave app for cyclists.</h2>
-        <p class="lead">As lead engineer and PhD student, I took PrioBike from idea to field test in Hamburg. The app gives cyclists speed advice to catch the green wave, based on live data from 10,000+ traffic lights. I wrote the probabilistic traffic-light prediction in Go, the ML matching of traffic lights to routes in Python, and a GraphHopper-based bike routing more accurate than Google Maps and OSM. PrioBike won 3rd place at the Deutscher Fahrradpreis.</p>
+        <p class="lead">As lead engineer and PhD student, I took PrioBike from idea to field test in Hamburg. The app gives cyclists speed advice to catch the green wave, based on live data from 18,000+ traffic lights. I wrote the probabilistic traffic-light prediction in Go, brought the matching from my research into production in Python, and built a GraphHopper-based bike routing more accurate than Google Maps. PrioBike won 3rd place at the Deutscher Fahrradpreis.</p>
         <div class="links start">
           <a href="https://github.com/priobike/priobike-flutter-app" target="_blank" rel="noreferrer">priobike app</a>
           <a href="https://github.com/priobike/priobike-predictor" target="_blank" rel="noreferrer">traffic light prediction</a>
@@ -159,7 +159,7 @@
       </section>
 
       <section class="chapter outro" id="contact" data-band="0.962,0.978,2,2">
-        <h2>Let's build something together.</h2>
+        <h2>Cloud, ML or 3D: let's build something together.</h2>
         <p class="lead">I'm based in Dresden and love collaborating with people all over the world.</p>
         <div class="links">
           <a href="mailto:hi@philippmatth.es">hi@philippmatth.es</a>
