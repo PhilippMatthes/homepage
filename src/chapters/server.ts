@@ -161,13 +161,13 @@ export class Server {
 
     // Board
     this.boardMat = new ShaderMaterial({
-      uniforms: { uVisible: { value: 0 }, uDeep: { value: palette.deep }, uCyan: { value: palette.cyan } },
+      uniforms: { uVisible: { value: 0 }, uFade: { value: 1 }, uDeep: { value: palette.deep }, uCyan: { value: palette.cyan } },
       vertexShader: /* glsl */ `
         varying vec2 vUv;
         void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
       `,
       fragmentShader: /* glsl */ `
-        uniform float uVisible; uniform vec3 uDeep; uniform vec3 uCyan;
+        uniform float uVisible; uniform float uFade; uniform vec3 uDeep; uniform vec3 uCyan;
         varying vec2 vUv;
         void main() {
           vec2 g = vUv * vec2(44.0, 70.0);
@@ -176,7 +176,7 @@ export class Server {
           float line = 1.0 - min(min(l.x, l.y), 1.0);
           float vig = smoothstep(0.0, 0.08, min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y)));
           vec3 c = uDeep * 0.55 + uCyan * line * 0.05;
-          gl_FragColor = vec4(c * vig * uVisible, 1.0);
+          gl_FragColor = vec4(c * vig * uVisible, uFade);
         }
       `,
     })
@@ -300,7 +300,15 @@ export class Server {
     this.chassisMat.depthWrite = fill > 0.9 && v > 0.98
     this.internals.visible = o.lid > 0.01
     const keep = 1 - 0.75 * (o.dim ?? 0)
-    this.boardMat.uniforms.uVisible.value = o.lid * v * keep
+    // The board and parts are opaque, so on the way out (hall fading into the point cloud)
+    // they turn see-through instead of darkening into a silhouette that then pops away.
+    const fading = v < 0.999
+    for (const m of [this.boardMat, this.componentMat, this.gpuMat]) {
+      m.transparent = fading
+      m.depthWrite = !fading
+    }
+    this.boardMat.uniforms.uFade.value = v
+    this.boardMat.uniforms.uVisible.value = o.lid * keep
     this.componentMat.uniforms.uVisible.value = o.lid * v * keep
     this.gpuMat.uniforms.uVisible.value = o.lid * v
     this.gpuMat.uniforms.uGlow.value = 1.2 + o.heat * 3
