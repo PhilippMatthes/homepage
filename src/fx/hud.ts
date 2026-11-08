@@ -50,7 +50,7 @@ export class Hud {
     pos: Vector3,
     key: number | string,
     html: string,
-    color = '#9fd8ff',
+    color = 'var(--ice)',
     className = '',
     align: 'above' | 'left' = 'above',
     width?: number,

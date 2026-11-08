@@ -13,7 +13,7 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import { loadRamp, palette } from '../core/palette'
+import { loadRamp, palette, shade, themeUniforms } from '../core/palette'
 import { holoMaterial } from '../fx/holoMaterial'
 import { packetGlsl } from '../fx/packets'
 import { SERVER, SERVER_HOME, SERVER_SLIDE } from '../world/layout'
@@ -101,7 +101,7 @@ const pulseVertex = /* glsl */ `
     // warms towards amber as the GPU heats up.
     float r = fract(aSeed.y * 7.31 + aSeed.x * 3.7);
     vColor = packetColor(aKind == 2.0 ? 1.0 : -1.0, aKind == 0.0 ? r * 0.94 : r);
-    if (aKind == 1.0 || aKind == 2.0) vColor = mix(vColor, PKT_HOT, uHeat * 0.85);
+    if (aKind == 1.0 || aKind == 2.0) vColor = mix(vColor, uThHot, uHeat * 0.85);
     float l1 = length(aP1 - aP0);
     float l2 = length(aP2 - aP1);
     float l3 = length(aP3 - aP2);
@@ -137,9 +137,9 @@ const pulseFragment = /* glsl */ `
 export class Server {
   readonly group = new Group()
   readonly internals = new Group()
-  readonly chassisMat = holoMaterial({ transparent: true, edgeWidth: 1.4, fill: new Color('#050d1f') })
-  readonly componentMat = holoMaterial({ edgeWidth: 1.1, fill: new Color('#06122a'), glow: 0.8 })
-  readonly gpuMat = holoMaterial({ edgeWidth: 1.6, fill: new Color('#0b2a5c'), edge: palette.ice, glow: 1.2 })
+  readonly chassisMat = holoMaterial({ transparent: true, edgeWidth: 1.4, fill: shade(palette.deep, 0.5) })
+  readonly componentMat = holoMaterial({ edgeWidth: 1.1, fill: shade(palette.deep, 0.68), glow: 0.8 })
+  readonly gpuMat = holoMaterial({ edgeWidth: 1.6, fill: new Color() /* set from the load ramp each frame */, edge: palette.ice, glow: 1.2 })
   readonly boardMat: ShaderMaterial
   readonly traceMat = new LineBasicMaterial({
     color: palette.cyan,
@@ -257,6 +257,7 @@ export class Server {
       depthWrite: false,
       blending: AdditiveBlending,
       uniforms: {
+        ...themeUniforms,
         uTime: { value: 0 },
         uScale: { value: 1 },
         uSize: { value: 0.0032 },

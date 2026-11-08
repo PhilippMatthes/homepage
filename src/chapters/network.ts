@@ -3,7 +3,6 @@ import {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
-  Color,
   Group,
   Line,
   LineBasicMaterial,
@@ -13,7 +12,7 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import { palette } from '../core/palette'
+import { palette, shade, themeUniforms } from '../core/palette'
 import { holoMaterial, setHoloFade } from '../fx/holoMaterial'
 import { HALL } from '../world/layout'
 import { packetGlsl } from '../fx/packets'
@@ -24,8 +23,8 @@ import { packetGlsl } from '../fx/packets'
  */
 export class Network {
   readonly group = new Group()
-  private shellMat = holoMaterial({ transparent: true, panels: 2.4, fill: new Color('#040a18'), edge: palette.cyan, glow: 0.9 })
-  private unitMat = holoMaterial({ transparent: true, fill: new Color('#061024'), edge: palette.ice, glow: 0.8 })
+  private shellMat = holoMaterial({ transparent: true, panels: 2.4, fill: shade(palette.deep, 0.4), edge: palette.cyan, glow: 0.9 })
+  private unitMat = holoMaterial({ transparent: true, fill: shade(palette.deep, 0.58), edge: palette.ice, glow: 0.8 })
   private linkMat = new LineBasicMaterial({ color: palette.cyan, transparent: true, opacity: 0, blending: AdditiveBlending, depthWrite: false })
   private pulseMat: ShaderMaterial
   private pulseGeo: BufferGeometry
@@ -92,7 +91,7 @@ export class Network {
       transparent: true,
       depthWrite: false,
       blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uScale: { value: 1 } },
+      uniforms: { ...themeUniforms, uVisible: { value: 0 }, uScale: { value: 1 } },
       vertexShader: /* glsl */ `
         uniform float uVisible; uniform float uScale;
         attribute float aFade; attribute float aTint; attribute float aDir; varying float vA; varying vec3 vColor;

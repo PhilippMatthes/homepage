@@ -16,7 +16,7 @@ import { feature } from 'topojson-client'
 import type { Topology, GeometryCollection } from 'topojson-specification'
 import type { MultiPolygon, Polygon } from 'geojson'
 import landUrl from 'world-atlas/land-50m.json?url'
-import { palette } from '../core/palette'
+import { palette, themeGlsl, themeUniforms } from '../core/palette'
 import { moodAccent } from '../core/mood'
 import { GLOBE_CENTER, GLOBE_RADIUS, latLonToWorld } from '../world/layout'
 import { sunDirection } from '../world/sun'
@@ -225,7 +225,7 @@ export class Globe {
       transparent: true,
       depthWrite: false,
       blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uScale: { value: 1 } },
+      uniforms: { ...themeUniforms, uVisible: { value: 0 }, uScale: { value: 1 } },
       vertexShader: /* glsl */ `
         uniform float uVisible; uniform float uScale;
         attribute float aFade; attribute float aArrive; varying float vA; varying float vArrive;
@@ -238,10 +238,11 @@ export class Globe {
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
+        ${themeGlsl}
         varying float vA; varying float vArrive;
         void main() {
           vec2 c = gl_PointCoord - 0.5; float r = dot(c, c) * 4.0; if (r > 1.0) discard;
-          vec3 col = mix(vec3(0.85, 0.95, 1.0), vec3(1.0, 0.7, 0.36), vArrive);
+          vec3 col = mix(uThSpark, uThHot, vArrive);
           gl_FragColor = vec4(col * exp(-r * 2.5) * vA * 1.6, 1.0);
         }`,
     })
@@ -259,7 +260,7 @@ export class Globe {
       transparent: true,
       depthWrite: false,
       blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uScale: { value: 1 }, uTime: { value: 0 } },
+      uniforms: { ...themeUniforms, uVisible: { value: 0 }, uScale: { value: 1 }, uTime: { value: 0 } },
       vertexShader: /* glsl */ `
         uniform float uScale; uniform float uTime;
         attribute float aRing; varying float vRing;
@@ -271,13 +272,14 @@ export class Globe {
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
+        ${themeGlsl}
         uniform float uVisible; uniform float uTime; varying float vRing;
         void main() {
           vec2 c = gl_PointCoord - 0.5; float r = length(c) * 2.0; if (r > 1.0) discard;
           float a;
           if (vRing > 0.5) { float t = fract(uTime * 0.5); a = smoothstep(0.08, 0.0, abs(r - 0.92)) * (1.0 - t); }
           else a = exp(-r * r * 6.0) * 1.5;
-          gl_FragColor = vec4(vec3(0.85, 0.97, 1.0) * a * uVisible, 1.0);
+          gl_FragColor = vec4(uThSpark * a * uVisible, 1.0);
         }`,
     })
     const bg = new BufferGeometry()

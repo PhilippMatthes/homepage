@@ -15,7 +15,7 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import { palette } from '../core/palette'
+import { palette, shade } from '../core/palette'
 import { holoMaterial } from '../fx/holoMaterial'
 import { smooth } from '../core/timeline'
 
@@ -202,7 +202,7 @@ export class Agents {
     const pad = 0.005
     const cardMeshes: Mesh[] = []
     this.cards = STATIONS.map((s) => {
-      const mat = holoMaterial({ transparent: true, fill: new Color('#071633'), edge: ICE, edgeWidth: 1.4, glow: 1 })
+      const mat = holoMaterial({ transparent: true, fill: shade(palette.deep, 0.82), edge: ICE, edgeWidth: 1.4, glow: 1 })
       const box = new Mesh(new BoxGeometry(CARD.w, CARD.h, CARD.d), mat)
       box.position.set(s.x, CARD.h / 2, ROW_Z)
       box.renderOrder = 11
@@ -250,7 +250,7 @@ export class Agents {
       depthWrite: false,
       depthTest: false,
       blending: AdditiveBlending,
-      uniforms: { uVisible: { value: 0 }, uSize: { value: 10 }, uColor: { value: new Color('#e8f6ff') } },
+      uniforms: { uVisible: { value: 0 }, uSize: { value: 10 }, uColor: { value: palette.spark } },
     })
     const jobs = new Points(this.jobGeo, this.jobMat)
     jobs.frustumCulled = false

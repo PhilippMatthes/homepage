@@ -39,7 +39,8 @@ interface Vm {
   unit: number
   units: number
   start: number
-  tint: Color
+  /** Position on the load ramp (the color follows the section palette). */
+  tint: number
   /** Set for the VMs that get rebalanced. */
   move?: { host: number; unit: number }
 }
@@ -106,7 +107,7 @@ export class Cortex {
       if (best < 0) break
       const h = this.hosts[best]
       // Seated VMs sit in the calm middle of the load ramp (cyan → ice).
-      const tint = loadRamp(0.42 + rand() * 0.28)
+      const tint = 0.42 + rand() * 0.28
       this.vms.push({ host: best, unit: h.used, units, start: 0, tint })
       h.used += units
       placed += units
@@ -198,7 +199,7 @@ export class Cortex {
 
       const hot = this.hosts[vm.host].hot ? heat : 0
       const flicker = 0.85 + 0.15 * Math.sin(o.time * 3 + i * 1.7)
-      this.c.copy(vm.tint).lerp(HOT, hot)
+      loadRamp(vm.tint, this.c).lerp(HOT, hot)
       // Seated VMs stay subtle so the racks still read; moving and hot ones glow.
       const glow = moving ? 1.3 : (0.28 + 0.5 * hot) * flicker
       this.c.multiplyScalar(o.visible * Math.min(1, t * 3) * glow)

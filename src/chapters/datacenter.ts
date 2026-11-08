@@ -1,6 +1,5 @@
 import {
   BoxGeometry,
-  Color,
   Group,
   InstancedMesh,
   Matrix4,
@@ -8,7 +7,7 @@ import {
   PlaneGeometry,
   ShaderMaterial,
 } from 'three'
-import { palette } from '../core/palette'
+import { palette, shade } from '../core/palette'
 import { shared } from '../core/shared'
 import { holoMaterial, setHoloFade } from '../fx/holoMaterial'
 import {
@@ -136,17 +135,17 @@ function floorMaterial() {
 export class Datacenter {
   readonly group = new Group()
   readonly rackMat = holoMaterial({ slots: true, edgeWidth: 1.2, glow: 0.9, transparent: true, focus: true })
-  readonly trayMat = holoMaterial({ fill: new Color('#030812'), edge: palette.blue, glow: 0.7, transparent: true, focus: true })
+  readonly trayMat = holoMaterial({ fill: shade(palette.deep, 0.3), edge: palette.blue, glow: 0.7, transparent: true, focus: true })
   readonly floorMat = floorMaterial()
   readonly shellMat = holoMaterial({
     transparent: true,
     panels: 1.2,
     edgeWidth: 1.6,
-    fill: new Color('#050c1c'),
+    fill: shade(palette.deep, 0.45),
     edge: palette.cyan,
     glow: 1.1,
   })
-  readonly roofUnitMat = holoMaterial({ transparent: true, fill: new Color('#071226'), edge: palette.ice, glow: 0.9 })
+  readonly roofUnitMat = holoMaterial({ transparent: true, fill: shade(palette.deep, 0.62), edge: palette.ice, glow: 0.9 })
   readonly racks: InstancedMesh
   private shell = new Group()
 

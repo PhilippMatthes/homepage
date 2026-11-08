@@ -8,7 +8,7 @@ import {
   Vector3,
   Vector4,
 } from 'three'
-import { classes, loadRampGlsl, palette } from '../core/palette'
+import { classes, loadRampGlsl, palette, themeUniforms } from '../core/palette'
 import { shared } from '../core/shared'
 import { packetGlsl } from './packets'
 import { DASH } from '../chapters/dashboard'
@@ -181,14 +181,14 @@ const vertexShader = /* glsl */ `
     else c = (uDeep * 1.4 + uCyan * 0.12) * (1.0 + 1.3 * on); // the window lights up as the stack opens
     // The scan plane brightens each layer as it passes.
     c *= 1.0 + 1.8 * on * exp(-pow((L - stackScan()) / 0.07, 2.0));
-    c += vec3(0.9, 0.95, 1.0) * uStackFlash;
+    c += uThSpark * uStackFlash;
     return c * fract(aStack.w) * 2.0;
   }
   vec3 portraitColor() {
     float band = exp(-pow((position.y - uScanY) / 0.05, 2.0));
     float trail = exp(-max(0.0, position.y - uScanY) * 3.0) * step(uScanY, position.y) * 0.25;
-    vec3 c = aColor * (1.0 + trail + gTouch * 0.9) + vec3(0.85, 0.95, 1.0) * band * 1.4 * aMisc.x;
-    c = c * gBurnVis + vec3(0.9, 0.95, 1.0) * gBurnEdge * 1.2;
+    vec3 c = aColor * (1.0 + trail + gTouch * 0.9) + uThSpark * band * 1.4 * aMisc.x;
+    c = c * gBurnVis + uThSpark * gBurnEdge * 1.2;
     return gStack > 0.0 ? mix(c, stackColor() * gBurnVis, gStack) : c;
   }
 
@@ -214,7 +214,7 @@ const vertexShader = /* glsl */ `
     float busy = max(uCortex.y * inArea, hot);
     float fast = step(0.45, fract(uTime * (2.5 + aSeed.z * 5.0) + aSeed.w * 7.0));
     tw = mix(tw, 0.25 + 0.75 * fast, busy);
-    led = mix(led, PKT_HOT * 1.4, hot);
+    led = mix(led, uThHot * 1.4, hot);
     led *= tw * (1.0 + 0.6 * busy);
     float ph = flowPhase((0.035 + 0.07 * aSeed.y) * uHallFlow);
     vec3 stream = packetColor(aFlow.x, fract(aSeed.w * 7.31 + aSeed.y * 3.17)) * 0.8 * smoothstep(0.0, 0.12, ph) * smoothstep(1.0, 0.85, ph);
@@ -229,7 +229,7 @@ const vertexShader = /* glsl */ `
     vec3 r = aSeed.xyz * 2.0 - 1.0;
     return uGpu + r * vec3(0.045, 0.006, 0.04);
   }
-  vec3 gpuColor() { return vec3(0.55, 0.8, 1.0) * 0.45; }
+  vec3 gpuColor() { return uThGlow * 0.5; }
 
   // ---------- 3 dashboards ----------
   float h1(float x) { return fract(sin(x * 91.17) * 43758.5453); }
@@ -271,14 +271,14 @@ const vertexShader = /* glsl */ `
         float j = floor(s / 0.3 * K);
         float a = u * 2.0 * PI;
         pw = node(j, ps) * W + 0.02 * sqrt(v) * vec2(cos(a), sin(a));
-        col = vec3(0.9, 0.97, 1.0) * 1.2;
+        col = uThSpark * 1.2;
       } else {
         float e = floor((s - 0.3) / 0.7 * 20.0);
         float a = floor(h1(e * 1.31 + ps) * K);
         float b = floor(h1(e * 2.77 + ps + 0.5) * K);
         pw = mix(node(a, ps) * W, node(b, ps) * W, u);
         float pulse = exp(-pow(fract(u - uTime * 0.35 + h1(e)) * 12.0, 2.0));
-        col = uCyan * 0.35 + vec3(0.85, 0.95, 1.0) * pulse * 1.6;
+        col = uCyan * 0.35 + uThSpark * pulse * 1.6;
       }
       return vec3(aDash.xy + pw, aDash.z);
     } else {
@@ -301,13 +301,13 @@ const vertexShader = /* glsl */ `
     int k = int(aClass + 0.5);
     float refl = k == 1 ? 0.95 : k == 4 ? 0.75 : k == 2 ? 0.6 : k == 3 ? 0.4 : 0.32;
     float intensity = refl * (0.55 + 0.45 * aSeed.z) * (0.8 + 0.2 * h);
-    vec3 raw = vec3(0.78, 0.85, 0.95) * intensity * 0.75;
+    vec3 raw = uThHaze * intensity * 0.75;
     float swept = smoothstep(0.0, 0.08, uSweep - aCloud.x) * uSweepOn;
     vec3 cls = uClassColors[int(aClass + 0.5)] * 1.35;
     float front = exp(-pow((aCloud.x - uSweep) / 0.09, 2.0)) * uSweepOn;
     // Cutaway: the street fades out towards the viewer instead of ending in a hard edge.
     float near = 1.0 - 0.8 * smoothstep(uCloudNear, uCloudNear + 0.7, aCloud.z);
-    return (mix(raw, cls, swept) + vec3(0.9, 0.97, 1.0) * front * 2.0) * near;
+    return (mix(raw, cls, swept) + uThSpark * front * 2.0) * near;
   }
 
   // ---------- 5 city ----------
@@ -317,7 +317,7 @@ const vertexShader = /* glsl */ `
     float w = aMisc.y;
     vec3 road = mix(uDeep * 3.2 + uCyan * 0.18, uIce * 0.5, w * w);
     float ph = flowPhase(0.04 + 0.08 * aSeed.y);
-    vec3 car = vec3(0.75, 0.9, 1.0) * 1.3 * smoothstep(0.0, 0.1, ph) * smoothstep(1.0, 0.9, ph);
+    vec3 car = uThSpark * 1.2 * smoothstep(0.0, 0.1, ph) * smoothstep(1.0, 0.9, ph);
     return mix(road * (0.7 + 0.3 * aSeed.z), car, cityFlows());
   }
 
@@ -400,7 +400,7 @@ const vertexShader = /* glsl */ `
     float fog = exp(-pow(uFogDensity * dist, 2.0));
     vec3 c = mix(cA, cB, e) * (1.0 + arc * 0.3) * (1.0 - 0.45 * arc * step(1.0, m) * step(m, 3.0));
     float lum = dot(c, vec3(0.299, 0.587, 0.114));
-    c = mix(c, vec3(lum) * vec3(0.78, 0.86, 1.0), 0.7 * far);
+    c = mix(c, vec3(lum) * uThHaze, 0.7 * far);
     vColor = c * fog * vis * (1.0 + 0.35 * uWarp);
     vAlpha = alpha;
   }
@@ -472,6 +472,7 @@ export class MorphParticles {
       depthTest: true,
       blending: AdditiveBlending,
       uniforms: {
+        ...themeUniforms,
         uTime: { value: 0 },
         uMorph: { value: 0 },
         uScale: { value: 1 },

@@ -1,4 +1,9 @@
+import { palette } from '../core/palette'
 import { reducedMotion } from '../core/quality'
+
+const srgb = (c: typeof palette.ice) => c.getStyle().match(/[\d.]+/g)!.slice(0, 3).map(Number)
+/** Dots settle at ice and flare towards spark at the scan line. */
+const [ICE, SPARK] = [srgb(palette.ice), srgb(palette.spark)]
 
 export interface Rect {
   x: number
@@ -120,15 +125,16 @@ export class Loader {
       const a = Math.min(1, d.lum * 1.1 + flare * 0.8) * (0.55 + 0.45 * d.depth) * edge * edge
       const size = cell * (0.28 + 0.42 * d.depth) * (1 + flare)
       const jitter = flare * Math.sin(time * 30 + d.u * 90) * cell * 0.3
-      ctx.fillStyle = `rgba(${Math.round(150 + 105 * flare)}, ${Math.round(205 + 50 * flare)}, 255, ${a.toFixed(3)})`
+      const [cr, cg, cb] = ICE.map((c, i) => Math.round(c * 0.92 + (SPARK[i] - c * 0.92) * flare))
+      ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${a.toFixed(3)})`
       ctx.fillRect(r.x + d.u * r.size - size / 2 + jitter, r.y + d.v * r.size - size / 2, size, size)
     }
     if (this.shown < 0.999 && this.moveT < 0.5) {
       const y = r.y + scanV * r.size
       const g = ctx.createLinearGradient(r.x, 0, r.x + r.size, 0)
-      g.addColorStop(0, 'rgba(159, 216, 255, 0)')
-      g.addColorStop(0.5, 'rgba(220, 240, 255, 0.85)')
-      g.addColorStop(1, 'rgba(159, 216, 255, 0)')
+      g.addColorStop(0, `rgba(${ICE.join(', ')}, 0)`)
+      g.addColorStop(0.5, `rgba(${SPARK.join(', ')}, 0.85)`)
+      g.addColorStop(1, `rgba(${ICE.join(', ')}, 0)`)
       ctx.fillStyle = g
       ctx.fillRect(r.x - r.size * 0.1, y, r.size * 1.2, 1)
     }

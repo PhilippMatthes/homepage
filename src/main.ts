@@ -136,10 +136,10 @@ async function boot() {
   particles.u.uSunDir.value = globe.sunDir.value
   // Titles are clipped to their panel / card so they never run into the neighbor on narrow screens.
   PANELS.forEach((panel, i) =>
-    hud.add(dashboard.titleAnchors[i], 'dash', panel.title, '#9fd8ff', 'panel-title', 'left', DASH.w - 0.12),
+    hud.add(dashboard.titleAnchors[i], 'dash', panel.title, 'var(--ice)', 'panel-title', 'left', DASH.w - 0.12),
   )
   STATIONS.forEach((st, i) =>
-    hud.add(agents.anchors[i], 'agents', st.name, '#cfe6ff', 'panel-title agent-title', 'left', CARD_TITLE_W),
+    hud.add(agents.anchors[i], 'agents', st.name, 'var(--spark)', 'panel-title agent-title', 'left', CARD_TITLE_W),
   )
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 

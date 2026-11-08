@@ -1,12 +1,13 @@
 import { LinearFilter, Mesh, PlaneGeometry, ShaderMaterial, SRGBColorSpace, Texture, TextureLoader, Vector3 } from 'three'
 import { burnGlsl } from '../fx/particles'
-import { palette } from '../core/palette'
+import { themeGlsl, themeUniforms } from '../core/palette'
 import { PORTRAIT_CENTER, PORTRAIT_DEPTH, PORTRAIT_SIZE } from '../world/layout'
 
 /**
- * The cover: the real photo, displaced in 3D by its depth map (like 3Dify),
- * reacting to the pointer. It then burns away along the same noise field
- * the point cloud uses to appear, so photo and points hand over seamlessly.
+ * The cover: the real photo in full colour, displaced in 3D by its depth map
+ * (like 3Dify), reacting to the pointer; the room behind is the backdrop's
+ * point cloud. It then burns away along the same noise field the point cloud
+ * uses to appear, so photo and points hand over seamlessly.
  */
 export class PortraitMesh {
   readonly mesh: Mesh
@@ -31,11 +32,9 @@ export class PortraitMesh {
         uPointerStrength: { value: 0 },
         uTime: { value: 0 },
         uVisible: { value: 1 },
-        // Shared with the clear color, so the shadows follow the background mood.
-        uShadow: { value: palette.bg },
         uTexel: { value: 1 / ((depth.image as { width?: number })?.width ?? 1024) },
         uLightDir: { value: new Vector3(-0.45, 0.55, 0.7).normalize() },
-        uRim: { value: palette.cyan },
+        ...themeUniforms,
       },
       vertexShader: /* glsl */ `
         uniform sampler2D uDepth;
@@ -62,13 +61,12 @@ export class PortraitMesh {
         }
       `,
       fragmentShader: /* glsl */ `
+        ${themeGlsl}
         uniform sampler2D uPhoto;
         uniform sampler2D uDepth;
         uniform float uDepthScale;
         uniform float uTexel;
         uniform vec3 uLightDir;
-        uniform vec3 uRim;
-        uniform vec3 uShadow;
         uniform float uBurn;
         uniform float uVisible;
         varying vec2 vUv;
@@ -102,23 +100,11 @@ export class PortraitMesh {
 
           // Gentle key light that follows the pointer: modulates the photo, never replaces it.
           float key = clamp((dot(n, normalize(uLightDir)) + 0.5) / 1.5, 0.0, 1.0);
-          // Faint cool glow only along the outer silhouette (where the depth falls off).
-          float silhouette = 1.0 - smoothstep(0.27, 0.45, vDepth);
 
           vec3 photo = texture2D(uPhoto, vUv).rgb;
-          vec3 c = photo;
-          // Greyscale, lightly lit and lifted, then a near-neutral duotone whose
-          // shadows sink into the background.
-          float l0 = dot(c, vec3(0.2126, 0.7152, 0.0722));
-          float l = l0;
-          l = clamp(l * mix(0.85, 1.25, key) * 1.12 + 0.03, 0.0, 1.0);
-          vec3 mid = vec3(0.22, 0.25, 0.31);
-          vec3 high = vec3(0.96, 0.97, 1.0);
-          c = l < 0.42 ? mix(uShadow, mid, l / 0.42) : mix(mid, high, (l - 0.42) / 0.58);
-          // A hint of the photo's own colour (its chroma, so brightness stays put), kept out of the shadows.
-          c = max(c + (photo - vec3(l0)) * 0.3 * smoothstep(0.08, 0.35, l), 0.0);
-          c += uRim * silhouette * 0.22;
-          c += vec3(0.55, 0.85, 1.0) * edge * 2.2 + vec3(0.6, 0.85, 1.0) * vTouch * 0.25;
+          // The photo in its own colours, shaped by the key light and slightly lifted.
+          vec3 c = photo * mix(0.85, 1.15, key) + 0.02;
+          c += uThGlow * edge * 2.2 + uThGlow * vTouch * 0.25;
           gl_FragColor = vec4(c, a * uVisible);
           #include <colorspace_fragment>
         }

@@ -1,5 +1,5 @@
 import { Color, ShaderMaterial } from 'three'
-import { palette } from '../core/palette'
+import { palette, shade } from '../core/palette'
 import { U } from '../world/layout'
 import { shared } from '../core/shared'
 
@@ -30,8 +30,9 @@ export function holoMaterial(o: HoloOptions = {}) {
     depthWrite: true,
     defines: { SLOTS: o.slots ? 1 : 0, PANELS: o.panels ? 1 : 0, FOCUS: o.focus ? 1 : 0 },
     uniforms: {
-      uFill: { value: (o.fill ?? new Color('#040a18')).clone() },
-      uEdge: { value: (o.edge ?? palette.cyan).clone() },
+      // Not cloned: palette colors (and shade()s of them) are live and follow the section palette.
+      uFill: { value: o.fill ?? shade(palette.deep, 0.4) },
+      uEdge: { value: o.edge ?? palette.cyan },
       uEdgeWidth: { value: o.edgeWidth ?? 1.0 },
       uFillAlpha: { value: o.fillAlpha ?? 1 },
       uEdgeAlpha: { value: 1 },

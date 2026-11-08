@@ -1,5 +1,5 @@
 import { Group, Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
-import { palette } from '../core/palette'
+import { palette, themeGlsl, themeUniforms } from '../core/palette'
 
 /**
  * Perses-style observability dashboards floating in the aisle in front of
@@ -73,9 +73,10 @@ export class Dashboard {
     this.mat = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
-      uniforms: { uVisible: { value: 0 }, uEdge: { value: palette.cyan }, uAspect: { value: DASH.w / DASH.h } },
+      uniforms: { ...themeUniforms, uVisible: { value: 0 }, uEdge: { value: palette.cyan }, uAspect: { value: DASH.w / DASH.h } },
       vertexShader: /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
       fragmentShader: /* glsl */ `
+        ${themeGlsl}
         uniform float uVisible; uniform vec3 uEdge; uniform float uAspect; varying vec2 vUv;
         void main() {
           vec2 d = min(vUv, 1.0 - vUv) * vec2(uAspect, 1.0);
@@ -83,7 +84,7 @@ export class Dashboard {
           float fw = fwidth(e);
           float border = 1.0 - smoothstep(0.0, fw * 1.5, e);
           float header = step(0.86, vUv.y) * 0.06;
-          vec3 col = vec3(0.02, 0.05, 0.12) + uEdge * (border * 0.55 + header);
+          vec3 col = uThPanel + uEdge * (border * 0.55 + header);
           float a = (0.55 + border * 0.45) * uVisible;
           gl_FragColor = vec4(col, a);
         }

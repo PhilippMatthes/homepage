@@ -1,5 +1,4 @@
-import { Color } from 'three'
-import { palette } from '../core/palette'
+import { Color, SRGBColorSpace } from 'three'
 import { PORTRAIT_CENTER, PORTRAIT_DEPTH, PORTRAIT_SIZE } from '../world/layout'
 
 interface Img {
@@ -63,7 +62,6 @@ export async function samplePortrait(count: number, photoUrl: string, depthUrl: 
   // Keep enough scan rows for the LiDAR look even with a lean particle budget.
   const rows = Math.max(90, Math.round(Math.sqrt(count) * 0.55))
   const tint = new Color()
-  const dark = palette.deep.clone().multiplyScalar(0.9)
   const DEPTH_CUTOFF = 0.2
 
   let n = 0
@@ -84,14 +82,9 @@ export async function samplePortrait(count: number, photoUrl: string, depthUrl: 
     // Soften the silhouette: fewer points where depth is falling off.
     if (d < DEPTH_CUTOFF * 1.4 && Math.random() > (d - DEPTH_CUTOFF) / (DEPTH_CUTOFF * 0.4)) continue
 
-    const r = sample(photo, u, v, 0)
-    const g = sample(photo, u, v, 1)
-    const b = sample(photo, u, v, 2)
-    const lum = 0.299 * r + 0.587 * g + 0.114 * b
-    const l = Math.pow(lum, 1.25)
-    tint.copy(dark).lerp(palette.ice, l)
-    tint.lerp(palette.white, Math.pow(lum, 5) * 0.7)
-    const k = 0.55 + 0.55 * d
+    // The photo's own colour (linear, like the rest of the scene), brighter towards the camera.
+    tint.setRGB(sample(photo, u, v, 0), sample(photo, u, v, 1), sample(photo, u, v, 2), SRGBColorSpace)
+    const k = (0.55 + 0.55 * d) * 1.1
     col[n * 3] = tint.r * k
     col[n * 3 + 1] = tint.g * k
     col[n * 3 + 2] = tint.b * k

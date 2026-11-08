@@ -44,8 +44,8 @@ const orbit = (deg: number, r: number, y: number): [number, number, number] => [
 ]
 const KEYS: Key[] = [
   // cover: the 3D photo
-  { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36, zoom: 1.75 },
-  { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36, zoom: 1.6 },
+  { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 44, zoom: 1.45 },
+  { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 42, zoom: 1.4 },
   // it burns into points that rebuild into an app screen, nearly face-on; as its
   // view hierarchy explodes we orbit round to the side, like the 3D view debugger
   { p: 0.065, pos: orbit(-6, 9.8, 30.4), sheetPos: orbit(-4, 10.4, 30.4), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.3, zoom: 1.1 },
@@ -255,8 +255,8 @@ export class CameraRig {
     const tan0 = Math.tan((fov * Math.PI) / 360)
     // Bust height on screen (fraction of the viewport) at the current fov.
     const h0 = (BUST.top - BUST.bottom) / (2 * dist * tan0)
-    // Fill ~78% of the band, but never zoom far from the tuned framing.
-    const z = Math.min(1.3, Math.max(0.85, (band * 0.78) / h0))
+    // Fill ~62% of the band, but never zoom far from the tuned framing.
+    const z = Math.min(1.3, Math.max(0.85, (band * 0.62) / h0))
     const tan = tan0 / z
     const ndcMid = (PORTRAIT_CENTER.y + (BUST.top + BUST.bottom) / 2 - eyeY) / (dist * tan)
     const screenMid = (1 - ndcMid) / 2
