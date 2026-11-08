@@ -46,11 +46,11 @@ const KEYS: Key[] = [
   // cover: the 3D photo
   { p: 0.0, pos: [0, 29.1, 10.6], target: [0, 29.1, 0], fov: 36, zoom: 1.75 },
   { p: 0.035, pos: [0, 29.2, 10.0], target: [0, 29.2, 0], fov: 36, zoom: 1.6 },
-  // it burns into points that rebuild into a MacBook and an iPhone, while we
-  // orbit gently to a three-quarter view from slightly above (keyboard and screens both read)
-  { p: 0.065, pos: orbit(18, 9.6, 31.0), sheetPos: orbit(12, 10.2, 31.0), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.3, zoom: 1.1 },
-  { p: 0.095, pos: orbit(28, 9.4, 31.4), sheetPos: orbit(18, 10.2, 31.3), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
-  { p: 0.125, pos: orbit(36, 9.2, 31.7), sheetPos: orbit(24, 10.2, 31.5), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
+  // it burns into points that rebuild into an app screen, nearly face-on; as its
+  // view hierarchy explodes we orbit round to the side, like the 3D view debugger
+  { p: 0.065, pos: orbit(-6, 9.8, 30.4), sheetPos: orbit(-4, 10.4, 30.4), target: [0.4, 29.6, 0.2], fov: 40, shift: 1.3, zoom: 1.1 },
+  { p: 0.095, pos: orbit(22, 10.2, 31.0), sheetPos: orbit(14, 10.8, 30.9), target: [0.3, 29.35, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
+  { p: 0.125, pos: orbit(34, 10.2, 31.3), sheetPos: orbit(22, 10.8, 31.2), target: [0.3, 29.35, 0.2], fov: 40, shift: 1.9, zoom: 1.1 },
   // the points rain down onto the datacenter
   { p: 0.165, pos: [4, 34, 14], target: [0, 16, 0], fov: 42 },
   { p: 0.21, pos: [0, 42, 30], target: [0, 0, 0], fov: 45 },
@@ -118,6 +118,7 @@ export class CameraRig {
   private fwd = new Vector3()
   private initialized = false
   private lift = -1
+  private slide = 0
   private viewW = 0
   private viewH = 0
   baseFov = 40
@@ -133,6 +134,13 @@ export class CameraRig {
    * headline, as fractions of the viewport height. The bust is fitted into it.
    */
   heroBand = { top: 0.06, bottom: 0.8 }
+  /**
+   * Bottom-sheet screens: a subject (world points) to fit into the band
+   * between the top bar and the copy, blended in by `weight`. main.ts fills
+   * this each frame while a chapter wants it.
+   */
+  fit = { points: [] as Vector3[], top: 0.06, bottom: 0.6, weight: 0 }
+  private v = new Vector3()
   private base = new Vector3()
 
   constructor(private camera: PerspectiveCamera) {}
@@ -211,7 +219,14 @@ export class CameraRig {
       fov = lerp(fov, f.fov, hero)
       lift += f.lift * hero
     }
-    this.setLift(lift)
+    let slide = 0
+    if (this.sheet && this.fit.weight > 0 && this.fit.points.length) {
+      const f = this.frameFit(aspect)
+      fov = lerp(fov, f.fov, this.fit.weight)
+      lift = lerp(lift, f.lift, this.fit.weight)
+      slide = f.slide * this.fit.weight
+    }
+    this.setLift(lift, slide)
     // Depth range and fog follow the zoom level (from a 1U server to a planet).
     const d = this.pos.distanceTo(this.target)
     shared.uFogDensity.value = 0.35 / Math.max(d, 6)
@@ -250,15 +265,48 @@ export class CameraRig {
     return { fov: (Math.atan(tan) * 360) / Math.PI, lift: screenMid - want }
   }
 
-  /** Shifts the rendered image up by `lift` × viewport height (an off-center projection). */
-  private setLift(lift: number) {
+  /**
+   * Fits `fit.points` into the band between `fit.top` and `fit.bottom`: picks
+   * the fov at which they fill most of it (or most of the width, if that's
+   * tighter), then lifts and slides the image to center them in it.
+   */
+  private frameFit(aspect: number) {
+    const { points, top, bottom } = this.fit
+    const band = Math.max(0.2, bottom - top)
+    this.camera.updateMatrixWorld()
+    // Per point: its offset from the view axis per meter of depth (tangent space).
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
+    for (const p of points) {
+      const c = this.v.copy(p).applyMatrix4(this.camera.matrixWorldInverse)
+      const d = Math.max(0.1, -c.z)
+      x0 = Math.min(x0, c.x / d)
+      x1 = Math.max(x1, c.x / d)
+      y0 = Math.min(y0, c.y / d)
+      y1 = Math.max(y1, c.y / d)
+    }
+    // Fill 86% of the band's height, but leave a margin left and right.
+    const tanH = (y1 - y0) / (2 * band * 0.86)
+    const tanW = (x1 - x0) / (2 * 0.84 * aspect)
+    const tan = Math.max(tanH, tanW, 0.05)
+    const screenMid = (1 - (y0 + y1) / 2 / tan) / 2
+    // The subject's horizontal center, as a fraction of the viewport width from the middle.
+    const slide = (x0 + x1) / 2 / (tan * aspect) / 2
+    return { fov: (Math.atan(tan) * 360) / Math.PI, lift: screenMid - (top + band * 0.5), slide }
+  }
+
+  /**
+   * Shifts the rendered image up by `lift` × viewport height and left by
+   * `slide` × viewport width (an off-center projection).
+   */
+  private setLift(lift: number, slide = 0) {
     const w = innerWidth
     const h = innerHeight
-    if (Math.abs(lift - this.lift) < 1e-4 && w === this.viewW && h === this.viewH) return
+    if (Math.abs(lift - this.lift) < 1e-4 && Math.abs(slide - this.slide) < 1e-4 && w === this.viewW && h === this.viewH) return
     this.lift = lift
+    this.slide = slide
     this.viewW = w
     this.viewH = h
-    if (Math.abs(lift) < 1e-4) this.camera.clearViewOffset()
-    else this.camera.setViewOffset(w, h, 0, lift * h, w, h)
+    if (Math.abs(lift) < 1e-4 && Math.abs(slide) < 1e-4) this.camera.clearViewOffset()
+    else this.camera.setViewOffset(w, h, slide * w, lift * h, w, h)
   }
 }

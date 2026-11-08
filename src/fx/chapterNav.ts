@@ -75,7 +75,9 @@ export class ChapterNav {
 
   private byHash() {
     const id = decodeURIComponent(location.hash.slice(1))
-    return this.chapters.find((c) => c.id === id)
+    // Renamed chapters keep their old anchors as aliases (data-aliases), so old links still work.
+    const alias = id && document.querySelector<HTMLElement>(`[data-aliases~="${CSS.escape(id)}"]`)?.id
+    return this.chapters.find((c) => c.id === id || c.id === alias)
   }
 
   /** Keeps the URL anchor in sync with the chapter on screen, without adding history entries. */

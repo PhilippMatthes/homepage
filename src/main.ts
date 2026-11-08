@@ -14,7 +14,7 @@ import { Loader } from './fx/loader'
 import { samplePortrait } from './chapters/portrait'
 import { PortraitMesh } from './chapters/portraitMesh'
 import { Backdrop } from './chapters/backdrop'
-import { deviceTargets } from './chapters/devices'
+import { stackCorners, viewStackTargets } from './chapters/viewStack'
 import { Datacenter, hallTargets } from './chapters/datacenter'
 import { Network } from './chapters/network'
 import { Server } from './chapters/server'
@@ -59,7 +59,7 @@ async function boot() {
     loader.track(PortraitMesh.load(photoUrl, depthUrl)),
     loader.track(Backdrop.load(Math.round(N * 0.35), photoUrl, depthUrl, `${BASE}assets/selfie-scene-depth.webp`)),
   ])
-  const devices = deviceTargets(N)
+  const stack = viewStackTargets(N)
   const hall = hallTargets(N)
   const dash = dashTargets(N)
   const cloud = buildCloud(N)
@@ -71,7 +71,8 @@ async function boot() {
       portrait: portrait.pos,
       portraitColor: portrait.col,
       portraitVis: portrait.vis,
-      device: devices.target,
+      stack: stack.target,
+      stackLayer: stack.layer,
       hall: hall.pos,
       flow: hall.flow,
       dash: dash.base,
@@ -108,6 +109,8 @@ async function boot() {
     particles.points,
   )
   particles.u.uCloudGround.value = CLOUD_CENTER.y
+  particles.u.uCloudNear.value = CLOUD_CENTER.z + 2.2
+  particles.u.uStackN.value.copy(stack.normal)
   // Rack LEDs follow Cortex: where it schedules, and which hosts run hot.
   particles.u.uCortexArea.value.set(cortex.region.x0, cortex.region.x1, cortex.region.z)
   cortex.hotSpots.slice(0, 4).forEach((h, i) => particles.u.uHot.value[i].copy(h))
@@ -187,16 +190,24 @@ async function boot() {
   const topbar = document.querySelector<HTMLElement>('.topbar')!
   const heroEl = document.querySelector<HTMLElement>('.chapter.hero')!
   const heroTitle = heroEl.querySelector<HTMLElement>('h1')!
+  // Chapter 01 on phones: the app screen is fitted between the top bar and its copy's eyebrow.
+  const stackEl = document.querySelector<HTMLElement>('#apps')!
+  const stackEyebrow = stackEl.querySelector<HTMLElement>('.eyebrow')!
   const measureHero = () => {
     const h = innerHeight
     rig.heroBand.top = topbar.getBoundingClientRect().bottom / h
     rig.heroBand.bottom = (heroEl.offsetTop + heroTitle.offsetTop) / h
+    rig.fit.top = rig.heroBand.top + 0.01
+    rig.fit.bottom = (stackEl.offsetTop + stackEyebrow.offsetTop) / h - 0.015
   }
   measureHero()
   addEventListener('resize', measureHero)
   document.fonts?.ready.then(measureHero)
   let copy = -1
   let warp = 0
+  // Chapter 01: last frame's progress and when the view stack last slammed shut.
+  let lastP = 0
+  let slamAt = -100
 
   // CSS variables are only written when they change, to spare per-frame style recalcs.
   const cssVars = new Map<string, string>()
@@ -226,6 +237,11 @@ async function boot() {
     const warpTarget = reducedMotion ? 0 : smooth(Math.min(1, Math.max(0, (Math.abs(scroll.velocity) - 0.015) * 14)))
     warp += (warpTarget - warp) * (1 - Math.exp(-dt * (warpTarget > warp ? 6 : 2.5)))
     stage.setWarp(warp, bloomAt(p))
+    // Phones: keep the whole app screen (flat or exploded) in view above chapter 01's copy,
+    // from when it forms until its points rain onto the datacenter.
+    const spread = particles.u.uStackSpread.value // last frame's, set further down
+    rig.fit.weight = band(p, T.stack[0] + 0.01, T.stack[1], T.stackSlam[1], T.dissolve[0] + 0.015)
+    if (rig.fit.weight > 0) stackCorners(spread, time, rig.fit.points)
     if (rig.update(p, dt, pointer, time, copy)) stage.updatePointScale()
     stage.camera.updateMatrixWorld()
     const scale = stage.pointScale
@@ -256,9 +272,9 @@ async function boot() {
     if (raycaster.ray.intersectPlane(plane, hit)) particles.u.uPointer.value.copy(hit)
 
     photoMesh.update(burn, time, hit, touch, pointer)
-    // The room only belongs behind the face, so it fades as the face turns into the devices.
+    // The room only belongs behind the face, so it fades as the face turns into the app screen.
     const scanY = PORTRAIT_CENTER.y + PORTRAIT_SIZE * 0.6 - ((time * 0.22) % 1.6) * PORTRAIT_SIZE * 0.75
-    backdrop.update(1 - smooth(range(p, T.devices[0], T.devices[1] - 0.005)), time, scale, scanY)
+    backdrop.update(1 - smooth(range(p, T.stack[0], T.stack[1] - 0.005)), time, scale, scanY)
     datacenter.update(hallVis, shell, time)
     network.update(networkVis, time, scale)
     const cortexState = cortex.update({
@@ -291,7 +307,15 @@ async function boot() {
     u.uMorph.value = morphAt(p)
     u.uScale.value = scale
     u.uBurn.value = burn
-    u.uDeviceMix.value = range(p, T.devices[0], T.devices[1])
+    u.uStackMix.value = range(p, T.stack[0], T.stack[1])
+    // The view hierarchy explodes with a soft overshoot, then slams shut, accelerating.
+    const spreadT = range(p, T.stackSpread[0], T.stackSpread[1]) - 1
+    const slamT = range(p, T.stackSlam[0], T.stackSlam[1])
+    u.uStackSpread.value = (1 + 2.2 * spreadT * spreadT * spreadT + 1.2 * spreadT * spreadT) * (1 - slamT * slamT * slamT)
+    // Scrolling forward through the impact sets off a flash that fades on its own.
+    if (p >= T.stackSlam[1] && lastP < T.stackSlam[1] && p < T.dissolve[0] + 0.02) slamAt = time
+    lastP = p
+    u.uStackFlash.value = reducedMotion ? 0 : 1.4 * Math.exp(-(time - slamAt) * 5)
     u.uGpu.value.copy(server.gpuWorld)
     u.uSweep.value = sweepX
     u.uSweepOn.value = sweepOn
@@ -319,7 +343,9 @@ async function boot() {
   }
   document.addEventListener('visibilitychange', () => watchdog.reset())
   // Where the portrait plane lands on screen, so the loader's dot grid can glide onto it.
+  // Opened on a chapter (deep link), the portrait isn't on screen: no glide.
   const portraitRect = () => {
+    if (scroll.progress > 0.03) return null
     const h = PORTRAIT_SIZE / 2
     const a = new Vector3(PORTRAIT_CENTER.x - h, PORTRAIT_CENTER.y + h, PORTRAIT_CENTER.z).project(stage.camera)
     const b = new Vector3(PORTRAIT_CENTER.x + h, PORTRAIT_CENTER.y - h, PORTRAIT_CENTER.z).project(stage.camera)

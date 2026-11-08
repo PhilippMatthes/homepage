@@ -25,11 +25,18 @@ export interface CloudObject {
 const rnd = (a: number, b: number) => a + Math.random() * (b - a)
 const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5
 
+/** Vertical beams of the simulated sensor: elevation range (radians) and count. */
+const BEAMS = { lo: (-40 * Math.PI) / 180, hi: (26 * Math.PI) / 180, n: 32 }
+/** Half width of a beam's footprint, as a fraction of the beam spacing. */
+const BEAM_HALF = 0.2
+
 /**
  * A synthetic street scene as a LiDAR would see it: ground in concentric
- * rings around the sensor, cars, pedestrians, trees and facades sampled
- * on the surfaces facing the sensor. Coordinates are local (ground y = 0),
- * then shifted to CLOUD_CENTER.
+ * rings around the sensor, cars, pedestrians, trees and a facade sampled
+ * on the surfaces facing the sensor, in the horizontal stripes of the
+ * sensor's beams, with shadows behind whatever blocks them. The facade on
+ * the camera's side is left out so the street stays open to the viewer.
+ * Coordinates are local (ground y = 0), then shifted to CLOUD_CENTER.
  */
 export function buildCloud(count: number) {
   const pos = new Float32Array(count * 3)
@@ -53,12 +60,14 @@ export function buildCloud(count: number) {
   for (const x of [-3.4, -1.8, -0.2, 1.5, 3.2]) {
     for (const side of [-1, 1]) {
       if (Math.random() < 0.25) continue
-      shapes.push({ cls: 3, kind: 'tree', c: new Vector3(x + rnd(-0.2, 0.2), 0, side * 2.05), s: new Vector3(0.6, rnd(0.9, 1.15), 0.6) })
+      // Trees on the camera's side stay low, so they frame the street without hiding it.
+      const h = side > 0 ? rnd(0.7, 0.8) : rnd(0.9, 1.15)
+      const w = side > 0 ? 0.5 : 0.6
+      shapes.push({ cls: 3, kind: 'tree', c: new Vector3(x + rnd(-0.2, 0.2), 0, side * 2.05), s: new Vector3(w, h, w) })
     }
   }
-  for (const side of [-1, 1]) {
-    shapes.push({ cls: 4, kind: 'wall', c: new Vector3(0, 0, side * (Z - 0.2)), s: new Vector3(2 * X, 1.2, 0.05) })
-  }
+  // Only the far facade: the near one would stand between the camera and the street.
+  shapes.push({ cls: 4, kind: 'wall', c: new Vector3(0, 0, -(Z - 0.2)), s: new Vector3(2 * X, 1.6, 0.05) })
 
   const budget = { ground: 0.36, car: 0.2, ped: 0.06, tree: 0.18, wall: 0.2 }
   const perKind = (k: Shape['kind']) => shapes.filter((s) => s.kind === k)
@@ -73,6 +82,43 @@ export function buildCloud(count: number) {
     n++
   }
   const facing = (p: Vector3, normal: Vector3) => tmp.copy(sensor).sub(p).dot(normal) > 0
+  // A point is only returned if it lies on one of the sensor's beams.
+  const beamStep = (BEAMS.hi - BEAMS.lo) / (BEAMS.n - 1)
+  const onBeam = (p: Vector3) => {
+    const el = Math.atan2(p.y - sensor.y, Math.hypot(p.x - sensor.x, p.z - sensor.z))
+    const k = (el - BEAMS.lo) / beamStep
+    return k > -0.5 && k < BEAMS.n - 0.5 && Math.abs(k - Math.round(k)) < BEAM_HALF
+  }
+  // Boxes that cast LiDAR shadows on the ground (cars and pedestrians).
+  const blockers = shapes
+    .filter((s) => s.kind === 'car' || s.kind === 'ped')
+    .map((s) => ({
+      lo: new Vector3(s.c.x - s.s.x / 2, 0.04, s.c.z - s.s.z / 2),
+      hi: new Vector3(s.c.x + s.s.x / 2, s.s.y, s.c.z + s.s.z / 2),
+    }))
+  /** Does the segment sensor → p pass through a blocker (slab test)? */
+  const shadowed = (p: Vector3) => {
+    const d = tmp.copy(p).sub(sensor)
+    for (const b of blockers) {
+      let t0 = 0
+      let t1 = 1
+      let hit = true
+      for (const c of ['x', 'y', 'z'] as const) {
+        if (Math.abs(d[c]) < 1e-9) {
+          if (sensor[c] < b.lo[c] || sensor[c] > b.hi[c]) { hit = false; break }
+          continue
+        }
+        let a = (b.lo[c] - sensor[c]) / d[c]
+        let z = (b.hi[c] - sensor[c]) / d[c]
+        if (a > z) [a, z] = [z, a]
+        t0 = Math.max(t0, a)
+        t1 = Math.min(t1, z)
+        if (t0 > t1) { hit = false; break }
+      }
+      if (hit) return true
+    }
+    return false
+  }
 
   // Ground rings
   const nGround = Math.floor(count * budget.ground)
@@ -85,6 +131,7 @@ export function buildCloud(count: number) {
     if (Math.abs(p.x) > X || Math.abs(p.z) > Z - 0.2) { i--; continue }
     const curb = Math.abs(p.z) > 1.15 ? 0.03 : 0
     p.y += curb
+    if (shadowed(p)) { i--; continue }
     push(p, 0)
   }
 
@@ -92,7 +139,7 @@ export function buildCloud(count: number) {
   const sampleShape = (s: Shape, m: number) => {
     let tries = 0
     let made = 0
-    while (made < m && tries++ < m * 12) {
+    while (made < m && tries++ < m * 40) {
       const p = new Vector3()
       const nrm = new Vector3()
       if (s.kind === 'car') {
@@ -148,7 +195,7 @@ export function buildCloud(count: number) {
         nrm.set(0, 0, -Math.sign(s.c.z))
         p.set(x, y, 0).add(s.c)
       }
-      if (!facing(p, nrm)) continue
+      if (!facing(p, nrm) || !onBeam(p)) continue
       p.x += gauss() * 0.004
       p.y += gauss() * 0.004
       p.z += gauss() * 0.004
@@ -162,10 +209,12 @@ export function buildCloud(count: number) {
     for (const s of list) sampleShape(s, Math.floor(total / list.length))
   }
   // Fill any remainder with ground.
+  let guard = 0
   while (n < count) {
     const a = Math.random() * Math.PI * 2
     const r = rnd(0.3, X)
     const p = new Vector3(Math.cos(a) * r, 0, Math.sin(a) * r * (Z / X))
+    if (shadowed(p) && guard++ < count) continue
     push(p, 0)
   }
 

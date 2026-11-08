@@ -21,9 +21,13 @@ export const SCROLL_VH = 2000
 export const T = {
   // 3D photo burns away into the LiDAR point cloud...
   burn: [0.03, 0.06],
-  // ...whose points rebuild right away into a MacBook and an iPhone (chapter 01)
-  devices: [0.035, 0.075],
-  // the devices' points rain onto the datacenter
+  // ...whose points rebuild right away into an app screen (chapter 01)
+  stack: [0.035, 0.075],
+  // once it has formed, it explodes into its view hierarchy, like a 3D view debugger
+  stackSpread: [0.07, 0.097],
+  // the layers slam back together...
+  stackSlam: [0.114, 0.128],
+  // ...and the screen's points rain onto the datacenter
   dissolve: [0.13, 0.22],
   hallIn: [0.12, 0.19],
   network: [0.15, 0.2, 0.29, 0.33],

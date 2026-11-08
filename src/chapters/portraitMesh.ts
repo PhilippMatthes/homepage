@@ -105,14 +105,18 @@ export class PortraitMesh {
           // Faint cool glow only along the outer silhouette (where the depth falls off).
           float silhouette = 1.0 - smoothstep(0.27, 0.45, vDepth);
 
-          vec3 c = texture2D(uPhoto, vUv).rgb;
+          vec3 photo = texture2D(uPhoto, vUv).rgb;
+          vec3 c = photo;
           // Greyscale, lightly lit and lifted, then a near-neutral duotone whose
           // shadows sink into the background.
-          float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+          float l0 = dot(c, vec3(0.2126, 0.7152, 0.0722));
+          float l = l0;
           l = clamp(l * mix(0.85, 1.25, key) * 1.12 + 0.03, 0.0, 1.0);
           vec3 mid = vec3(0.22, 0.25, 0.31);
           vec3 high = vec3(0.96, 0.97, 1.0);
           c = l < 0.42 ? mix(uShadow, mid, l / 0.42) : mix(mid, high, (l - 0.42) / 0.58);
+          // A hint of the photo's own colour (its chroma, so brightness stays put), kept out of the shadows.
+          c = max(c + (photo - vec3(l0)) * 0.3 * smoothstep(0.08, 0.35, l), 0.0);
           c += uRim * silhouette * 0.22;
           c += vec3(0.55, 0.85, 1.0) * edge * 2.2 + vec3(0.6, 0.85, 1.0) * vTouch * 0.25;
           gl_FragColor = vec4(c, a * uVisible);

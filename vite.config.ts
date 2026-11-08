@@ -19,7 +19,7 @@ function chapterPages(): Plugin {
     generateBundle() {
       const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8')
       const menu = new Map([...html.matchAll(/<a href="#([\w-]+)" data-goto="[\d.]+">([^<]+)<\/a>/g)].map((m) => [m[1], text(m[2])]))
-      for (const [, id, body] of html.matchAll(/<section class="chapter[^"]*" id="([\w-]+)"[^>]*>([\s\S]*?)<\/section>/g)) {
+      for (const [, id, attrs, body] of html.matchAll(/<section class="chapter[^"]*" id="([\w-]+)"([^>]*)>([\s\S]*?)<\/section>/g)) {
         const name = menu.get(id) ?? id
         const h2 = text(body.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '')
         const lead = text(body.match(/<p class="lead">([\s\S]*?)<\/p>/)?.[1] ?? '')
@@ -49,6 +49,14 @@ function chapterPages(): Plugin {
 </html>
 `
         this.emitFile({ type: 'asset', fileName: `${id}/index.html`, source })
+        // Old chapter URLs (renamed anchors) keep working and forward to the new one.
+        for (const old of attrs.match(/data-aliases="([^"]*)"/)?.[1].split(/\s+/).filter(Boolean) ?? []) {
+          this.emitFile({
+            type: 'asset',
+            fileName: `${old}/index.html`,
+            source: source.replace(`<meta property="og:url" content="${SITE}/${id}/" />`, `<meta property="og:url" content="${SITE}/${old}/" />`),
+          })
+        }
       }
     },
   }

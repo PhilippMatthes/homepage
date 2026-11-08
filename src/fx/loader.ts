@@ -48,11 +48,15 @@ export class Loader {
     return p
   }
 
-  /** Glides the grid onto `rect` (CSS px), completes the scan, then resolves. */
-  finish(rect: Rect): Promise<void> {
+  /**
+   * Glides the grid onto `rect` (CSS px), completes the scan, then resolves.
+   * Without a rect (the page opens on a chapter, not the cover), the grid
+   * stays where it is and fades out with the loader.
+   */
+  finish(rect: Rect | null): Promise<void> {
     this.done = this.total
-    this.to = rect
-    const ms = reducedMotion || !this.dots.length ? 0 : 700
+    this.to = rect ?? this.from
+    const ms = reducedMotion || !this.dots.length || !rect ? 0 : 700
     return new Promise((resolve) =>
       setTimeout(() => {
         resolve()

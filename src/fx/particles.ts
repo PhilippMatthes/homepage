@@ -12,7 +12,8 @@ import { classes, loadRampGlsl, palette } from '../core/palette'
 import { shared } from '../core/shared'
 import { packetGlsl } from './packets'
 import { DASH } from '../chapters/dashboard'
-import { PORTRAIT_CENTER, PORTRAIT_SIZE } from '../world/layout'
+import { STACK_DEPTH, STACK_FAN } from '../chapters/viewStack'
+import { PORTRAIT_CENTER, PORTRAIT_SIZE, STACK_CENTER } from '../world/layout'
 
 export interface MorphTargets {
   count: number
@@ -21,10 +22,12 @@ export interface MorphTargets {
   portraitColor: Float32Array
   portraitVis: Float32Array
   /**
-   * Chapter 01: positions on the MacBook and iPhone the portrait rebuilds into
-   * (xyz), with kind + brightness / 2 packed into w (one attribute slot; WebGL has 16).
+   * Chapter 01: positions on the app screen the portrait rebuilds into (xyz),
+   * with kind + brightness / 2 packed into w (one attribute slot; WebGL has 16).
    */
-  device: Float32Array
+  stack: Float32Array
+  /** Each stack point's layer in the view hierarchy, 0 (back) … 1 (front). */
+  stackLayer: Float32Array
   /** Datacenter LED / data-stream positions; `flow` is a travel vector (0 = static LED). */
   hall: Float32Array
   flow: Float32Array
@@ -69,7 +72,12 @@ const vertexShader = /* glsl */ `
   uniform float uBurn;
   uniform vec3 uPortraitCenter;
   uniform float uPortraitSize;
-  uniform float uDeviceMix;  // 0 face, 1 the face's points rebuilt as MacBook + iPhone
+  uniform float uStackMix;    // 0 face, 1 the face's points rebuilt as an app screen
+  uniform float uStackSpread; // 0 flat screen, 1 exploded into its view hierarchy
+  uniform float uStackFlash;  // white flash as the layers slam back together
+  uniform vec3 uStackN;       // screen normal, the axis the layers spread along
+  uniform vec3 uStackC;       // screen center, the pivot the layers fan around
+  uniform float uCloudNear;  // world z where the point cloud starts fading towards the camera
   uniform vec3 uAmber;
   uniform float uHallFlow;
   uniform vec3 uGpu;
@@ -104,8 +112,8 @@ const vertexShader = /* glsl */ `
   attribute vec3 aCity;
   attribute vec3 aCityFlow;
   attribute vec4 aGlobe;    // xyz world position, w = closeness to Dresden
-  attribute vec2 aMisc;     // x portrait visibility, y city road weight
-  attribute vec4 aDevice;   // xyz position, w = kind (0 outline, 1 screen UI, 2 keys, 3 accent, 4 glass) + brightness / 2
+  attribute vec3 aMisc;     // x portrait visibility, y city road weight, z view-stack layer (0 back … 1 front)
+  attribute vec4 aStack;    // xyz position, w = kind (0 view bounds, 1 UI, 2 text, 3 selected view, 4 glass) + brightness / 2
   attribute vec4 aSeed;
 
   varying vec3 vColor;
@@ -115,7 +123,7 @@ const vertexShader = /* glsl */ `
   float gTouch = 0.0;
   float gBurnEdge = 0.0;
   float gBurnVis = 1.0;
-  float gDevice = 0.0;
+  float gStack = 0.0;
 
   ${burnGlsl}
   ${packetGlsl}
@@ -136,35 +144,52 @@ const vertexShader = /* glsl */ `
     p.xy += normalize(dp.xy + 1e-5) * f * 0.06;
     p.z += f * (0.18 + 0.06 * ripple) + gBurnEdge * 0.25;
     p.z += sin(uTime * 1.3 + aSeed.x * 40.0) * 0.008;
-    if (uDeviceMix > 0.0) {
-      // Right after the cover, the face's points rebuild into the devices in staggered waves.
-      float lt = clamp((uDeviceMix - aSeed.z * 0.45) / 0.55, 0.0, 1.0);
-      gDevice = lt * lt * (3.0 - 2.0 * lt);
+    if (uStackMix > 0.0) {
+      // Right after the cover, the face's points rebuild into the app screen in staggered waves.
+      float lt = clamp((uStackMix - aSeed.z * 0.45) / 0.55, 0.0, 1.0);
+      gStack = lt * lt * (3.0 - 2.0 * lt);
       vec3 swirl = (aSeed.xyw - 0.5) * 2.0;
-      vec3 d = aDevice.xyz;
-      // A faint shimmer on the screens once they're lit.
-      d += vec3(0.0, 0.0, sin(uTime * 2.0 + aSeed.y * 30.0) * 0.004);
-      p = mix(p, d, gDevice) + swirl * sin(PI * gDevice) * 0.3;
+      // Exploded, each layer floats in its own depth slot and breathes a little.
+      float L = aMisc.z;
+      float s = uStackSpread * (1.0 + 0.07 * sin(uTime * 1.4 + L * 6.0));
+      vec3 d = aStack.xyz + uStackN * (L - 0.5) * ${STACK_DEPTH.toFixed(3)} * s;
+      // The layers fan around the vertical axis like a deck of cards, swaying gently.
+      float a = ((L - 0.5) * ${STACK_FAN.toFixed(3)} + sin(uTime * 0.45) * 0.07) * s;
+      vec3 q = d - uStackC;
+      float ca = cos(a), sa = sin(a);
+      q.xz = vec2(ca * q.x + sa * q.z, -sa * q.x + ca * q.z);
+      d = uStackC + q;
+      d += uStackN * sin(uTime * 2.0 + aSeed.y * 30.0) * 0.004;
+      p = mix(p, d, gStack) + swirl * sin(PI * gStack) * 0.3;
     }
     return p;
   }
-  vec3 deviceColor() {
-    float k = floor(aDevice.w);
+  /** Depth (0..1) of the scan plane that sweeps through the exploded layers. */
+  float stackScan() { return fract(uTime * 0.22) * 1.5 - 0.25; }
+  vec3 stackColor() {
+    float k = floor(aStack.w);
+    float L = aMisc.z;
+    float on = clamp(uStackSpread, 0.0, 1.0);
     float twinkle = 0.8 + 0.2 * sin(uTime * 3.0 + aSeed.x * 60.0);
+    // Flat, the screen is ice blue; exploded, every layer gets its own colour, back deep, front ice.
+    vec3 tint = mix(uIce, loadRamp(0.1 + L * 0.68), on);
     vec3 c;
-    if (k < 0.5) c = mix(uCyan, uIce, 0.35) * 1.1;
-    else if (k < 1.5) c = uIce * twinkle;
-    else if (k < 2.5) c = uCyan * 0.75;
-    else if (k < 3.5) c = uAmber * (0.9 + 0.35 * sin(uTime * 2.4));
-    else c = uDeep * 1.4 + uCyan * 0.12;
-    return c * fract(aDevice.w) * 2.0;
+    if (k < 0.5) c = tint * 1.25;
+    else if (k < 1.5) c = tint * twinkle * 1.1;
+    else if (k < 2.5) c = mix(tint, uIce, 0.25) * 0.95;
+    else if (k < 3.5) c = mix(uIce, uAmber, 0.4 + 0.6 * on) * (1.0 + 0.3 * on * sin(uTime * 3.2));
+    else c = (uDeep * 1.4 + uCyan * 0.12) * (1.0 + 1.3 * on); // the window lights up as the stack opens
+    // The scan plane brightens each layer as it passes.
+    c *= 1.0 + 1.8 * on * exp(-pow((L - stackScan()) / 0.07, 2.0));
+    c += vec3(0.9, 0.95, 1.0) * uStackFlash;
+    return c * fract(aStack.w) * 2.0;
   }
   vec3 portraitColor() {
     float band = exp(-pow((position.y - uScanY) / 0.05, 2.0));
     float trail = exp(-max(0.0, position.y - uScanY) * 3.0) * step(uScanY, position.y) * 0.25;
     vec3 c = aColor * (1.0 + trail + gTouch * 0.9) + vec3(0.85, 0.95, 1.0) * band * 1.4 * aMisc.x;
     c = c * gBurnVis + vec3(0.9, 0.95, 1.0) * gBurnEdge * 1.2;
-    return gDevice > 0.0 ? mix(c, deviceColor() * gBurnVis, gDevice) : c;
+    return gStack > 0.0 ? mix(c, stackColor() * gBurnVis, gStack) : c;
   }
 
   // ---------- 1 hall ----------
@@ -280,7 +305,9 @@ const vertexShader = /* glsl */ `
     float swept = smoothstep(0.0, 0.08, uSweep - aCloud.x) * uSweepOn;
     vec3 cls = uClassColors[int(aClass + 0.5)] * 1.35;
     float front = exp(-pow((aCloud.x - uSweep) / 0.09, 2.0)) * uSweepOn;
-    return mix(raw, cls, swept) + vec3(0.9, 0.97, 1.0) * front * 2.0;
+    // Cutaway: the street fades out towards the viewer instead of ending in a hard edge.
+    float near = 1.0 - 0.8 * smoothstep(uCloudNear, uCloudNear + 0.7, aCloud.z);
+    return (mix(raw, cls, swept) + vec3(0.9, 0.97, 1.0) * front * 2.0) * near;
   }
 
   // ---------- 5 city ----------
@@ -366,8 +393,8 @@ const vertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mv;
 
     // Portrait thinning: hidden portrait points fade in as they fly away.
-    // On the devices, the visible share draws at full strength (no portrait vignette).
-    float pv = mix(aMisc.x, step(0.001, aMisc.x), gDevice);
+    // On the app screen, the visible share draws at full strength (no portrait vignette).
+    float pv = mix(aMisc.x, step(0.001, aMisc.x), gStack);
     float vis = i == 0 ? mix(pv, 1.0, e) : 1.0;
 
     float fog = exp(-pow(uFogDensity * dist, 2.0));
@@ -408,7 +435,7 @@ export class MorphParticles {
     const n = t.count
     g.setAttribute('position', new BufferAttribute(t.portrait, 3))
     g.setAttribute('aColor', new BufferAttribute(t.portraitColor, 3))
-    g.setAttribute('aDevice', new BufferAttribute(t.device, 4))
+    g.setAttribute('aStack', new BufferAttribute(t.stack, 4))
     g.setAttribute('aHall', new BufferAttribute(t.hall, 3))
     g.setAttribute('aFlow', new BufferAttribute(t.flow, 3))
     g.setAttribute('aDash', new BufferAttribute(t.dash, 3))
@@ -417,12 +444,13 @@ export class MorphParticles {
     g.setAttribute('aClass', new BufferAttribute(t.cloudClass, 1))
     g.setAttribute('aCity', new BufferAttribute(t.city, 3))
     g.setAttribute('aCityFlow', new BufferAttribute(t.cityFlow, 3))
-    const misc = new Float32Array(n * 2)
+    const misc = new Float32Array(n * 3)
     for (let i = 0; i < n; i++) {
-      misc[i * 2] = t.portraitVis[i]
-      misc[i * 2 + 1] = t.cityWeight[i]
+      misc[i * 3] = t.portraitVis[i]
+      misc[i * 3 + 1] = t.cityWeight[i]
+      misc[i * 3 + 2] = t.stackLayer[i]
     }
-    g.setAttribute('aMisc', new BufferAttribute(misc, 2))
+    g.setAttribute('aMisc', new BufferAttribute(misc, 3))
     // Globe targets are filled in later (the land mask loads lazily).
     const globe = new Float32Array(n * 4)
     for (let i = 0; i < n; i++) {
@@ -456,7 +484,12 @@ export class MorphParticles {
         uBurn: { value: 0 },
         uPortraitCenter: { value: PORTRAIT_CENTER.clone() },
         uPortraitSize: { value: PORTRAIT_SIZE },
-        uDeviceMix: { value: 0 },
+        uStackMix: { value: 0 },
+        uStackSpread: { value: 0 },
+        uStackFlash: { value: 0 },
+        uStackN: { value: new Vector3(0, 0, 1) },
+        uStackC: { value: STACK_CENTER.clone() },
+        uCloudNear: { value: 1000 },
         uAmber: { value: palette.amber },
         uHallFlow: { value: 1 },
         uGpu: { value: new Vector3() },
