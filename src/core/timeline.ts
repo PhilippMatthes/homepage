@@ -31,6 +31,8 @@ export const T = {
   dissolve: [0.13, 0.22],
   hallIn: [0.12, 0.19],
   network: [0.15, 0.2, 0.29, 0.33],
+  // the network unfurls from the hub as the camera pulls back
+  networkGrow: [0.19, 0.262],
   roof: [0.29, 0.34],
   // Cortex: VMs drop into the racks along the aisle, then hot hosts get rebalanced
   cortexVisible: [0.385, 0.4, 0.47, 0.495],

@@ -141,6 +141,12 @@ async function boot() {
   STATIONS.forEach((st, i) =>
     hud.add(agents.anchors[i], 'agents', st.name, 'var(--spark)', 'panel-title agent-title', 'left', CARD_TITLE_W),
   )
+  // The hub's beacon carries the scale of the fleet; the VM count ticks up as the network unfurls.
+  const vmCount = hud
+    .add(network.beaconTop, 'network', `<i></i>20+ datacenters<b></b>`, 'var(--spark)', 'place')
+    .querySelector('b')!
+  const vmFmt = new Intl.NumberFormat('en-US')
+  let lastVms = -1
   hud.add(cityOverlay.head, 'wave', '<i></i>green wave ahead', '#4ade80', 'place')
 
   const debugEl = new URLSearchParams(location.search).has('debug') ? document.getElementById('debug') : null
@@ -276,7 +282,10 @@ async function boot() {
     const scanY = PORTRAIT_CENTER.y + PORTRAIT_SIZE * 0.6 - ((time * 0.22) % 1.6) * PORTRAIT_SIZE * 0.75
     backdrop.update(1 - smooth(range(p, T.stack[0], T.stack[1] - 0.005)), time, scale, scanY)
     datacenter.update(hallVis, shell, time)
-    network.update(networkVis, time, scale)
+    const networkGrow = range(p, T.networkGrow[0], T.networkGrow[1])
+    network.update(networkVis, networkGrow, time, scale, stage.dpr)
+    const vms = Math.round(100_000 * smooth(range(networkGrow, 0.05, 0.95)) / 100) * 100
+    if (vms !== lastVms) vmCount.textContent = `· ${vmFmt.format((lastVms = vms))} VMs`
     const cortexState = cortex.update({
       visible: band(p, T.cortexVisible[0], T.cortexVisible[1], T.cortexVisible[2], T.cortexVisible[3]),
       place: range(p, T.place[0], T.place[1]),
@@ -329,6 +338,7 @@ async function boot() {
       globe: smooth(range(p, 0.975, 0.99)),
       dash: dashVis,
       agents: agentsVis,
+      network: networkVis * smooth(range(networkGrow, 0.1, 0.3)),
       wave: cityVis * band(p, T.greenWave[0], T.greenWave[0] + 0.01, T.greenWave[1] - 0.01, T.greenWave[1]),
     })
     setVar('--hint', (1 - range(p, 0, 0.012)).toFixed(3))

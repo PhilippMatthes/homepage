@@ -17,6 +17,8 @@ export interface HoloOptions {
   transparent?: boolean
   fillAlpha?: number
   glow?: number
+  /** Lit window specks on the side walls (cell size in meters), as if full of racks. */
+  windows?: number
 }
 
 /**
@@ -28,7 +30,7 @@ export function holoMaterial(o: HoloOptions = {}) {
   const m = new ShaderMaterial({
     transparent: o.transparent ?? false,
     depthWrite: true,
-    defines: { SLOTS: o.slots ? 1 : 0, PANELS: o.panels ? 1 : 0, FOCUS: o.focus ? 1 : 0 },
+    defines: { SLOTS: o.slots ? 1 : 0, PANELS: o.panels ? 1 : 0, FOCUS: o.focus ? 1 : 0, WINDOWS: o.windows ? 1 : 0 },
     uniforms: {
       // Not cloned: palette colors (and shade()s of them) are live and follow the section palette.
       uFill: { value: o.fill ?? shade(palette.deep, 0.4) },
@@ -41,6 +43,7 @@ export function holoMaterial(o: HoloOptions = {}) {
       uBg: { value: palette.bg },
       uFogDensity: shared.uFogDensity,
       uPanel: { value: o.panels ?? 1 },
+      uWin: { value: o.windows ?? 1 },
       uFocusExtent: shared.uFocusExtent,
       uFocusAmount: shared.uFocusAmount,
       uU: { value: U },
@@ -75,6 +78,7 @@ export function holoMaterial(o: HoloOptions = {}) {
       uniform float uU;
       uniform float uTime;
       uniform float uPanel;
+      uniform float uWin;
       uniform vec2 uFocusExtent;
       uniform float uFocusAmount;
       varying vec2 vUv;
@@ -108,6 +112,21 @@ export function holoMaterial(o: HoloOptions = {}) {
           float panel = (1.0 - min(min(gl.x, gl.y), 1.0)) * (1.0 - smoothstep(0.2, 0.6, max(gw.x, gw.y)));
           col += uEdge * panel * 0.22;
           edge = max(edge, panel * 0.35);
+        #endif
+        #if WINDOWS == 1
+          // Walls: lit windows. Roof: rack LEDs glimmering through the glass, in rows.
+          vec3 wn = abs(vN);
+          bool roof = wn.y > 0.5;
+          vec2 wsz = roof ? vec2(uWin * 0.5, uWin * 1.4) : vec2(uWin, uWin * 0.55);
+          vec2 wq = (roof ? vW.xz : (wn.x > 0.5 ? vW.zy : vW.xy)) / wsz;
+          vec2 cell = floor(wq);
+          vec2 f = fract(wq) - 0.5;
+          float h = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
+          float on = step(roof ? 0.6 : 0.42, h) * (0.55 + 0.45 * sin(uTime * (0.6 + 2.0 * h) + h * 40.0));
+          float speck = (1.0 - smoothstep(0.16, 0.28, abs(f.x))) * (1.0 - smoothstep(0.1, 0.2, abs(f.y)));
+          // Not in the plinth, and only while the specks resolve.
+          float band = (roof ? 1.0 : step(0.35, vW.y) * step(vW.y, 2.9)) * (1.0 - smoothstep(0.2, 0.45, max(fwidth(wq.x), fwidth(wq.y))));
+          col += mix(uEdge, vec3(1.0), 0.35) * speck * on * band * (roof ? 0.6 : 0.9);
         #endif
         col += uEdge * edge * uGlow;
 
