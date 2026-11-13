@@ -4,9 +4,6 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
-  # Refresh the live GitHub numbers daily.
-  schedule:
-    - cron: '0 4 * * *'
 
 permissions:
   contents: read

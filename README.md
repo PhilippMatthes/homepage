@@ -2,19 +2,21 @@
 
 My personal homepage: a single scroll-driven three.js scene, served as a static site from GitHub Pages.
 
-Scrolling flies one continuous camera through nine chapters. A single particle system carries the story, morphing from one shape to the next:
+Scrolling flies one continuous camera from a cover through seven chapters to a contact page. A single particle system carries the story, morphing from one shape to the next:
 
-1. **Cover.** The real photo, displaced in 3D by its depth map (a nod to 3Dify), reacting to the pointer.
-2. **3D & shaders.** The photo burns away into a LiDAR-style point cloud while the camera orbits the head.
-3. **SAP Cloud Infrastructure.** The points rain onto a datacenter in a network of interconnected datacenters.
-4. **Cortex.** The roof fades, the camera dives to one rack, and a 1U server slides out of its slot.
-5. **CobaltCore.** The lid fades and data pulses race along the board traces into the GPU.
-6. **Perses.** The data rises into floating observability dashboards: time series, bars, heatmap and a node graph.
-7. **Data science.** The dashboards dissolve into a street-scene point cloud that a model classifies.
-8. **PrioBike-HH.** The camera zooms out over a city road network with a green wave on a bike route.
-9. **Contact.** The camera zooms out further to a globe: based in Dresden, collaborating worldwide.
+- **Cover.** The real photo, displaced in 3D by its depth map (a nod to 3Dify), reacting to the pointer.
+- **01 · iOS & Mac.** The photo burns into a LiDAR-style point cloud that rebuilds as an app screen, explodes into its view hierarchy and slams shut.
+- **02 · Cloud Infrastructure.** The points rain onto a datacenter hall inside a network of 20+ datacenters.
+- **03 · Cortex Scheduler.** The roof fades, VMs drop into racks and get rebalanced, and a 1U server slides out.
+- **04 · Agentic Engineering.** Jobs run through an agent pipeline that calls inference on the server's GPU.
+- **05 · Data Science.** Data streams up into floating Perses dashboards.
+- **06 · Machine Learning.** The dashboards dissolve into a street-scene point cloud that a model classifies.
+- **07 · Product Engineering.** The camera zooms out over a city with a green wave on a bike route (PrioBike).
+- **Contact & imprint.** A globe: based in Dresden, collaborating worldwide.
 
-Chapter backgrounds and the UI accent drift subtly between moods (`src/core/mood.ts`).
+Each section has its own palette, blended on scroll (`src/core/palette.ts`, `src/core/mood.ts`). Each chapter's copy is a short lead plus a `<details class="more">` with the rest.
+
+Without WebGL2, without JavaScript, or with `?plain`, the same copy renders as a plain text page (three.js is then never downloaded). The menu links to it as "Text version".
 
 ## Develop
 
@@ -22,10 +24,13 @@ Needs Node ≥ 20.19 (see `.nvmrc`).
 
 ```sh
 npm install
-npm run dev        # http://localhost:5173  (append ?debug for a progress readout, ?quality=low|medium|high to force a tier)
+npm run dev        # http://localhost:5173
 npm run build      # type-check + production build into dist/
 npm run preview
+npm run og         # re-render the social preview images in public/og/ (commit them)
 ```
+
+URL parameters: `?debug` (progress readout), `?quality=low|medium|high` (force a tier), `?p=0.42` (jump to a scroll position), `?plain` (text version). Keyboard: ←/→ step between chapters; Tab walks through all links and the scene follows focus.
 
 ## Structure
 
@@ -36,6 +41,7 @@ npm run preview
 | `src/core/stage.ts` | Renderer and post-processing (bloom, tone mapping, vignette, grain, chromatic aberration). |
 | `src/fx/particles.ts` | `MorphParticles`: one point set that morphs portrait → LEDs → GPU → point cloud. |
 | `src/chapters/*` | Procedural content for each chapter (3D photo, portrait points, hall + network, server, dashboards, point cloud, city, globe). |
+| `src/main.ts` → `src/experience.ts` | Boot: picks the plain page or lazily loads the 3D experience, which wires every chapter into one frame loop. |
 | `src/fx/hud.ts` + `index.html` | Copy, labels and metrics. Each `[data-band]` section fades over a scroll range. |
 | `tools/depth/estimate.py` | Offline: turns a new photo into `selfie.webp` + `selfie-depth.webp` (Depth Anything V2). |
 

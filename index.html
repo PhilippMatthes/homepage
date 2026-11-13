@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Philipp Matthes</title>
+    <title>Philipp Matthes · Software engineer for cloud, data science and apps</title>
     <meta name="description" content="Philipp Matthes is a software engineer at home in cloud, data science and apps, building the scheduler behind SAP's sovereign cloud." />
     <meta name="author" content="Philipp Matthes" />
     <meta name="theme-color" content="#02040a" />
     <meta name="color-scheme" content="dark" />
-    <!-- ?og (scripts/og.mjs): hide the UI chrome before first paint. -->
-    <script>if (/[?&]og(=|&|$)/.test(location.search)) document.documentElement.classList.add('og')</script>
+    <link rel="canonical" href="https://philippmatth.es/" />
+    <!-- .js: without JavaScript, the plain page shows instead of the loader.
+         ?og (scripts/og.mjs): hide the UI chrome before first paint. -->
+    <script>
+      document.documentElement.classList.add('js')
+      if (/[?&]og(=|&|$)/.test(location.search)) document.documentElement.classList.add('og')
+    </script>
     <!-- Critical styles inline: dark from the very first paint, loader visible before any JS/CSS loads. -->
     <style>
       html, body { margin: 0; background: #02040a; color: #e8f2ff; color-scheme: dark; }
@@ -19,24 +24,38 @@
         font: 500 11px/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: 0.3em; text-transform: uppercase;
       }
       #loader span { position: absolute; left: 50%; bottom: 14vh; translate: -50% 0; }
+      html:not(.js) #loader { display: none; }
     </style>
     <meta property="og:title" content="Philipp Matthes" />
-    <meta property="og:description" content="Cloud infrastructure, machine learning and smart mobility — from Dresden." />
+    <meta property="og:description" content="Philipp Matthes is a software engineer at home in cloud, data science and apps, building the scheduler behind SAP's sovereign cloud." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://philippmatth.es/" />
     <meta property="og:image" content="https://philippmatth.es/og/index.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portrait of Philipp Matthes dissolving into a point cloud" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Philipp Matthes",
+        "honorificPrefix": "Dr.-Ing.",
+        "jobTitle": "Software Engineer",
+        "worksFor": { "@type": "Organization", "name": "SAP" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "TU Dresden" },
+        "url": "https://philippmatth.es/",
+        "image": "https://philippmatth.es/og/index.jpg",
+        "address": { "@type": "PostalAddress", "addressLocality": "Dresden", "addressCountry": "DE" },
+        "sameAs": ["https://github.com/PhilippMatthes", "https://www.linkedin.com/in/pmatthes"]
+      }
+    </script>
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="./icons/apple-icon-180x180.png" />
     <link rel="preload" as="image" href="./assets/selfie.webp" />
     <link rel="preload" as="image" href="./assets/selfie-depth.webp" />
     <link rel="preload" as="image" href="./assets/selfie-scene-depth.webp" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <canvas id="gl" aria-hidden="true"></canvas>
@@ -58,9 +77,11 @@
           <li><a href="#machine-learning" data-goto="0.78">Machine Learning</a></li>
           <li><a href="#product" data-goto="0.895">Product Engineering</a></li>
           <li><a href="#contact" data-goto="1">Contact &amp; imprint</a></li>
+          <li class="menu-plain"><a href="?plain">Text version</a></li>
         </ol>
       </div>
       <nav>
+        <a class="plain-only" href="./">3D version</a>
         <a href="https://github.com/PhilippMatthes" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://www.linkedin.com/in/pmatthes" target="_blank" rel="noreferrer">LinkedIn</a>
       </nav>
@@ -73,14 +94,18 @@
       <!-- data-band: fade in a→b, hold, fade out c→d (scroll progress 0..1) -->
       <section class="chapter hero" data-band="-1,-1,0.03,0.046">
         <h1>Hey, I'm Philipp!</h1>
-        <p class="lead">Software engineer who loves building cool stuff, at home in cloud, data science and apps.</p>
+        <p class="lead">Software engineer building the scheduler behind SAP's sovereign cloud. At home in cloud, data science and apps.</p>
         <img class="fallback-portrait" src="./assets/selfie.webp" alt="Portrait of Philipp Matthes" width="256" height="256" />
       </section>
 
       <section class="chapter left" id="apps" data-aliases="threedify" data-band="0.054,0.066,0.136,0.148">
         <p class="eyebrow">// 01 · iOS &amp; Mac · Swift · CoreML · Metal</p>
         <h2>My software journey started with apps for iPhone and Mac.</h2>
-        <p class="lead">I shipped my first apps right after starting computer science in 2016. Lautstärke, which measures environmental noise, quickly passed 10,000 downloads, and as a freelancer I built apps for clients like Mitteldeutscher Rundfunk (MDR). On-device machine learning was the hot new thing back then, so I put it to work in prototypes like 3Dify, a parallax shader driven by disparity maps, much like the 3D photo effect on today's iPhones. 3D and design are a passion of mine anyway: I spent half a year as a Cinema 4D artist at a media agency.</p>
+        <p class="lead">I shipped my first apps right after starting computer science in 2016. Lautstärke, which measures environmental noise, quickly passed 10,000 downloads, and I built apps for clients like Mitteldeutscher Rundfunk (MDR).</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>On-device machine learning was the hot new thing back then, so I put it to work in prototypes like 3Dify, a parallax shader driven by disparity maps, much like the 3D photo effect on today's iPhones. 3D and design are a passion of mine anyway: I spent half a year as a Cinema 4D artist at a media agency.</p>
+        </details>
         <div class="cards">
           <a class="card" href="https://github.com/PhilippMatthes/3dify-ios" target="_blank" rel="noreferrer">
             <b>3Dify</b>
@@ -96,7 +121,11 @@
       <section class="chapter right" id="cloud" data-aliases="sci" data-band="0.212,0.226,0.308,0.322">
         <p class="eyebrow">// 02 · Cloud infrastructure · KVM · Kubernetes</p>
         <h2>Today, I help build Europe's next-generation sovereign cloud at SAP.</h2>
-        <p class="lead">After my PhD at TU Dresden, I joined SAP Cloud Infrastructure to work on CobaltCore, the new KVM stack taking over 20+ datacenters around the globe and more than 100,000 virtual machines. My Kubernetes components connect the OpenStack interface our customers use with IronCore, a cloud-native bare-metal operating system. I work on central pieces like the VM operator and the KVM node agent, and on Cortex, which you'll meet next.</p>
+        <p class="lead">After my PhD at TU Dresden, I joined SAP Cloud Infrastructure to work on CobaltCore, the new KVM stack taking over 20+ datacenters around the globe and more than 100,000 virtual machines.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>My Kubernetes components connect the OpenStack interface our customers use with IronCore, a cloud-native bare-metal operating system. I work on central pieces like the VM operator and the KVM node agent, and on Cortex, which you'll meet next.</p>
+        </details>
         <div class="links start">
           <a href="https://apeirora.eu/" target="_blank" rel="noreferrer">apeirora.eu</a>
           <a href="https://cobaltcore.dev/" target="_blank" rel="noreferrer">cobaltcore.dev</a>
@@ -108,7 +137,11 @@
       <section class="chapter left" id="cortex" data-band="0.404,0.416,0.482,0.493">
         <p class="eyebrow">// 03 · Scheduling · Go · Kubernetes</p>
         <h2>I'm the lead contributor of Cortex, the scheduler that decides where SAP's virtual machines run.</h2>
-        <p class="lead">I built this Kubernetes operator from the ground up to make smart placement decisions for almost anything: OpenStack compute (Nova), storage (Cinder, Manila) and networking (Neutron), and even gang scheduling of GPU workloads on Kubernetes. I shaped its core: a knowledge database that ingests metrics and other data sources, and a scheduler built on Kubernetes-native inventory like VM and hypervisor CRDs. Today, Cortex gives SAP Cloud Infrastructure capabilities it never had before: automated failover partitioning and reservations, committed-resource scheduling, and capacity planning through an infrastructure dashboard.</p>
+        <p class="lead">I built this Kubernetes operator from the ground up. It makes smart placement decisions for OpenStack compute, storage and networking, and even gang-schedules GPU workloads on Kubernetes.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>Cortex covers OpenStack compute (Nova), storage (Cinder, Manila) and networking (Neutron). I shaped its core: a knowledge database that ingests metrics and other data sources, and a scheduler built on Kubernetes-native inventory like VM and hypervisor CRDs. Today, Cortex gives SAP Cloud Infrastructure capabilities it never had before: automated failover partitioning and reservations, committed-resource scheduling, and capacity planning through an infrastructure dashboard.</p>
+        </details>
         <div class="links start">
           <a href="https://github.com/cobaltcore-dev/cortex" target="_blank" rel="noreferrer">cortex</a>
         </div>
@@ -117,7 +150,11 @@
       <section class="chapter right" id="agents" data-aliases="agentic" data-band="0.503,0.515,0.566,0.578">
         <p class="eyebrow">// 04 · Agentic engineering</p>
         <h2>I'm always looking to improve the things around me. Lately, that means agents.</h2>
-        <p class="lead">Trying new technologies and ideas is what I love doing, and recently I've focused on how agents can automate daily work and bridge knowledge gaps. Around CobaltCore, I've set up agentic pipelines for code review and release management, and for keeping our issue board and progress tracking current through a knowledge graph of issues and commits. Just as important is keeping them safe: a network-based sandbox guards against prompt injection and leaks of sensitive company data. I'm a coder at heart, and working with AI helps me grow and learn.</p>
+        <p class="lead">Around CobaltCore, I've set up agentic pipelines for code review, release management and issue tracking, sandboxed against prompt injection and leaks of sensitive company data.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>Trying new technologies and ideas is what I love doing, and recently I've focused on how agents can automate daily work and bridge knowledge gaps. The pipelines keep our issue board and progress tracking current through a knowledge graph of issues and commits, and a network-based sandbox keeps them safe. I'm a coder at heart, and working with AI helps me grow and learn.</p>
+        </details>
         <div class="links start">
           <a href="https://github.com/cobaltcore-dev/thalamus" target="_blank" rel="noreferrer">thalamus · inference</a>
           <a href="https://github.com/cobaltcore-dev/cortex/tree/main/.agents" target="_blank" rel="noreferrer">cortex agents</a>
@@ -128,7 +165,11 @@
       <section class="chapter left" id="data-science" data-aliases="perses" data-band="0.59,0.602,0.69,0.703">
         <p class="eyebrow">// 05 · Data science · Monitoring · Perses</p>
         <h2>I love collecting data and finding out what it can teach us.</h2>
-        <p class="lead">My PhD gave me a strong background in data science: trajectories and user data, plus large amounts of geodata and real-time signals. I enjoy digging for patterns, testing hypotheses, and measuring whether an idea actually has an impact. In the CNCF project Perses, I help push open monitoring forward; my canvas panel draws graphs straight from query data, like failover partitions or network throughput. I look for where cloud-native and data science meet, and off the clock, I analyze my finances in Grafana.</p>
+        <p class="lead">My PhD gave me a strong background in data science. In the CNCF project Perses, I help push open monitoring forward; my canvas panel draws graphs straight from query data.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>In my research I worked with trajectories and user data, plus large amounts of geodata and real-time signals. I enjoy digging for patterns, testing hypotheses, and measuring whether an idea actually has an impact. The canvas panel draws things like failover partitions or network throughput. I look for where cloud-native and data science meet, and off the clock, I analyze my finances in Grafana.</p>
+        </details>
         <div class="links start">
           <a href="https://github.com/perses/perses" target="_blank" rel="noreferrer">perses/perses</a>
           <a href="https://github.com/perses/plugins/tree/main/canvas" target="_blank" rel="noreferrer">perses canvas</a>
@@ -139,19 +180,27 @@
       <section class="chapter right" id="machine-learning" data-aliases="research" data-band="0.735,0.747,0.82,0.832">
         <p class="eyebrow">// 06 · Machine learning · TU Dresden</p>
         <h2>Classical and deep machine learning problems are my jam.</h2>
-        <p class="lead">Ten years ago, I trained my first recurrent network for sequence prediction, and it failed miserably on Romeo and Juliet. I kept at it, picking up theory and practice along the way, from building balanced datasets to unsupervised learning. For my diploma and my PhD at TU Dresden (Dr.-Ing., 2024), I developed models for transport mode detection on phones and for error-robust, geometry-based traffic light matching, and published them at top international conferences.</p>
+        <p class="lead">For my diploma and my PhD at TU Dresden (Dr.-Ing., 2024), I developed models for transport mode detection on phones and for geometry-based traffic light matching, published at top international conferences.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>Ten years ago, I trained my first recurrent network for sequence prediction, and it failed miserably on Romeo and Juliet. I kept at it, picking up theory and practice along the way, from building balanced datasets to unsupervised learning.</p>
+        </details>
         <ul class="pubs">
-          <li><b>Cloudy with a Chance of Green: Measuring the Predictability of 18,009 Traffic Lights in Hamburg</b><span>IEEE IV 2024</span></li>
-          <li><b>GeoAI-Powered Lane Matching for Bike Routes in GLOSA Apps</b><span>ACM SIGSPATIAL 2023</span></li>
-          <li><b>Matching Traffic Lights to Routes for Real-World Deployments of Mobile GLOSA Apps</b><span>IEEE ISC2 2022</span></li>
-          <li><b>Selecting Resource-Efficient ML Models for Transport Mode Detection on Mobile Devices</b><span>IEEE IoTaIS 2022</span></li>
+          <li><a href="https://doi.org/10.1109/IV55156.2024.10588724" target="_blank" rel="noreferrer"><b>Cloudy with a Chance of Green: Measuring the Predictability of 18,009 Traffic Lights in Hamburg</b><span>IEEE IV 2024</span></a></li>
+          <li><a href="https://doi.org/10.1145/3589132.3625583" target="_blank" rel="noreferrer"><b>GeoAI-Powered Lane Matching for Bike Routes in GLOSA Apps</b><span>ACM SIGSPATIAL 2023</span></a></li>
+          <li><a href="https://doi.org/10.1109/ISC255366.2022.9922560" target="_blank" rel="noreferrer"><b>Matching Traffic Lights to Routes for Real-World Deployments of Mobile GLOSA Apps</b><span>IEEE ISC2 2022</span></a></li>
+          <li><a href="https://ieeexplore.ieee.org/document/9976004" target="_blank" rel="noreferrer"><b>Selecting Resource-Efficient ML Models for Transport Mode Detection on Mobile Devices</b><span>IEEE IoTaIS 2022</span></a></li>
         </ul>
       </section>
 
       <section class="chapter left" id="product" data-aliases="priobike" data-band="0.848,0.86,0.928,0.94">
         <p class="eyebrow">// 07 · Product engineering · PrioBike</p>
         <h2>Platform engineer by day, product engineer at heart.</h2>
-        <p class="lead">I love working with smart people on polished solutions, whether that's an architecture, a clean package structure, an interface or an RFC. What drives me is impact: working back from what users need to the concrete implementation, end to end. In my PhD project PrioBike, I led a small team building a green wave app for cyclists in Hamburg, from the machine learning behind smart routing and traffic light matching all the way to the user interface, which won 3rd place at the Deutscher Fahrradpreis.</p>
+        <p class="lead">In my PhD project PrioBike, I led a small team building a green wave app for cyclists in Hamburg, end to end, which won 3rd place at the Deutscher Fahrradpreis.</p>
+        <details class="more">
+          <summary>More</summary>
+          <p>I love working with smart people on polished solutions, whether that's an architecture, a clean package structure, an interface or an RFC. What drives me is impact: working back from what users need to the concrete implementation. In PrioBike, that meant everything from the machine learning behind smart routing and traffic light matching all the way to the user interface.</p>
+        </details>
         <div class="links start">
           <a href="https://github.com/priobike/priobike-flutter-app" target="_blank" rel="noreferrer">priobike app</a>
           <a href="https://github.com/priobike/priobike-predictor" target="_blank" rel="noreferrer">traffic light prediction</a>

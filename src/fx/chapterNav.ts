@@ -62,7 +62,26 @@ export class ChapterNav {
       this.setMenu(this.list.hidden)
     })
     document.addEventListener('click', () => this.setMenu(false))
-    document.addEventListener('keydown', (e) => e.key === 'Escape' && this.setMenu(false))
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') return this.setMenu(false)
+      // ←/→ step between chapters.
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) return
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+      const p = this.scroll.raw()
+      const gotos = this.chapters.map((c) => c.goto)
+      const target = e.key === 'ArrowRight' ? gotos.find((g) => g > p + 0.005) : [0, ...gotos].reverse().find((g) => g < p - 0.005)
+      if (target === undefined) return
+      e.preventDefault()
+      this.go(target)
+    })
+
+    // Keyboard and screen reader users: focusing copy that isn't on screen flies there.
+    document.getElementById('overlay')!.addEventListener('focusin', (e) => {
+      const section = (e.target as HTMLElement).closest<HTMLElement>('[data-band]')
+      if (!section || section.classList.contains('on')) return
+      const [, b, c] = section.dataset.band!.split(',').map(Number)
+      this.scroll.jumpTo(Math.min(1, (b + Math.min(c, 1)) / 2))
+    })
 
     // Deep links: #cortex etc. opens the page at that chapter; editing the hash flies there.
     const initial = this.byHash()

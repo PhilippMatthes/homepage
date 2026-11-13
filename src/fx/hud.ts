@@ -70,7 +70,9 @@ export class Hud {
       el.style.opacity = v.toFixed(3)
       el.style.transform = `translate3d(0, ${((1 - v) * (p < r[1] ? 24 : -24)).toFixed(1)}px, 0)`
       if (this.blur) el.style.filter = v < 0.999 ? `blur(${((1 - v) * 8).toFixed(1)}px)` : ''
-      el.style.visibility = v > 0.001 ? 'visible' : 'hidden'
+      // Off-screen copy stays in the accessibility tree and tab order (ChapterNav flies to focused copy);
+      // only the chapter on screen takes clicks.
+      el.classList.toggle('on', v > 0.001)
     }
 
     const w = innerWidth

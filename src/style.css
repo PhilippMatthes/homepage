@@ -12,8 +12,9 @@
   --title-end: #9fc6ff;
   --panel: #060e20;
   --panel-hi: #141e46;
-  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* Self-hosted (@fontsource-variable, imported in main.ts): no third-party font requests. */
+  --sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --scroll-vh: 1100;
   --hint: 1;
   color-scheme: dark;
@@ -67,7 +68,7 @@ body {
   animation: scan 1.4s ease-in-out infinite;
 }
 @keyframes scan { 0%, 100% { transform: scaleX(0.1); } 50% { transform: scaleX(1); } }
-body.ready #loader, body.no-webgl #loader { opacity: 0; visibility: hidden; }
+body.ready #loader, body.no-webgl #loader, html:not(.js) #loader { opacity: 0; visibility: hidden; }
 
 /* ---------- top bar ---------- */
 .topbar {
@@ -98,7 +99,8 @@ body.ready #loader, body.no-webgl #loader { opacity: 0; visibility: hidden; }
 }
 .chapter {
   position: absolute;
-  visibility: hidden;
+  /* Faded by the HUD, but never visibility: hidden, so all copy stays readable for
+     screen readers and reachable by Tab (focus flies the scene there, see chapterNav.ts). */
   opacity: 0;
   max-width: min(540px, calc(100vw - 32px));
   will-change: opacity, transform, filter;
@@ -119,7 +121,7 @@ body.ready #loader, body.no-webgl #loader { opacity: 0; visibility: hidden; }
   position: absolute;
   inset: -90px -140px;
   z-index: -1;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 62%, transparent), color-mix(in srgb, var(--bg) 32%, transparent) 60%, transparent);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 80%, transparent), color-mix(in srgb, var(--bg) 55%, transparent) 60%, transparent);
   pointer-events: none;
 }
 .chapter.right { right: clamp(16px, 7vw, 120px); top: 50%; translate: 0 -50%; }
@@ -128,7 +130,6 @@ body.ready #loader, body.no-webgl #loader { opacity: 0; visibility: hidden; }
   bottom: clamp(40px, 9vh, 110px);
   translate: -50% 0;
   text-align: center;
-  pointer-events: auto;
   width: 100%;
   max-width: min(820px, calc(100vw - 32px));
 }
@@ -166,8 +167,35 @@ h2 { font-size: clamp(28px, 3vw, 46px); line-height: 1.06; text-wrap: balance; }
   margin: 20px 0 0;
   font-size: clamp(15px, 1.4vw, 19px);
   line-height: 1.5;
-  font-weight: 300;
+  font-weight: 400;
+  text-wrap: pretty;
+}
+
+/* Second tier of chapter copy: the lead stays short, the rest unfolds on demand. */
+.more { margin-top: 14px; }
+.more summary {
+  display: inline-block;
+  list-style: none;
+  cursor: pointer;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--muted);
+  padding: 8px 12px;
+  margin-left: -12px;
+  border-radius: 999px;
+  transition: color 0.2s, background 0.2s;
+}
+.more summary::-webkit-details-marker { display: none; }
+.more summary::after { content: ' +'; color: var(--accent); }
+.more[open] summary::after { content: ' −'; }
+.more summary:hover { color: var(--ink); background: color-mix(in srgb, var(--cyan) 10%, transparent); }
+.more p {
+  margin: 6px 0 0;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.5;
+  color: var(--body);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 18px rgba(0, 0, 0, 0.6);
   text-wrap: pretty;
 }
 
@@ -337,14 +365,15 @@ h2 { font-size: clamp(28px, 3vw, 46px); line-height: 1.06; text-wrap: balance; }
   -webkit-backdrop-filter: blur(10px);
   color: var(--ink);
   text-decoration: none;
-  pointer-events: auto;
   transition: border-color 0.2s, background 0.2s;
 }
 .card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--panel-hi) 45%, transparent); }
 .card b { font-weight: 600; font-size: 15px; }
 .card b::after { content: ' ↗'; color: var(--accent); font-weight: 400; }
 .card span { font-size: 13px; line-height: 1.45; color: var(--muted); }
-.chapter a { pointer-events: auto; }
+/* Only the chapter on screen (.on, set by the HUD) takes clicks; faded copy lets them through. */
+.chapter.on :is(a, summary), .chapter.outro.on { pointer-events: auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .links.start { justify-content: flex-start; gap: 10px; margin-top: 24px; }
 .links.start a { padding: 10px 15px; font-size: 12.5px; }
 .links.start a::after { content: ' ↗'; color: var(--accent); }
@@ -365,6 +394,9 @@ h2 { font-size: clamp(28px, 3vw, 46px); line-height: 1.06; text-wrap: balance; }
 .pubs span { font: 500 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .pubs li { padding: 9px 0; }
 .pubs b { font-size: 12.5px; }
+.pubs a { display: grid; gap: 5px; color: inherit; text-decoration: none; }
+.pubs a b::after { content: ' ↗'; color: var(--accent); }
+.pubs a:hover b { color: #fff; }
 
 .path {
   list-style: none;
@@ -578,8 +610,23 @@ h2 { font-size: clamp(28px, 3vw, 46px); line-height: 1.06; text-wrap: balance; }
 /* ---------- ?og: clean frames for social preview images (scripts/og.mjs) ---------- */
 .og :is(.topbar, .rail, .scroll-hint, #debug) { display: none !important; }
 
-/* ---------- no WebGL: plain readable page ---------- */
-body.no-webgl #gl, body.no-webgl #scroll-space, body.no-webgl .scroll-hint, body.no-webgl #labels, body.no-webgl .rail, body.no-webgl .menu { display: none; }
-body.no-webgl #overlay { position: static; padding: 96px 16px 64px; display: flex; flex-direction: column; gap: 96px; align-items: center; }
-body.no-webgl .chapter { position: static; visibility: visible; opacity: 1; translate: none; transform: none; filter: none; text-align: left; }
-body.no-webgl .fallback-portrait { display: block; margin: 32px auto 0; border-radius: 50%; width: 160px; height: 160px; }
+/* ---------- short laptop screens: side copy must clear the top bar ---------- */
+@media (min-aspect-ratio: 1/1) and (max-height: 820px) {
+  .chapter .pubs li:nth-child(n + 3) { display: none; }
+}
+
+/* ---------- text version (?plain), no WebGL, or no JavaScript: plain readable page ---------- */
+.plain-only { display: none; }
+:is(body.no-webgl, html:not(.js) body) .plain-only { display: inline; }
+:is(body.no-webgl, html:not(.js) body) :is(#gl, #scroll-space, .scroll-hint, #labels, .rail, .menu) { display: none; }
+:is(body.no-webgl, html:not(.js) body) #overlay { position: static; pointer-events: auto; padding: 96px 16px 64px; display: flex; flex-direction: column; gap: 96px; align-items: center; }
+/* No `transform: none` here: the minifier folds it with `translate` and drops the latter.
+   The HUD never runs on this page, so nothing sets a transform anyway. */
+:is(body.no-webgl, html:not(.js) body) .chapter { position: static; opacity: 1; translate: none; filter: none; text-align: left; }
+:is(body.no-webgl, html:not(.js) body) .eyebrow { line-height: 1.6; }
+:is(body.no-webgl, html:not(.js) body) .chapter.outro { text-align: center; }
+:is(body.no-webgl, html:not(.js) body) .chapter :is(a, summary) { pointer-events: auto; }
+:is(body.no-webgl, html:not(.js) body) .fallback-portrait { display: block; margin: 32px auto 0; border-radius: 50%; width: 160px; height: 160px; }
+:is(body.no-webgl, html:not(.js) body) #overlay::after { content: none; }
+:is(body.no-webgl, html:not(.js) body) .chapter :is(.pubs li, .card span) { display: grid; }
+:is(body.no-webgl, html:not(.js) body) .chapter .pubs { display: block; }

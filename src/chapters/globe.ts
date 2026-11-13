@@ -15,7 +15,7 @@ import {
 import { feature } from 'topojson-client'
 import type { Topology, GeometryCollection } from 'topojson-specification'
 import type { MultiPolygon, Polygon } from 'geojson'
-import landUrl from 'world-atlas/land-50m.json?url'
+import landUrl from 'world-atlas/land-110m.json?url'
 import { palette, themeGlsl, themeUniforms } from '../core/palette'
 import { moodAccent } from '../core/mood'
 import { GLOBE_CENTER, GLOBE_RADIUS, latLonToWorld } from '../world/layout'
